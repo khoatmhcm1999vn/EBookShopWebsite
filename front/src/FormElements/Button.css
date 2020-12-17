@@ -1,0 +1,137 @@
+.Button {
+  font: inherit;
+  border: 1px solid #3b0062;
+  color: #3b0062;
+  background: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.Button:focus {
+  outline: none;
+}
+
+.Button:disabled {
+  background: #ccc;
+  color: #888888;
+  cursor: not-allowed;
+  border: #ccc;
+  box-shadow: none;
+}
+
+.Button:disabled:hover,
+.Button:disabled:active {
+  background: #ccc;
+  color: #888888;
+  border: #ccc;
+}
+
+.Button:hover,
+.Button:active {
+  background: #3b0062;
+  color: white;
+}
+
+.Button--flat {
+  border: none;
+}
+
+.Button--flat:hover,
+.Button--flat:active {
+  background: rgba(59, 0, 98, 0.3);
+  color: #3b0062;
+}
+
+.Button--raised {
+  background: #3b0062;
+  color: white;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.26);
+}
+
+.Button--raised:hover,
+.Button--raised:active {
+  background: #520288;
+}
+
+.Button.button--accent {
+  border-color: #fab83f;
+  color: #fab83f;
+}
+
+.Button--accent:hover,
+.Button--accent:active {
+  background: #fab83f;
+  color: #3b0062;
+}
+
+.Button--flat.button--accent:hover,
+.Button--flat.button--accent:active {
+  background: rgba(250, 184, 63, 0.3);
+  color: #fab83f;
+}
+
+.Button.button--accent.button--raised {
+  background: #fab83f;
+  color: #3b0062;
+}
+
+.Button--raised.button--accent:hover,
+.Button--raised.button--accent:active {
+  background: #fbc766;
+}
+
+.Button.button--danger {
+  border-color: #a30000;
+  color: #a30000;
+}
+
+.Button--danger:hover,
+.Button--danger:active {
+  background: #a30000;
+  color: white;
+}
+
+.Button--flat.button--danger:hover,
+.Button--flat.button--danger:active {
+  background: rgba(163, 0, 0, 0.3);
+  color: #a30000;
+}
+
+.Button.button--danger.button--raised {
+  background: #a30000;
+  color: white;
+}
+
+.Button--raised.button--danger:hover,
+.Button--raised.button--danger:active {
+  background: #c00000;
+}
+
+.Button.button--success {
+  border-color: #00b359;
+  color: #00b359;
+}
+
+.Button--success:hover,
+.Button--success:active {
+  background: #00b359;
+  color: white;
+}
+
+.Button--flat.button--success:hover,
+.Button--flat.button--success:active {
+  background: rgba(0, 179, 90, 0.3);
+  color: #00b359;
+}
+
+.Button.button--success.button--raised {
+  background: #00b359;
+  color: white;
+}
+
+.Button--raised.button--success:hover,
+.Button--raised.button--success:active {
+  background: #00a151;
+}
