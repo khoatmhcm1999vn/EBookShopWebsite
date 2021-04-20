@@ -1,4 +1,4 @@
 var a = 5;
 console.log(a);
 
-var b = 5;
+var b = 6;
