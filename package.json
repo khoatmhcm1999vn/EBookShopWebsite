@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon --watch backend --exec node --experimental-modules backend/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/khoatmhcm1999vn/shop_book_backend.git"
+    "url": "git+https://github.com/khoatmhcm1999vn/2020-2021-TLCNWebBanHang.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/khoatmhcm1999vn/shop_book_backend/issues"
+    "url": "https://github.com/khoatmhcm1999vn/2020-2021-TLCNWebBanHang/issues"
   },
-  "homepage": "https://github.com/khoatmhcm1999vn/shop_book_backend#readme",
+  "homepage": "https://github.com/khoatmhcm1999vn/2020-2021-TLCNWebBanHang#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
