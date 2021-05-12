@@ -1,0 +1,94 @@
+@keyframes ldio-skmr27zgsyi {
+  0% {
+    transform: translate(6px, 40px) scale(0);
+  }
+  25% {
+    transform: translate(6px, 40px) scale(0);
+  }
+  50% {
+    transform: translate(6px, 40px) scale(1);
+  }
+  75% {
+    transform: translate(40px, 40px) scale(1);
+  }
+  100% {
+    transform: translate(74px, 40px) scale(1);
+  }
+}
+@keyframes ldio-skmr27zgsyi-r {
+  0% {
+    transform: translate(74px, 40px) scale(1);
+  }
+  100% {
+    transform: translate(74px, 40px) scale(0);
+  }
+}
+@keyframes ldio-skmr27zgsyi-c {
+  0% {
+    background: #222222;
+  }
+  25% {
+    background: #00d8ff;
+  }
+  50% {
+    background: #222222;
+  }
+  75% {
+    background: #00d8ff;
+  }
+  100% {
+    background: #222222;
+  }
+}
+.ldio-skmr27zgsyi div {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transform: translate(40px, 40px) scale(1);
+  background: #222222;
+  animation: ldio-skmr27zgsyi 2.0833333333333335s infinite
+    cubic-bezier(0, 0.5, 0.5, 1);
+}
+.ldio-skmr27zgsyi div:nth-child(1) {
+  background: #00d8ff;
+  transform: translate(74px, 40px) scale(1);
+  animation: ldio-skmr27zgsyi-r 0.5208333333333334s infinite
+      cubic-bezier(0, 0.5, 0.5, 1),
+    ldio-skmr27zgsyi-c 2.0833333333333335s infinite step-start;
+}
+.ldio-skmr27zgsyi div:nth-child(2) {
+  animation-delay: -0.5208333333333334s;
+  background: #222222;
+}
+.ldio-skmr27zgsyi div:nth-child(3) {
+  animation-delay: -1.0416666666666667s;
+  background: #00d8ff;
+}
+.ldio-skmr27zgsyi div:nth-child(4) {
+  animation-delay: -1.5625s;
+  background: #222222;
+}
+.ldio-skmr27zgsyi div:nth-child(5) {
+  animation-delay: -2.0833333333333335s;
+  background: #00d8ff;
+}
+.loadingio-spinner-ellipsis-aeb8fucc4h {
+  width: 71px;
+  height: 71px;
+  /*display: inline-block;*/
+  overflow: hidden;
+  margin-right: auto;
+  margin-left: auto;
+}
+.ldio-skmr27zgsyi {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(0.71);
+  backface-visibility: hidden;
+  transform-origin: 0 0; /* see note above */
+}
+.ldio-skmr27zgsyi div {
+  box-sizing: content-box;
+}
