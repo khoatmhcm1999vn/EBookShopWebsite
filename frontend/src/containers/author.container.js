@@ -43,6 +43,7 @@ class AuthorContainer extends Component {
         <Slider />
         <Author
           author={this.props.author}
+          currentUser={this.props.currentUser}
           isadd={this.props.isadd}
           addAuthor={(name) => this.props.bookActions.addAuthor(name)}
           updateAuthor={(id, name) =>
@@ -50,6 +51,8 @@ class AuthorContainer extends Component {
           }
           deleteAuthor={(id) => this.props.bookActions.deleteAuthor(id)}
           deactivateAuthor={(id) => this.props.bookActions.deactivateAuthor(id)}
+          uploadFile={(value) => this.props.bookActions.uploadFile(value)}
+          downloadFile={() => this.props.bookActions.downloadFile()}
           isupdate={this.props.isupdate}
           page={this.props.page}
           totalpage={this.props.totalpage}
@@ -67,6 +70,7 @@ const mapStateToProps = (state) => ({
   isadd: state.bookReducers.author.isadd,
   isupdate: state.bookReducers.author.isupdate,
   islogin: state.userReducers.user.islogin,
+  currentUser: state.userReducers.user.currentUser,
   totalpage: state.bookReducers.author.totalpage,
   page: state.bookReducers.author.page,
 });

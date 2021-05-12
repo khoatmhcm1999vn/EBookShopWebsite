@@ -83,6 +83,7 @@ class Profile extends Component {
             islogin={this.props.islogin}
             logout={() => this.props.logout()}
             history={this.props.history}
+            cart={this.props.cart}
           />
         </header>
         <section id="cart_items">

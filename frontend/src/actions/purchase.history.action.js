@@ -15,18 +15,20 @@ export const setPage = (page) => ({
   page,
 });
 export const getPurchaseHitory = () => async (dispatch, getState) => {
+  const page = getState().purchaseReducers.purchaseHistory.page;
+  // console.log(page);
   let res = null;
   let user = storeConfig.getUser();
   if (user === null) return;
   try {
-    res = await axiosClient.get("/bill/list/" + user.id);
+    res = await axiosClient.get(`/bill/list/${user.id}/${page}`);
     // console.log(res)
   } catch (err) {
     console.log(err);
     return;
   }
   dispatch(setPurchaseHistory(res.data));
-  dispatch(setTotalPage(1));
+  dispatch(setTotalPage(res.totalPage));
 };
 export const deleteBill = (id) => async (dispatch, getState) => {
   try {

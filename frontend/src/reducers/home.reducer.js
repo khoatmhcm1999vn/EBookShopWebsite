@@ -1,7 +1,15 @@
 import { homeTypes, sortTypes } from "../constants/action.types";
 import { combineReducers } from "redux";
 
-const home = (state = { top_product: [] }, action) => {
+const home = (
+  state = {
+    top_product: [],
+    countProductBill: 0,
+    countProductStock: 0,
+    countBill: 0,
+  },
+  action
+) => {
   switch (action.type) {
     case homeTypes.SET_TOP_PRODUCT: {
       return {
@@ -9,6 +17,28 @@ const home = (state = { top_product: [] }, action) => {
         top_product: action.data,
       };
     }
+
+    case homeTypes.SET_COUNT_PRODUCT_BILL: {
+      return {
+        ...state,
+        countProductBill: action.data,
+      };
+    }
+
+    case homeTypes.SET_COUNT_PRODUCT_STOCK: {
+      return {
+        ...state,
+        countProductStock: action.data,
+      };
+    }
+
+    case homeTypes.SET_COUNT_BILL: {
+      return {
+        ...state,
+        countBill: action.data,
+      };
+    }
+
     default:
       return state;
   }

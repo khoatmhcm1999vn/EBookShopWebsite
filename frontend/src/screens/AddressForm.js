@@ -4,15 +4,15 @@ import { addAddress } from "../actions/user.action";
 import { saveShippingAddress } from "../actions/cart.action";
 // import { MaterialButton, MaterialInput } from "../../components/MaterialUI";
 import SearchBar from "../components/searchbar/SearchBar";
+
 /**
  * @author
  * @function AddressForm
  **/
+
 const AddressForm = (props) => {
   const { initialData } = props;
-  // const [pinCode, setPinCode] = useState(
-  //   initialData ? initialData.pinCode : ""
-  // );
+
   const [address, setAddress] = useState(
     initialData ? initialData.address : ""
   );
@@ -21,14 +21,14 @@ const AddressForm = (props) => {
     initialData ? initialData.district : ""
   );
   const [city, setCity] = useState(initialData ? initialData.city : "");
-  const [code, setCode] = useState(initialData ? initialData.code : "");
+  // const [code, setCode] = useState(initialData ? initialData.code : "");
 
   const dispatch = useDispatch();
   const userAddr = useSelector((state) => state.userReducers.user);
   const [submitFlag, setSubmitFlag] = useState(false);
   const [id, setId] = useState(initialData ? initialData._id : "");
 
-  // console.log(id);
+  console.log(props.initialData);
 
   const inputContainer = {
     width: "100%",
@@ -41,10 +41,10 @@ const AddressForm = (props) => {
         ward,
         district,
         city,
-        code,
+        // code,
       },
     };
-    // console.log(payload);
+    console.log(payload);
     if (id) {
       payload.address._id = id;
       dispatch(saveShippingAddress(payload.address._id));
@@ -52,11 +52,12 @@ const AddressForm = (props) => {
     dispatch(addAddress(payload));
     setSubmitFlag(true);
   };
+  // console.log(submitFlag);
 
   useEffect(() => {
-    console.log("addressCount", userAddr.address);
+    console.log("addressCount", initialData);
     if (submitFlag) {
-      console.log("where are we", userAddr);
+      // console.log("where are we", userAddr);
       let _address = {};
       if (id) {
         _address = {
@@ -65,15 +66,15 @@ const AddressForm = (props) => {
           ward,
           district,
           city,
-          code,
+          // code,
         };
       } else {
-        _address = userAddr.address.slice(userAddr.address.length - 1)[0];
+        _address = initialData;
       }
-      // console.log(_address);
+      console.log(_address);
       props.onSubmitForm(_address);
     }
-  }, [userAddr.address]);
+  }, [initialData, submitFlag, userAddr.address]);
 
   const renderAddressForm = () => {
     return (
@@ -156,7 +157,7 @@ const AddressForm = (props) => {
             />
           </div>
         </div>
-        <div className="flexRow">
+        {/* <div className="flexRow">
           <div style={inputContainer}>
             <label
               style={{
@@ -173,7 +174,7 @@ const AddressForm = (props) => {
               onChange={(e) => setCode(e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
         <div className="flexRow">
           <button
             title="SAVE AND DELIVER HERE"
@@ -187,6 +188,23 @@ const AddressForm = (props) => {
             Save and Delivery here!
           </button>
         </div>
+
+        {/* {!props.newAddress && (
+          <div className="flexRow">
+            <button
+              title="Cancel"
+              className="btn btn-primary"
+              // onClick={props.onCancel}
+              style={{
+                width: "250px",
+                margin: "20px 0",
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        )} */}
+
         {props.deleteAddress && (
           <div className="flexRow">
             <button
@@ -205,25 +223,26 @@ const AddressForm = (props) => {
   if (props.withoutLayout) {
     return <div>{renderAddressForm()}</div>;
   }
-  return (
-    <div className="checkoutStep" style={{ background: "#f5faff" }}>
-      <div className={`checkoutHeader`}>
-        <div>
-          <span className="stepNumber">+</span>
-          <span className="stepTitle">{"ADD NEW ADDRESS"}</span>
-        </div>
-      </div>
-      <div
-        style={{
-          padding: "0 60px",
-          paddingBottom: "20px",
-          boxSizing: "border-box",
-        }}
-      >
-        {renderAddressForm()}
-      </div>
-    </div>
-  );
+
+  // return (
+  //   <div className="checkoutStep" style={{ background: "#f5faff" }}>
+  //     <div className={`checkoutHeader`}>
+  //       <div>
+  //         <span className="stepNumber">+</span>
+  //         <span className="stepTitle">{"ADD NEW ADDRESS"}</span>
+  //       </div>
+  //     </div>
+  //     <div
+  //       style={{
+  //         padding: "0 60px",
+  //         paddingBottom: "20px",
+  //         boxSizing: "border-box",
+  //       }}
+  //     >
+  //       {renderAddressForm()}
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default AddressForm;

@@ -86,6 +86,7 @@ const FooterTop = () => {
             </div>
           </div>
           {currentUser && !currentUser.user.is_admin ? <Chatbox /> : null}
+          {/* <Chatbox /> */}
           <div className="col-sm-3">
             <div className="address">
               <img src="/img/home/map.png" alt="" />

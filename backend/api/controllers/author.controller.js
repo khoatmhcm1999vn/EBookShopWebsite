@@ -71,3 +71,12 @@ export const getAuthor = (req, res) => {
     res.status(200).json({ data: docs });
   });
 };
+
+export const getAuthorUser = (req, res) => {
+  Author.find({ isEnabled: true }, (err, docs) => {
+    if (err) {
+      console.log(err);
+    }
+    res.status(200).json({ data: docs });
+  });
+};

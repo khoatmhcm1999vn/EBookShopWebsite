@@ -63,6 +63,7 @@ class HeaderMiddle extends Component {
     }
   };
   render() {
+    // console.log(this.props.cart.length);
     return (
       <div className="header-middle">
         <div className="container">
@@ -149,7 +150,11 @@ class HeaderMiddle extends Component {
                   </li>
                   <li>
                     <Link to={"/cart"}>
-                      <i className="fa fa-shopping-cart" /> Cart
+                      {/* <i className="fa fa-shopping-cart" /> Cart */}
+                      <i className="fa fa-shopping-cart"></i>&nbsp;
+                      <small className="cart-badge">
+                        {this.props.cart.length}
+                      </small>
                     </Link>
                   </li>
                   {this.handlelogin()}

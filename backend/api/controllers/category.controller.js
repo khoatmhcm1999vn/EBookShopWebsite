@@ -10,6 +10,15 @@ export const getCategory = (req, res) => {
   });
 };
 
+export const getCategoryUser = (req, res) => {
+  Category.find({ isEnabled: true }, (err, docs) => {
+    if (err) {
+      console.log(err);
+    }
+    res.status(200).json({ data: docs });
+  });
+};
+
 export const getAll = async (req, res) => {
   if (typeof req.params.page === "undefined") {
     res.status(402).json({ msg: "Data invalid" });

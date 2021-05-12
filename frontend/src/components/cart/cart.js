@@ -19,6 +19,7 @@ class Cart extends Component {
             islogin={this.props.islogin}
             logout={() => this.props.logout()}
             history={this.props.history}
+            cart={this.props.cart}
           />
         </header>
         <ContentCart
@@ -30,10 +31,38 @@ class Cart extends Component {
           deteleProductInCart={(id_product) =>
             this.props.deteleProductInCart(id_product)
           }
-          payment={(city, district, ward, address, phone, name) =>
-            this.props.payment(city, district, ward, address, phone, name)
+          city={this.props.city}
+          getDistrict={(code) => this.props.getDistrict(code)}
+          district={this.props.district}
+          getWard={(codecity, codedistrict) =>
+            this.props.getWard(codecity, codedistrict)
+          }
+          ward={this.props.ward}
+          payment={(
+            city,
+            district,
+            ward,
+            address,
+            phone,
+            name,
+            cart,
+            email,
+            paymentResult
+          ) =>
+            this.props.payment(
+              city,
+              district,
+              ward,
+              address,
+              phone,
+              name,
+              cart,
+              email,
+              paymentResult
+            )
           }
           ispay={this.props.ispay}
+          cartPayment={this.props.cartPayment}
         />
         <footer id="footer">
           <FooterTop />

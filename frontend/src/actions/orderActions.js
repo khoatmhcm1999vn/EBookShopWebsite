@@ -38,6 +38,9 @@ import AxiosClient from "../config/axiosClient";
 export const createOrder = (order) => async (dispatch, getState) => {
   dispatch({ type: ORDER_CREATE_REQUEST, payload: order });
   let res;
+
+  // console.log(order);
+
   try {
     // const {
     //   userSignin: { userInfo },

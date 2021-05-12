@@ -18,6 +18,13 @@ import Publisher from "../models/publisher.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import fs from "fs";
+import expressAsyncHandler from "express-async-handler";
+
+import excel from "exceljs";
+import excelToJson from "convert-excel-to-json";
+import mongoose from "mongoose";
+
+import { generateToken } from "../utils/utils.js";
 
 const uploadImg = async (path) => {
   let res;
@@ -38,7 +45,7 @@ export const addBook = async (req, res) => {
     typeof req.body.quantity === "undefined" ||
     typeof req.body.published === "undefined" ||
     typeof req.body.price === "undefined" ||
-    typeof req.body.release_date === "undefined" ||
+    typeof req.body.createdAt === "undefined" ||
     typeof req.body.describe === "undefined" ||
     typeof req.body.id_nsx === "undefined" ||
     typeof req.body.id_author === "undefined"
@@ -54,7 +61,7 @@ export const addBook = async (req, res) => {
     price,
     quantity,
     published,
-    release_date,
+    createdAt,
     describe,
     id_nsx,
     id_author,
@@ -73,7 +80,7 @@ export const addBook = async (req, res) => {
     price: price,
     quantity,
     published,
-    release_date: release_date,
+    createdAt: createdAt,
     img: urlImg,
     describe: describe,
     id_nsx: id_nsx,
@@ -103,7 +110,7 @@ export const updateBook = async (req, res) => {
     typeof req.body.quantity === "undefined" ||
     typeof req.body.published === "undefined" ||
     typeof req.body.price === "undefined" ||
-    typeof req.body.release_date === "undefined" ||
+    typeof req.body.createdAt === "undefined" ||
     typeof req.body.describe === "undefined" ||
     typeof req.body.id_nsx === "undefined" ||
     typeof req.body.id_author === "undefined"
@@ -120,7 +127,7 @@ export const updateBook = async (req, res) => {
     price,
     quantity,
     published,
-    release_date,
+    createdAt,
     describe,
     id_nsx,
     id_author,
@@ -166,7 +173,7 @@ export const updateBook = async (req, res) => {
     bookFind.price = parseFloat(price);
     bookFind.quantity = parseFloat(quantity);
     bookFind.published = published;
-    bookFind.release_date = release_date;
+    bookFind.createdAt = createdAt;
     bookFind.describe = describe;
     bookFind.id_nsx = id_nsx;
     bookFind.id_author = id_author;
@@ -192,7 +199,7 @@ export const updateBook = async (req, res) => {
     bookFind.price = parseFloat(price);
     bookFind.quantity = parseFloat(quantity);
     bookFind.published = published;
-    bookFind.release_date = release_date;
+    bookFind.createdAt = createdAt;
     bookFind.describe = describe;
     bookFind.id_nsx = id_nsx;
     bookFind.id_author = id_author;
@@ -214,23 +221,21 @@ export const updateBook = async (req, res) => {
 
 export const deletebook = async (req, res) => {
   if (typeof req.params.id === "undefined") {
-    res
-      .status(422)
-      .json({ result: "error", message: " 👎 Dữ liệu Book bị lỗi!" });
+    res.json({ result: "error", message: "👎 Dữ liệu Book bị lỗi!" });
     return;
   }
+
   let bookFind;
   try {
     bookFind = await Book.findById(req.params.id);
   } catch (err) {
     console.log(err);
-    res
-      .status(500)
-      .json({ result: "error", message: " 👎 Không tìm thấy Book!" });
+    res.json({ result: "error", message: "👎 Không tìm thấy Book!" });
     return;
   }
+
   bookFind.remove();
-  res.status(200).json({ result: "success", message: " 👍 Xóa thành công!" });
+  res.json({ result: "success", message: "👍 Xóa thành công!" });
 };
 
 export const deactivateBook = async (req, res) => {
@@ -668,6 +673,7 @@ export const getAllUser = async (req, res) => {
     res.status(402).json({ msg: "Data invalid" });
     return;
   }
+
   let count = null;
   try {
     count = await UserAddress.count({});
@@ -709,6 +715,7 @@ export const getAllUser = async (req, res) => {
     res.status(200).json({ data: [], msg: "Invalid page", totalPage });
     return;
   }
+
   UserAddress.find({}, { __v: 0 })
     .skip(9 * (parseInt(page) - 1))
     .limit(9)
@@ -736,11 +743,10 @@ export const addUser = async (req, res) => {
     typeof req.body.phone_number === "undefined" ||
     typeof req.body.is_admin === "undefined"
   ) {
-    res
-      .status(422)
-      .json({ success: false, message: " 👎 Dữ liệu User bị lỗi!" });
+    res.json({ success: false, message: "👎 Dữ liệu User bị lỗi!" });
     return;
   }
+
   let {
     email,
     password,
@@ -750,22 +756,21 @@ export const addUser = async (req, res) => {
     phone_number,
     is_admin,
   } = req.body;
+
   let userFind = null;
   try {
     userFind = await User.find({ email: email });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: " 👎 Không tìm thấy User!" });
+    res.json({ success: false, message: "👎 User đã tồn tại!" });
     // console.log(1);
     return;
   }
+
   if (userFind.length > 0) {
-    res
-      .status(409)
-      .json({ success: false, message: " 👎 Email nhập đã tồn tại!" });
+    res.json({ success: false, message: "👎 Email nhập đã tồn tại!" });
     return;
   }
+
   password = bcrypt.hashSync(password, 10);
   const newUser = new User({
     email: email,
@@ -777,17 +782,19 @@ export const addUser = async (req, res) => {
     is_verify: true,
     is_admin: is_admin,
   });
+
   try {
     await newUser.save();
   } catch (err) {
     console.log(err);
-    res.status(500).json({
+    res.json({
       success: false,
-      message: " 👎 Có sự cố khi lưu vào trong database!",
+      message: "👎 Có sự cố khi lưu vào trong database!",
     });
     return;
   }
-  res.status(201).json({ success: true, message: " 👍 Thêm mới thành công!" });
+
+  res.status(201).json({ success: true, message: "👍 Thêm mới thành công!" });
 };
 
 export const updateUser = async (req, res) => {
@@ -799,11 +806,10 @@ export const updateUser = async (req, res) => {
     typeof req.body.phone_number === "undefined" ||
     typeof req.body.is_admin === "undefined"
   ) {
-    res
-      .status(422)
-      .json({ success: false, message: " 👎 Dữ liệu User bị lỗi!" });
+    res.json({ success: false, message: "👎 Dữ liệu User bị lỗi!" });
     return;
   }
+
   let {
     email,
     firstName,
@@ -812,38 +818,39 @@ export const updateUser = async (req, res) => {
     phone_number,
     is_admin,
   } = req.body;
+
   let userFind;
   try {
     userFind = await User.findOne({ email: email });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: " 👎 Không tìm thấy User!" });
+    res.json({ success: false, message: "👎 User đã tồn tại!" });
     return;
   }
+
   if (userFind === null) {
-    res
-      .status(422)
-      .json({ success: false, message: " 👎 Không tìm thấy User!" });
+    res.json({ success: false, message: "👎 Không tìm thấy User!" });
     return;
   }
+
   userFind.firstName = firstName;
   userFind.lastName = lastName;
   // userFind.address = address;
   userFind.phone_number = phone_number;
   userFind.is_admin = is_admin;
+
   try {
     await userFind.save();
   } catch (err) {
-    res.status(500).json({
+    res.json({
       success: false,
-      message: " Có sự cố xảy ra khi lưu vào database",
+      message: "👎 Có sự cố xảy ra khi lưu vào database",
     });
     return;
   }
+
   res.status(200).json({
     success: true,
-    message: " 👍 Cập nhật thành công!",
+    message: "👍 Cập nhật thành công!",
     user: {
       email: userFind.email,
       firstName: userFind.firstName,
@@ -857,44 +864,45 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   if (typeof req.body.email === "undefined") {
-    res
-      .status(422)
-      .json({ result: "error", message: " 👎 Email đã nhập không tồn tại!" });
+    res.json({ result: "error", message: "👎 Email đã nhập không tồn tại!" });
     return;
   }
+
   let userFind;
+
   try {
     userFind = await User.findOne({ email: req.body.email });
   } catch (err) {
-    res
-      .status(500)
-      .json({ result: "error", message: " 👎 Không tìm thấy User!" });
+    res.json({ result: "error", message: "👎 Không tìm thấy User!" });
     return;
   }
+
   userFind.remove();
-  res.status(200).json({ result: "success", message: " 👍 Xóa thành công!" });
+
+  res.status(200).json({ result: "success", message: "👍 Xóa thành công!" });
 };
 
 export const deactivateUser = async (req, res) => {
   if (typeof req.body.email === "undefined") {
-    res
-      .status(422)
-      .json({ success: false, message: " 👎 Email đã nhập không tồn tại!" });
+    res.json({ success: false, message: "👎 Email đã nhập không tồn tại!" });
     return;
   }
+
   let userFind;
+
   try {
     userFind = await User.findOne({ email: req.body.email });
   } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: " 👎 Không tìm thấy User!" });
+    res.json({ success: false, message: "👎 Không tìm thấy User!" });
     return;
   }
+
   if (userFind.is_verify === true) userFind.is_verify = false;
   else userFind.is_verify = true;
+
   await userFind.save();
-  res.status(200).json({ success: true, message: " 👍 Thành công!" });
+
+  res.status(200).json({ success: true, message: "👍 Thành công!" });
 };
 
 export const login = async (req, res) => {
@@ -902,59 +910,55 @@ export const login = async (req, res) => {
     typeof req.body.email === "undefined" ||
     typeof req.body.password == "undefined"
   ) {
-    res
-      .status(402)
-      .json({ result: "error", message: " 👎 Sai email hoặc mật khẩu!" });
+    res.json({ result: "error", message: "👎 Sai email hoặc mật khẩu!" });
     return;
   }
+
   let { email, password } = req.body;
   let userFind = null;
   try {
     userFind = await User.findOne({ email: email });
   } catch (err) {
-    res
-      .status(500)
-      .json({ result: "error", message: " 👎 User không tồn tại!" });
+    res.json({ result: "error", message: "👎 User không tồn tại!" });
     return;
   }
+
   if (userFind == null) {
-    res
-      .status(422)
-      .json({ result: "error", message: " 👎 User không tồn tại!" });
+    res.json({ result: "error", message: "👎 User không tồn tại!" });
     return;
   }
 
   if (!userFind.is_verify) {
-    res
-      .status(401)
-      .json({ result: "error", message: " 👎 User chưa xác thực!" });
+    res.json({ result: "error", message: "👎 User chưa xác thực!" });
     return;
   }
 
   if (!bcrypt.compareSync(password, userFind.password)) {
-    res
-      .status(422)
-      .json({ result: "error", message: " 👎 Mật khẩu không đúng!" });
+    res.json({ result: "error", message: "👎 Mật khẩu không đúng!" });
     return;
   }
-  let token = jwt.sign(
-    {
-      _id: userFind._id,
-      email: email,
-      is_admin: userFind.is_admin,
-      iat: Math.floor(Date.now() / 1000) - 60 * 30,
-    },
-    process.env.JWT_SECRET
-  );
+
+  let token = generateToken(userFind);
+
+  // let token = jwt.sign(
+  //   {
+  //     _id: userFind._id,
+  //     email: email,
+  //     is_admin: userFind.is_admin,
+  //     iat: Math.floor(Date.now() / 1000) - 60 * 30,
+  //   },
+  //   process.env.JWT_SECRET
+  // );
+
   res.status(200).json({
     result: "success",
-    message: " 👍 Đăng nhập thành công!",
+    message: "👍 Đăng nhập thành công!",
     token: token,
     user: {
       email: userFind.email,
       firstName: userFind.firstName,
       lastName: userFind.lastName,
-      address: userFind.address,
+      // address: userFind.address,
       phone_number: userFind.phone_number,
       id: userFind._id,
       is_admin: userFind.is_admin,
@@ -964,13 +968,16 @@ export const login = async (req, res) => {
 
 export const meController = (req, res) => {
   const authorization = req.headers.authorization;
+
   if (!authorization) {
     return res.json({
       success: false,
       message: "Unauthorization",
     });
   }
+
   // const token = authorization.split(" ")[1];
+
   const token = authorization;
   if (!token || token === "") {
     return res.json({
@@ -1003,3 +1010,324 @@ export const meController = (req, res) => {
     });
   }
 };
+
+export const excelController = expressAsyncHandler(
+  async (req, res, next, error) => {
+    try {
+      if (req.file == undefined) {
+        return res.send({
+          success: false,
+          message: "👍 Please upload an excel file!!",
+        });
+        // ("Please upload an excel file!");
+      }
+
+      let filePath = req.file.path;
+      console.log(filePath);
+      // -> Read Excel File to Json Data
+
+      const excelData = excelToJson({
+        sourceFile: filePath,
+        sheets: [
+          {
+            // Excel Sheet Name
+            name: "Authors",
+            // Header Row -> be skipped and will not be present at our result object.
+            header: {
+              rows: 1,
+            },
+            // Mapping columns to keys
+            columnToKey: {
+              A: "_id",
+              B: "name",
+              C: "isEnabled",
+              D: "image",
+            },
+          },
+        ],
+      });
+
+      // -> Log Excel Data to Console
+      // console.log(excelData);
+
+      function convertToObjectId(id) {
+        const id_obj = mongoose.Types.ObjectId(id);
+        return id_obj;
+      }
+
+      function stringToBoolean(string) {
+        switch (string.toLowerCase().trim()) {
+          case "true":
+          case "yes":
+          case "1":
+            return true;
+          case "false":
+          case "no":
+          case "0":
+          case null:
+            return false;
+          default:
+            return Boolean(string);
+        }
+      }
+
+      // const id = stringToBoolean(strObj.string);
+      // console.log(id);
+      // if (typeof id === "boolean") {
+      //   // variable is a boolean
+      //   console.log(true);
+      // }
+      // console.log(ObjectId.isValid(id));
+
+      excelData.Authors.map((e, i) => {
+        e._id = convertToObjectId(e._id);
+        e.isEnabled = stringToBoolean(e.isEnabled);
+      });
+      // console.log(excelData);
+
+      await Author.insertMany(excelData.Authors, function (err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          // console.log("Number of documents inserted: " + data);
+          res.status(201).json({
+            success: true,
+            message: "👍 Import thành công!",
+          });
+        }
+      });
+      fs.unlinkSync(filePath);
+
+      //   Author.bulkCreate(tutorials)
+      //     .then(() => {
+      //       res.status(200).send({
+      //         message:
+      //           "Uploaded the file successfully: " + req.file.originalname,
+      //       });
+      //     })
+      //     .catch((error) => {
+      //       res.status(500).send({
+      //         message: "Fail to import data into database!",
+      //         error: error.message,
+      //       });
+      //     });
+      // });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Could not upload the file: " + req.file.originalname,
+      });
+    }
+  }
+);
+
+export const excelDownloadController = expressAsyncHandler(async (req, res) => {
+  const authors = await Author.find({});
+  // console.log(authors);
+
+  let workbook = new excel.Workbook(); //creating workbook
+  let worksheet = workbook.addWorksheet("Authors"); //creating worksheet
+
+  //  WorkSheet Header
+  worksheet.columns = [
+    { header: "Id", key: "_id", width: 10 },
+    { header: "Name", key: "name", width: 30 },
+    // { header: "Address", key: "address", width: 30 },
+    { header: "Published", key: "isEnabled", width: 10 },
+    { header: "Image", key: "image", width: 20 },
+  ];
+
+  // Add Array Rows
+  worksheet.addRows(authors);
+
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  res.setHeader("Content-Disposition", "attachment; filename=" + "author.xlsx");
+
+  return workbook.xlsx.write(res).then(function () {
+    console.log("file saved!");
+    res.status(200).end();
+  });
+
+  // Write to File
+  // workbook.xlsx.writeFile("author.xlsx").then(function () {
+  //   console.log("file saved!");
+  //   res.json({ msg: "success" });
+  //   return;
+  // });
+});
+
+export const excelBookController = expressAsyncHandler(
+  async (req, res, next, error) => {
+    try {
+      if (req.file == undefined) {
+        return res.send({
+          success: false,
+          message: "👍 Please upload an excel file!!",
+        });
+        // ("Please upload an excel file!");
+      }
+
+      let filePath = req.file.path;
+      console.log(filePath);
+      // -> Read Excel File to Json Data
+
+      const excelData = excelToJson({
+        sourceFile: filePath,
+        sheets: [
+          {
+            // Excel Sheet Name
+            name: "Books",
+            // Header Row -> be skipped and will not be present at our result object.
+            header: {
+              rows: 1,
+            },
+            // Mapping columns to keys
+            columnToKey: {
+              A: "_id",
+              B: "name",
+              C: "describe",
+              D: "price",
+              E: "quantity",
+              F: "published",
+              G: "img",
+              H: "id_category",
+              I: "id_author",
+              J: "id_nsx",
+            },
+          },
+        ],
+      });
+
+      // -> Log Excel Data to Console
+      // console.log(excelData);
+
+      function convertToObjectId(id) {
+        const id_obj = mongoose.Types.ObjectId(id);
+        return id_obj;
+      }
+
+      function stringToBoolean(string) {
+        switch (string.toLowerCase().trim()) {
+          case "true":
+          case "yes":
+          case "1":
+            return true;
+          case "false":
+          case "no":
+          case "0":
+          case null:
+            return false;
+          default:
+            return Boolean(string);
+        }
+      }
+
+      // const id = stringToBoolean(strObj.string);
+      // console.log(id);
+      // if (typeof id === "boolean") {
+      //   // variable is a boolean
+      //   console.log(true);
+      // }
+      // console.log(ObjectId.isValid(id));
+
+      excelData.Books.map((e, i) => {
+        // e._id = convertToObjectId(e._id);
+        e._id = e._id.slice(1, -1);
+        // console.log(e._id);
+
+        // if (typeof e._id === "string") {
+        //   console.log("abc");
+        // }
+        // console.log(typeof e._id);
+
+        // console.log(e.id_category);
+        // console.log(mongoose.Types.ObjectId.isValid(e._id));
+
+        e.id_category = convertToObjectId(e.id_category);
+        e.id_author = convertToObjectId(e.id_author);
+        e.id_nsx = convertToObjectId(e.id_nsx);
+        e.published = stringToBoolean(e.published);
+      });
+
+      // console.log(excelData);
+      // fs.unlinkSync(filePath);
+      // return res.json({ success: false, message: "fail" });
+
+      await Book.insertMany(excelData.Books, function (err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          // console.log("Number of documents inserted: " + data);
+          res.status(201).json({
+            success: true,
+            message: "👍 Import thành công!",
+          });
+        }
+      });
+      fs.unlinkSync(filePath);
+
+      //   Author.bulkCreate(tutorials)
+      //     .then(() => {
+      //       res.status(200).send({
+      //         message:
+      //           "Uploaded the file successfully: " + req.file.originalname,
+      //       });
+      //     })
+      //     .catch((error) => {
+      //       res.status(500).send({
+      //         message: "Fail to import data into database!",
+      //         error: error.message,
+      //       });
+      //     });
+      // });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Could not upload the file: " + req.file.originalname,
+      });
+    }
+  }
+);
+
+export const excelDownloadBookController = expressAsyncHandler(
+  async (req, res) => {
+    const books = await Book.find({}).select(
+      "name describe price quantity published img id_category id_author id_nsx "
+    );
+    // console.log(books);
+
+    let workbook = new excel.Workbook(); //creating workbook
+    let worksheet = workbook.addWorksheet("Books"); //creating worksheet
+
+    //  WorkSheet Header
+    worksheet.columns = [
+      { header: "Id", key: "_id", width: 40 },
+      { header: "Name", key: "name", width: 40 },
+      { header: "Description", key: "describe", width: 60 },
+      { header: "Price", key: "price", width: 10 },
+      { header: "Quantity", key: "quantity", width: 10 },
+      { header: "Published", key: "published", width: 10 },
+      { header: "Image", key: "img", width: 50 },
+      { header: "Id Category", key: "id_category", width: 40 },
+      { header: "Id Author", key: "id_author", width: 40 },
+      { header: "Id Publisher", key: "id_nsx", width: 40 },
+    ];
+
+    // Add Array Rows
+    worksheet.addRows(books);
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", "attachment; filename=" + "book.xlsx");
+
+    return workbook.xlsx.write(res).then(function () {
+      console.log("File saved!");
+      res.status(200).end();
+    });
+  }
+);

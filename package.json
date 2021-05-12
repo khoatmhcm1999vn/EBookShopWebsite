@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch backend --exec node --experimental-modules backend/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "product": "NODE_ENV=production nodemon --watch backend --exec node --experimental-modules backend/server.js",
+    "heroku-postbuild": "YARN_PRODUCTION=false cd client && yarn install"
   },
   "repository": {
     "type": "git",
@@ -24,8 +26,11 @@
     "body-parser": "^1.18.2",
     "braintree": "^3.3.0",
     "cloudinary": "^1.11.0",
+    "colors": "^1.4.0",
+    "convert-excel-to-json": "^1.7.0",
     "cors": "^2.8.4",
     "dotenv": "^8.2.0",
+    "exceljs": "^4.2.1",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "faker": "^5.5.3",
@@ -37,6 +42,7 @@
     "nodemailer": "^4.6.4",
     "nodemailer-smtp-transport": "^2.7.4",
     "randomstring": "^1.1.5",
+    "read-excel-file": "^5.1.0",
     "socket.io": "^4.0.1"
   },
   "devDependencies": {

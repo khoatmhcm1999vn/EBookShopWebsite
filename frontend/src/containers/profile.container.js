@@ -93,6 +93,7 @@ class ProfileContainer extends Component {
             }
             notiupdatePassword={this.state.notiupdatePassword}
             resetUpdatePassword={() => this.resetUpdatePassword()}
+            cart={this.props.cart}
           />
         </div>
       );
@@ -104,6 +105,7 @@ class ProfileContainer extends Component {
 const mapStateToProps = (state) => ({
   islogin: state.userReducers.user.islogin,
   isupdate: state.profileReducers.profile.isupdate,
+  cart: state.cart.data,
 });
 
 const mapDispatchToProps = (dispatch) => {

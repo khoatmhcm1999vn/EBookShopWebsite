@@ -4,9 +4,9 @@ import {
   generateToken,
   processPayment,
 } from "../controllers/braintree.controller.js";
-import { requireSignin } from "../middleware/index.js";
+// import { requireSignin } from "../middleware/index.js";
 
-braintreeRouter.get("/braintree/getToken", requireSignin, generateToken);
-braintreeRouter.post("/braintree/payment", requireSignin, processPayment);
+braintreeRouter.get("/braintree/getToken", generateToken);
+braintreeRouter.post("/braintree/payment", processPayment);
 
 export default braintreeRouter;

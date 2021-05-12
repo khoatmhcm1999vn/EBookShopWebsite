@@ -7,7 +7,8 @@ import * as bookActions from "../actions/book.action";
 import NavbarContainer from "./navbar.container";
 import Slider from "./slider.container";
 import * as userActions from "../actions/user.action";
-import Bill from "../components/bill/bill";
+// import Bill from "../components/bill/bill";
+import BillScreen from "../screens/BillScreen/BillScreen";
 
 class BillContainer extends Component {
   constructor() {
@@ -38,7 +39,7 @@ class BillContainer extends Component {
       <section id="container" className="">
         <NavbarContainer />
         <Slider />
-        <Bill
+        <BillScreen
           page={this.props.page}
           totalpage={this.props.totalpage}
           bill={this.props.bill}

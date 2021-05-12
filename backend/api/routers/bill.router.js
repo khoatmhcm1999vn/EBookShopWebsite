@@ -17,6 +17,9 @@ import {
   statisticaRevenueQuauter,
   getBillNoVerify,
   getBillVerify,
+  countAllProductBill,
+  countAllProduct,
+  countAllBill,
 } from "../controllers/bill.controller.js";
 import { requireSignin, adminMiddleware } from "../middleware/index.js";
 
@@ -34,7 +37,7 @@ const transporter = nodemailer.createTransport(
   })
 );
 // import { transporter } from "../utils/nodemailer.js";
-import { payOrderEmailTemplate } from "../utils/utils.js";
+import { payOrderEmailTemplateLogin } from "../utils/utils.js";
 
 import mongoose from "mongoose";
 import mongodb from "mongodb";
@@ -43,6 +46,7 @@ import Bill from "../models/bill.model.js";
 import User from "../models/user.model.js";
 import Book from "../models/book.model.js";
 import Cart from "../models/cart.model.js";
+import UserAddress from "../models/address.model.js";
 
 const billRouter = express.Router();
 billRouter.get(
@@ -96,18 +100,13 @@ billRouter.post(
   "/bill/create",
   requireSignin,
   expressAsyncHandler(async (req, res) => {
-    const {
-      products,
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
-      shippingAddress,
-      paymentMethod,
-    } = req.body;
+    const { products, totalPrice, shippingAddress, paymentMethod } = req.body;
+
     let cartFind = null;
+
     if (products.length === 0)
       res.status(400).send({ message: "Cart is empty" });
+
     try {
       cartFind = await Cart.findOne({ id_user: req.user._id });
       // console.log(cartFind);
@@ -115,15 +114,16 @@ billRouter.post(
       console.log("error ", err);
       res
         .status(500)
-        .json({ success: false, message: " 👎 Cart không tồn tại!" });
+        .json({ success: false, message: "👎 Cart không tồn tại!" });
       return;
     }
     if (cartFind === null) {
       res
         .status(404)
-        .json({ success: false, message: " 👎 Cart không tồn tại!" });
+        .json({ success: false, message: "👎 Cart không tồn tại!" });
       return;
     }
+
     // const token = randomstring.generate();
     // let sendEmail = await sendMailConfirmPayment(email, token);
     // if (!sendEmail) {
@@ -132,43 +132,47 @@ billRouter.post(
     //     .json({ success: false, message: " 👎 Có lỗi xảy ra khi gửi email!" });
     //   return;
     // }
+
     const new_bill = new Bill({
       user: req.user._id,
       products: products,
       addressId: shippingAddress,
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
+      // itemsPrice,
+      // shippingPrice,
+      // taxPrice,
       totalPrice,
       paymentMethod,
     });
+
     console.log(new_bill);
+
     try {
       await cartFind.remove();
     } catch (err) {
       res.status(500).json({
         success: false,
-        message: " 👎 Có lỗi xảy ra khi lưu trong database!",
+        message: "👎 Có lỗi xảy ra khi lưu trong database!",
       });
       console.log("Cart remove fail");
       return;
     }
+
     let createdOrder;
+
     try {
-      // res.json({ msg: "fail" });
-      // return;
       createdOrder = await new_bill.save();
     } catch (err) {
       res.status(500).json({
         success: false,
-        message: " 👎 Có lỗi xảy ra khi lưu trong database!",
+        message: "👎 Có lỗi xảy ra khi lưu trong database!",
       });
       console.log("Save bill fail");
       return;
     }
+
     res.status(201).json({
       success: true,
-      message: " 👍 Thêm mới thành công!",
+      message: "👍 Thêm mới thành công!",
       order: createdOrder,
     });
   })
@@ -188,7 +192,7 @@ billRouter.get(
         $lookup: {
           from: "useraddresses",
           localField: "addressId",
-          foreignField: "address._id",
+          foreignField: "_id",
           as: "bills",
         },
       },
@@ -219,7 +223,7 @@ billRouter.put(
         $lookup: {
           from: "useraddresses",
           localField: "addressId",
-          foreignField: "address._id",
+          foreignField: "_id",
           as: "bills",
         },
       },
@@ -230,7 +234,7 @@ billRouter.put(
     });
     // console.log(req.body);
     const firstOrder = order[0];
-    const firstAddress = firstOrder.bills[0].address[0];
+    // const firstAddress = firstOrder.bills[0].address;
     const fullName = orderFind.user.firstName + " " + orderFind.user.lastName;
     // console.log(orderFind);
 
@@ -252,7 +256,7 @@ billRouter.put(
         console.log(err);
         res.status(500).json({
           success: false,
-          message: " 👎 Có sự cố xảy ra khi lưu vào trong database!",
+          message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
         });
         return;
       }
@@ -266,7 +270,7 @@ billRouter.put(
           to: `${fullName} <${orderFind.user.email}>`,
           // to: orderFind.user.email,
           subject: `New order ${orderFind._id}`,
-          html: payOrderEmailTemplate(orderFind, firstAddress),
+          html: payOrderEmailTemplateLogin(orderFind, firstOrder.bills[0]),
         },
         (error, body) => {
           if (error) {
@@ -286,7 +290,7 @@ billRouter.put(
 );
 
 billRouter.get("/bill/verify/:token", verifyPayment);
-billRouter.get("/bill/list/:id_user", requireSignin, getBillByIDUser);
+billRouter.get("/bill/list/:id_user/:page", requireSignin, getBillByIDUser);
 billRouter.get("/bill/delete/:id", requireSignin, deleteBill);
 billRouter.get(
   "/bill/deactivate/:id",
@@ -301,6 +305,25 @@ billRouter.put(
   deliverBill
 );
 
+billRouter.post(
+  "/bill/count-all-product-bill",
+  requireSignin,
+  adminMiddleware,
+  countAllProductBill
+);
+billRouter.post(
+  "/bill/count-all-product",
+  requireSignin,
+  adminMiddleware,
+  countAllProduct
+);
+billRouter.post(
+  "/bill/count-all-bill",
+  requireSignin,
+  adminMiddleware,
+  countAllBill
+);
+
 billRouter.post("/bill/top/", requireSignin, adminMiddleware, statisticalTop10);
 billRouter.post(
   "/api/bills/summary",
@@ -308,6 +331,7 @@ billRouter.post(
   adminMiddleware,
   expressAsyncHandler(async (req, res) => {
     const orders = await Bill.aggregate([
+      { $match: { isDelivered: true } },
       {
         $group: {
           _id: null,
@@ -316,7 +340,7 @@ billRouter.post(
         },
       },
     ]);
-    const users = await User.aggregate([
+    const users = await UserAddress.aggregate([
       {
         $group: {
           _id: null,
@@ -325,6 +349,7 @@ billRouter.post(
       },
     ]);
     const dailyOrders = await Bill.aggregate([
+      { $match: { isDelivered: true } },
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
@@ -364,13 +389,14 @@ billRouter.post(
           count: { $sum: 1 },
         },
       },
-      {
-        $project: {
-          count: 1,
-          cust_name: "$cate.name",
-        },
-      },
+      // {
+      //   $project: {
+      //     count: 1,
+      //     cust_name: "$cate.name",
+      //   },
+      // },
     ]);
+
     res.send({ users, orders, dailyOrders, productCategories });
   })
 );
@@ -410,6 +436,251 @@ billRouter.get(
   requireSignin,
   adminMiddleware,
   getBillVerify
+);
+
+billRouter.post(
+  "/revenue",
+  // requireSignin,
+  // adminMiddleware,
+  expressAsyncHandler(async (req, res, next) => {
+    const today = new Date();
+    try {
+      let condition = {};
+
+      if (req.query.browse != undefined && req.query.browse != "") {
+        switch (req.query.browse) {
+          case "day":
+            condition.browse = {
+              $match: {
+                "_id.year": today.getFullYear(),
+                "_id.month": today.getMonth() + 1,
+                "_id.day": today.getDate(),
+              },
+            };
+            break;
+          case "month":
+            condition.browse = {
+              $match: {
+                "_id.year": today.getFullYear(),
+                "_id.month": today.getMonth() + 1,
+              },
+            };
+            break;
+          case "year":
+            condition.browse = {
+              $match: {
+                "_id.year": today.getFullYear(),
+              },
+            };
+            break;
+          default:
+            condition.browse = {
+              $project: {
+                _id: 1,
+                totalPrice: 1,
+                // total_quantity: 1,
+              },
+            };
+        }
+      } else {
+        condition.browse = {
+          $project: {
+            _id: 1,
+            totalPrice: 1,
+            // total_quantity: 1,
+          },
+        };
+      }
+
+      console.log(condition);
+
+      const pipeline = [
+        { $match: { isDelivered: true } },
+        {
+          $group: {
+            _id: {
+              day: { $dayOfMonth: "$createdAt" },
+              month: { $month: "$createdAt" },
+              year: { $year: "$createdAt" },
+            },
+            totalPrice: {
+              $sum: `$totalPrice`,
+            },
+            // total_quantity: {
+            //   $sum: `$total_quantity`,
+            // },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+        condition.browse,
+      ];
+      const order = await Bill.aggregate(pipeline);
+
+      console.log(order);
+
+      const totalPrice = order.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.totalPrice,
+        0
+      );
+
+      // const total_quantity = order.reduce(
+      //   (accumulator, currentValue) =>
+      //     accumulator + currentValue.total_quantity,
+      //   0
+      // );
+
+      return res.status(200).json({
+        success: true,
+        code: 200,
+        message: "",
+        totalPrice,
+        // total_quantity,
+        order,
+      });
+    } catch (error) {
+      return next(error);
+    }
+  })
+);
+
+billRouter.post(
+  "/session-order",
+  // requireSignin,
+  // adminMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const today = new Date();
+    try {
+      let condition = {};
+      if (req.query.browse != undefined && req.query.browse != "") {
+        switch (req.query.browse) {
+          case "day":
+            condition.browse = {
+              $match: {
+                "_id.year": today.getFullYear(),
+                "_id.month": today.getMonth() + 1,
+                "_id.day": today.getDate(),
+              },
+            };
+            break;
+          case "month":
+            condition.browse = {
+              $match: {
+                "_id.year": today.getFullYear(),
+                "_id.month": today.getMonth() + 1,
+              },
+            };
+            break;
+          case "year":
+            condition.browse = {
+              $match: {
+                "_id.year": today.getFullYear(),
+              },
+            };
+            break;
+          default:
+            condition.browse = {
+              $project: {
+                _id: 1,
+                count: 1,
+              },
+            };
+        }
+      } else {
+        condition.browse = {
+          $project: {
+            _id: 1,
+            count: 1,
+          },
+        };
+      }
+      const pipeline = [
+        {
+          $group: {
+            _id: {
+              day: { $dayOfMonth: "$createdAt" },
+              month: { $month: "$createdAt" },
+              year: { $year: "$createdAt" },
+            },
+            count: {
+              $sum: 1,
+            },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+        condition.browse,
+      ];
+      const order = await Bill.aggregate(pipeline);
+
+      console.log(order);
+      // console.log(today.getMonth())
+
+      const count = order.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.count,
+        0
+      );
+
+      return res
+        .status(200)
+        .json({ success: true, code: 200, message: "", count, order });
+    } catch (error) {
+      return next(error);
+    }
+  })
+);
+
+billRouter.post(
+  "/revenue-from-to",
+  expressAsyncHandler(async (req, res, next) => {
+    try {
+      let condition = {};
+      if (
+        req.query.browse_from != undefined &&
+        req.query.browse_from != "" &&
+        req.query.browse_to != undefined &&
+        req.query.browse_to != ""
+      ) {
+        condition.browse_from = req.query.browse_from;
+        condition.browse_to = req.query.browse_to;
+      }
+      const pipeline = [
+        {
+          $match: {
+            isDelivered: true,
+            createdAt: {
+              $lte: new Date(condition.browse_to),
+              $gte: new Date(condition.browse_from),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              month: { $month: "$createdAt" },
+              year: { $year: "$createdAt" },
+            },
+            totalPrice: {
+              $sum: `$totalPrice`,
+            },
+            // total_quantity: {
+            //   $sum: `$total_quantity`,
+            // },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+      ];
+      const order = await Bill.aggregate(pipeline);
+
+      console.log(new Date(condition.browse_to));
+      console.log(new Date(condition.browse_from));
+      console.log(order);
+
+      return res
+        .status(200)
+        .json({ success: true, code: 200, message: "", order });
+    } catch (error) {
+      return next(error);
+    }
+  })
 );
 
 export default billRouter;

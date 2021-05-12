@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FiCalendar } from "react-icons/fi";
+import vi from "date-fns/locale/vi";
+registerLocale("vi", vi);
 
 // create a dom reffrence for our Customized date picker icon
 const ref = React.createRef();
@@ -20,6 +22,7 @@ const DatePickerCallendarIcon = (props) => {
   return (
     <div className="datepicker" style={style}>
       <DatePicker
+        locale="vi"
         selected={props.createdAt}
         onChange={props.handleDateChange}
         customInput={<DatePickerCustomInput ref={ref} />}

@@ -2,24 +2,38 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 
+import { getBraintreeClientToken, processPayment } from "../../utils/api";
+import DropIn from "braintree-web-drop-in-react";
+
 class ContentCart extends Component {
   constructor() {
     super();
     this.state = {
       total: 0,
       show: false,
+      email: "",
       name: "",
       phone: "",
       city: { name: "", code: null },
       district: { name: "", code: null },
       ward: { name: "", code: null },
       address: "",
+      notiEmail: "",
       notiName: "",
       notiPhone: "",
       notiAddress: "",
       notiDetailAddress: "",
+      notiCart: "",
       ispay: false,
       showpaymentfail: false,
+
+      data: {
+        loading: false,
+        success: false,
+        clientToken: null,
+        error: "",
+        instance: {},
+      },
     };
   }
   componentWillMount() {
@@ -27,6 +41,27 @@ class ContentCart extends Component {
     for (let i = 0; i < this.props.cart.length; i++) {
       total +=
         Number(this.props.cart[i].price) * Number(this.props.cart[i].count);
+    }
+    // console.log(total)
+
+    if (!this.props.islogin) {
+      getBraintreeClientToken().then((res) => {
+        if (!res) {
+          this.setState({
+            data: {
+              ...this.state.data,
+              error: "fail",
+            },
+          });
+        } else {
+          this.setState({
+            data: {
+              ...this.state.data,
+              clientToken: res.clientToken,
+            },
+          });
+        }
+      });
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -48,18 +83,28 @@ class ContentCart extends Component {
   reset = () => {
     this.setState({
       show: false,
+      email: "",
       name: "",
       phone: "",
       city: { name: "", code: null },
       district: { name: "", code: null },
       ward: { name: "", code: null },
       address: "",
+      notiEmail: "",
       notiName: "",
       notiPhone: "",
       notiAddress: "",
       notiDetailAddress: "",
+      notiCart: "",
       ispay: false,
       showpaymentfail: false,
+      data: {
+        loading: false,
+        success: false,
+        clientToken: null,
+        error: "",
+        instance: {},
+      },
     });
   };
   handleQuantity = (e) => {
@@ -72,13 +117,19 @@ class ContentCart extends Component {
     this.setState({ quantity: e.target.value });
   };
   handlePayment = () => {
-    if (!this.props.islogin) {
-      this.setState({ show: true });
-      return;
-    } else {
-      this.setState({ show: false });
-    }
+    // if (!this.props.islogin) {
+    //   this.setState({ show: true });
+    //   return;
+    // } else {
+    //   this.setState({ show: false });
+    // }
     let check = true;
+    if (!this.isvalidEmail(this.state.email)) {
+      this.setState({ notiEmail: "Email invalid" });
+      check = false;
+    } else {
+      this.setState({ notiEmail: "" });
+    }
     if (this.state.name.length < 3) {
       this.setState({
         notiName: "Name invalid",
@@ -117,16 +168,96 @@ class ContentCart extends Component {
     } else {
       this.setState({ notiDetailAddress: "" });
     }
+    if (this.props.cart.length == 0) {
+      this.setState({ notiCart: "Please buy one product!" });
+      check = false;
+    } else {
+      this.setState({ notiCart: "" });
+    }
     if (check === false) return;
-    this.props.payment(
-      this.state.city.name,
-      this.state.district.name,
-      this.state.ward.name,
-      this.state.address,
-      this.state.phone,
-      this.state.name
+
+    this.props.cart.totalPrice = this.toPrice(
+      this.props.cart.reduce((a, c) => a + c.count * c.price, 0)
     );
+    this.props.cart.paymentMethod = this.props.cartPayment;
+    // console.log(this.props.cart);
+    // this.props.cart.shippingPrice = cart.itemsPrice > 100 ? toPrice(0) : toPrice(10);
+    // this.props.cart.taxPrice = toPrice(0.15 * cart.itemsPrice);
+    // this.props.cart.totalPrice = this.props.cart.itemsPrice;
+    //  + this.props.cart.shippingPrice + this.props.cart.taxPrice;
+
+    this.setState({
+      data: {
+        ...this.state.data,
+        loading: true,
+      },
+    });
+    let nonce;
+    let getNonce = this.state.data.instance
+      .requestPaymentMethod()
+      .then((res) => {
+        nonce = res.nonce;
+
+        const paymentData = {
+          paymentMethodNonce: nonce,
+          amount: this.props.cart.totalPrice,
+        };
+
+        processPayment(paymentData)
+          .then((response) => {
+            // console.log(response);
+            this.setState({
+              data: {
+                ...this.state.data,
+                success: response.success,
+              },
+            });
+
+            const paymentResult = {
+              id: response.transaction.id,
+              status: "COMPLETED",
+              update_time: response.transaction.updatedAt,
+              email_address: response.transaction.paypal.payerEmail,
+            };
+            console.log(paymentResult);
+
+            this.props.payment(
+              this.state.city.name,
+              this.state.district.name,
+              this.state.ward.name,
+              this.state.address,
+              this.state.phone,
+              this.state.name,
+              this.props.cart,
+              this.state.email,
+              paymentResult
+            );
+          })
+          .catch((error) => {
+            console.log("DropIn error: ", error);
+            this.setState({
+              data: {
+                ...this.state.data,
+                error: error.message,
+              },
+            });
+          });
+      });
+
+    // this.props.payment(
+    //   this.state.city.name,
+    //   this.state.district.name,
+    //   this.state.ward.name,
+    //   this.state.address,
+    //   this.state.phone,
+    //   this.state.name,
+    //   this.props.cart,
+    //   this.state.email
+    // );
   };
+
+  toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
+
   isvaidPhone = (phone) => {
     if (phone.length < 10 || phone.length > 11) return false;
     for (let i = 0; i < phone.length; i++) {
@@ -134,7 +265,13 @@ class ContentCart extends Component {
     }
     return true;
   };
+  isvalidEmail = (email) => {
+    if (email === "" || email.indexOf("@") === -1 || email.indexOf(".") === -1)
+      return false;
+    return true;
+  };
   handleSelectCity(value) {
+    // console.log(value)
     let city = value.split("/");
     let name = city[0];
     let code = city[1];
@@ -161,7 +298,9 @@ class ContentCart extends Component {
     });
   }
   render() {
-    console.log(this.props.cart);
+    // console.log(this.props.ispay);
+    console.log(this.state.data);
+    // console.log(this.state.show);
     return (
       <div>
         <section id="cart_items">
@@ -262,14 +401,14 @@ class ContentCart extends Component {
                           </p>
                         </td>
                         <td className="cart_delete">
-                          <a
+                          <button
                             className="cart_quantity_delete"
                             onClick={() =>
                               this.props.deteleProductInCart(element._id)
                             }
                           >
                             <i className="fa fa-times" />
-                          </a>
+                          </button>
                         </td>
                       </tr>
                     );
@@ -297,15 +436,17 @@ class ContentCart extends Component {
                     <li>
                       Total <span>${this.state.total}</span>
                     </li>
+                    <span style={{ color: "red" }}>{this.state.notiCart}</span>
                   </ul>
                   <Modal
                     show={this.state.show}
                     onHide={() => this.setState({ show: false })}
-                    container={this}
-                    aria-labelledby="contained-modal-title"
+                    animation={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
                   >
                     <Modal.Header closeButton>
-                      <Modal.Title id="contained-modal-title">
+                      <Modal.Title id="contained-modal-title-vcenter">
                         Notification
                       </Modal.Title>
                     </Modal.Header>
@@ -329,7 +470,18 @@ class ContentCart extends Component {
               </div>
               <div className="col-md-6">
                 <div className="chose_area">
-                  {/* <ul class="user_option">
+                  <ul class="user_option">
+                    <li>
+                      <label>Email</label>
+                      <input
+                        type="text"
+                        value={this.state.email}
+                        onChange={(e) =>
+                          this.setState({ email: e.target.value })
+                        }
+                      />
+                      <span>{this.state.notiEmail}</span>
+                    </li>
                     <li>
                       <label>Name</label>
                       <input
@@ -436,15 +588,16 @@ class ContentCart extends Component {
                       />
                       <span>{this.state.notiDetailAddress}</span>
                     </li>
-                  </ul> */}
+                  </ul>
                   <Modal
                     show={this.state.ispay}
                     onHide={() => this.setState({ ispay: false })}
-                    container={this}
-                    aria-labelledby="contained-modal-title"
+                    animation={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
                   >
                     <Modal.Header closeButton>
-                      <Modal.Title id="contained-modal-title">
+                      <Modal.Title id="contained-modal-title-vcenter">
                         Notification
                       </Modal.Title>
                     </Modal.Header>
@@ -455,7 +608,8 @@ class ContentCart extends Component {
                       <Button
                         onClick={() => {
                           this.reset();
-                          window.location.reload();
+                          document.location.href = "/";
+                          // window.location.reload();
                         }}
                       >
                         <a>OK</a>
@@ -466,11 +620,12 @@ class ContentCart extends Component {
                   <Modal
                     show={this.state.showpaymentfail}
                     onHide={() => this.setState({ showpaymentfail: false })}
-                    container={this}
-                    aria-labelledby="contained-modal-title"
+                    animation={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
                   >
                     <Modal.Header closeButton>
-                      <Modal.Title id="contained-modal-title">
+                      <Modal.Title id="contained-modal-title-vcenter">
                         Notification
                       </Modal.Title>
                     </Modal.Header>
@@ -486,7 +641,34 @@ class ContentCart extends Component {
                     </Modal.Footer>
                   </Modal>
 
-                  {this.props.islogin ? (
+                  {!this.props.islogin && this.state.data.clientToken && (
+                    <>
+                      <DropIn
+                        options={{
+                          authorization: this.state.data.clientToken,
+                          paypal: {
+                            flow: "vault",
+                          },
+                        }}
+                        onInstance={(instance) =>
+                          this.setState({
+                            data: {
+                              ...this.state.data,
+                              instance: instance,
+                            },
+                          })
+                        }
+                      />
+                      <button
+                        className="btn btn-default update"
+                        onClick={() => this.handlePayment()}
+                      >
+                        Payment
+                      </button>
+                    </>
+                  )}
+
+                  {/* {this.props.islogin ? (
                     this.props.cart.length == 0 ? (
                       <h2>Your cart is empty. Please buy something!</h2>
                     ) : (
@@ -503,7 +685,7 @@ class ContentCart extends Component {
                       Please <Link to="/login_register">sign in</Link> to
                       checkout!!!
                     </>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>

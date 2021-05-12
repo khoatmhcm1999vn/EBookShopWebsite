@@ -13,7 +13,7 @@ class User extends Component {
       password: "",
       firstName: "",
       lastName: "",
-      address: "",
+      // address: "",
       is_verify: true,
       phone_number: "",
       currType: "add",
@@ -335,7 +335,7 @@ class User extends Component {
       password: "",
       firstName: "",
       lastName: "",
-      address: "",
+      // address: "",
       phone_number: "",
       currType: "add",
       is_admin: false,
@@ -511,12 +511,12 @@ class User extends Component {
                         <td>{element.user.email}</td>
                         <td>{element.user.firstName}</td>
                         <td>{element.user.lastName}</td>
-                        <td>{element.address[0].address}</td>
+                        <td>{element.address}</td>
                         <td>{element.user.phone_number}</td>
                         <td>{element.user.is_verify.toString()}</td>
                         <td>
                           <div className="btn-group">
-                            <a
+                            <button
                               onClick={() =>
                                 this.setState({
                                   email: element.user.email,
@@ -532,23 +532,23 @@ class User extends Component {
                               className="btn btn-success"
                             >
                               <i className="icon_check_alt2" />
-                            </a>
-                            <a
+                            </button>
+                            <button
                               onClick={() =>
                                 this.confirmDelete(element.user.email)
                               }
                               className="btn btn-danger"
                             >
                               <i className="icon_close_alt2" />
-                            </a>
-                            <a
+                            </button>
+                            <button
                               onClick={() =>
                                 this.props.deactivateUser(element.user.email)
                               }
                               className="btn btn-danger"
                             >
                               <i className="icon_close_alt2" />
-                            </a>
+                            </button>
                           </div>
                         </td>
                       </tr>

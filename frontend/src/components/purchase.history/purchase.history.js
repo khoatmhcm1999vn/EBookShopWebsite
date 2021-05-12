@@ -211,6 +211,7 @@ class HistoryPurchase extends Component {
             islogin={this.props.islogin}
             logout={() => this.props.logout()}
             history={this.props.history}
+            cart={this.props.cart}
           />
         </header>
         <div>

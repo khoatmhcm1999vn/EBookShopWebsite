@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 // import * as bookActions from "../../actions/bookActions";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 
-import { Link } from "react-router-dom";
-import NavbarContainer from "../../containers/navbar.container";
-import Slider from "../../containers/slider.container";
+// import { Link } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
 
 import swal from "sweetalert";
 import Table from "../../components/table/Table";
-import { getToken, getUser } from "../../config/store.config";
+// import { getToken, getUser } from "../../config/store.config";
 import Loading from "../../components/loading/loading";
 // import * as moment from "moment";
 import "./BookScreen.css";
@@ -22,13 +21,13 @@ import {
   SelectColumnFilter,
   filterGreaterThan,
 } from "../../components/table/Table";
-import { element } from "prop-types";
 
 export default function BookScreen(props) {
-  const [book, setBook] = useState(null);
-  const [productDetail, setProductDetail] = useState(null);
+  // const [book, setBook] = useState(null);
+
   const [file, setFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+
   const [curr, setCurr] = useState("add");
   const [category, setCategory] = useState("category");
   const [publisher, setPublisher] = useState("publisher");
@@ -40,14 +39,34 @@ export default function BookScreen(props) {
   const [published, setPublished] = useState(true);
   const [img, setImg] = useState("");
   const [describe, setDescribe] = useState("");
+
   const [id_nsx, setId_Nsx] = useState("");
   const [id_author, setId_Author] = useState("");
   const [id_category, setId_Category] = useState("");
+
   const [noti, setNoti] = useState("");
   const [id, setId] = useState(null);
 
+  const [show, setShow] = useState(false);
+  const [nameAuthor, setNameAuthor] = useState("");
+
+  const [nameCategory, setNameCategory] = useState("");
+  const [showCategory, setShowCategory] = useState(false);
+
+  const [namePublisher, setNamePublisher] = useState("");
+  const [showPublisher, setShowPublisher] = useState(false);
+
+  const [showImport, setShowImport] = useState(false);
+  const [fileExcel, setFileExcel] = useState(null);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleImportClose = () => setShowImport(false);
+  const handleImportShow = () => setShowImport(true);
+
   useEffect(() => {
-    console.log("Prop Received: ", props);
+    // console.log("Prop Received: ", props.mproductDetail);
     if (props.book !== null) {
       setImagePreviewUrl(props.book.img);
     }
@@ -58,9 +77,62 @@ export default function BookScreen(props) {
       reset();
     }
     if (props.mproductDetail !== null) {
-      setProductDetail(props.mproductDetail);
+      setCurr("update");
+      setName(props.mproductDetail.name);
+      setCreatedAt(props.mproductDetail.createdAt.slice(0, 10));
+      setPrice(props.mproductDetail.price);
+      setQuantity(props.mproductDetail.quantity);
+      setPublished(props.mproductDetail.published);
+      setDescribe(props.mproductDetail.describe);
+      setCategory(getNameCategoryByID(props.mproductDetail.id_category));
+      setId_Category(props.mproductDetail.id_category);
+      setId_Author(props.mproductDetail.id_author);
+      setAuthor(getNameAuthorByID(props.mproductDetail.id_author));
+      setId_Nsx(props.mproductDetail.id_nsx);
+      setPublisher(getNamePublisherByID(props.mproductDetail.id_nsx));
+      setImg(props.mproductDetail.img);
+      setId(props.mproductDetail._id);
     }
-  }, [props.book, props.isadd, props.isupdate, props.mproductDetail]);
+    // if (props.isaddAuthor === true) reset();
+  }, [
+    props.book,
+    props.isadd,
+    props.isupdate,
+    props.mproductDetail,
+    props.author,
+    // props.isaddAuthor,
+  ]);
+
+  const handleId = async (value) => {
+    await props.getProductDetail(value);
+  };
+  // console.log(curr);
+
+  const handleAddAuthor = () => {
+    setShow(false);
+    props.addAuthor(nameAuthor);
+  };
+
+  const handleAddCategory = () => {
+    setShowCategory(false);
+    props.addCategory(nameCategory);
+  };
+
+  const handleAddPublisher = () => {
+    setShowPublisher(false);
+    props.addPublisher(namePublisher);
+  };
+
+  const handleChangeExcel = (file) => {
+    // console.log(img);
+    if (file === undefined) return;
+    setFileExcel(file);
+  };
+
+  const handleUploadExcel = () => {
+    setShowImport(false);
+    props.uploadFile(fileExcel);
+  };
 
   const columns = React.useMemo(
     () => [
@@ -185,28 +257,23 @@ export default function BookScreen(props) {
             <>
               <div className="btn-group">
                 <button
-                  className="btn btn-success"
-                  onClick={() => props.getProductDetail(value)}
-                >
-                  Click
-                </button>
-                <button
-                  onClick={() => {
-                    setCurr("update");
-                    setName(productDetail.name);
-                    setCreatedAt(productDetail.createdAt.slice(0, 10));
-                    setPrice(productDetail.price);
-                    setQuantity(productDetail.quantity);
-                    setPublished(productDetail.published);
-                    setDescribe(productDetail.describe);
-                    setCategory(getNameCategoryByID(productDetail.id_category));
-                    setId_Category(productDetail.id_category);
-                    setId_Author(productDetail.id_author);
-                    setAuthor(getNameAuthorByID(productDetail.id_author));
-                    setId_Nsx(productDetail.id_nsx);
-                    setPublisher(getNamePublisherByID(productDetail.id_nsx));
-                    setImg(productDetail.img);
-                    setId(value);
+                  onClick={async () => {
+                    await handleId(value);
+                    // setCurr("update");
+                    // setName(props.mproductDetail.name);
+                    // setCreatedAt(productDetail.createdAt.slice(0, 10));
+                    // setPrice(productDetail.price);
+                    // setQuantity(productDetail.quantity);
+                    // setPublished(productDetail.published);
+                    // setDescribe(productDetail.describe);
+                    // setCategory(getNameCategoryByID(productDetail.id_category));
+                    // setId_Category(productDetail.id_category);
+                    // setId_Author(productDetail.id_author);
+                    // setAuthor(getNameAuthorByID(productDetail.id_author));
+                    // setId_Nsx(productDetail.id_nsx);
+                    // setPublisher(getNamePublisherByID(productDetail.id_nsx));
+                    // setImg(productDetail.img);
+                    // setId(value);
                   }}
                   className="btn btn-success"
                 >
@@ -248,7 +315,7 @@ export default function BookScreen(props) {
         },
       },
     ],
-    [props, productDetail]
+    []
   );
   const Holdon = (columns) => {
     if (props.book) {
@@ -270,8 +337,6 @@ export default function BookScreen(props) {
     }
   };
 
-  console.log(productDetail);
-
   const handleChangeImg = (img) => {
     if (img === undefined) return;
     let reader = new FileReader();
@@ -281,21 +346,29 @@ export default function BookScreen(props) {
     };
     reader.readAsDataURL(img);
   };
+
   const invalidPrice = (t) => {
+    console.log(t);
+
     var str = t.toString();
     let count = 0;
+
     for (let i = 0; i < str.length; i++) {
       if (str.charAt(i) == "+" || str.charAt(i) == "-") count++;
       else break;
     }
+
     str = str.substring(count, str.length);
+    console.log(str);
     count = 0;
+
     for (let i = 0; i < str.length; i++) {
       if (str.charAt(i) == ".") {
         count++;
       }
       if (str.charAt(i) < "0" || str.charAt(i) > "9") return false;
     }
+
     if (count > 1) return false;
     return !isNaN(Number.parseFloat(str));
   };
@@ -437,9 +510,18 @@ export default function BookScreen(props) {
       id_author,
       file
     );
+    reset();
   };
 
   const reset = () => {
+    setNameAuthor("");
+    setShow(false);
+    setNameCategory("");
+    setShowCategory(false);
+    setNamePublisher("");
+    setShowPublisher(false);
+    setShowImport(false);
+
     setNoti("");
     setName("");
     setFile(null);
@@ -1016,7 +1098,7 @@ export default function BookScreen(props) {
                       Describe <span className="required">*</span>
                     </label>
                     <div className="col-lg-10">
-                      <input
+                      <textarea
                         value={describe}
                         onChange={(e) => setDescribe(e.target.value)}
                         className="form-control"
@@ -1044,8 +1126,75 @@ export default function BookScreen(props) {
                       <ul className="dropdown-menu" role="menu">
                         {renderMenuCategory()}
                       </ul>
+
+                      <div className="form-group">
+                        <button
+                          onClick={() => setShowCategory(true)}
+                          className="btn-custom"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <Modal
+                        show={showCategory}
+                        onHide={() => setShowCategory(false)}
+                        animation={false}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title id="contained-modal-title-vcenter">
+                            Add New Category
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="form-group ">
+                            <label
+                              for="cname"
+                              className="control-label col-lg-2"
+                            >
+                              Name <span className="required">*</span>
+                            </label>
+                            <div className="col-lg-10">
+                              <input
+                                onChange={(e) =>
+                                  setNameCategory(e.target.value)
+                                }
+                                value={nameCategory}
+                                className="form-control"
+                                id="cname"
+                                name="fullname"
+                                minlength="5"
+                                type="text"
+                                required
+                              />
+                            </div>
+                            <button
+                              onClick={handleAddCategory}
+                              className="btn-custom"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button
+                            variant="secondary"
+                            onClick={() => setShowCategory(false)}
+                          >
+                            Close
+                          </Button>
+                          <Button
+                            variant="primary"
+                            onClick={() => setShowCategory(false)}
+                          >
+                            Save Changes
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
                     </div>
                   </div>
+
                   <div className="form-group ">
                     <label for="comment" className="control-label col-lg-2">
                       Author
@@ -1062,8 +1211,64 @@ export default function BookScreen(props) {
                       <ul className="dropdown-menu" role="menu">
                         {renderMenuAuthor()}
                       </ul>
+
+                      <div className="form-group">
+                        <button onClick={handleShow} className="btn-custom">
+                          +
+                        </button>
+                      </div>
+                      <Modal
+                        show={show}
+                        onHide={handleClose}
+                        animation={false}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title id="contained-modal-title-vcenter">
+                            Add New Author
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="form-group ">
+                            <label
+                              for="cname"
+                              className="control-label col-lg-2"
+                            >
+                              Name <span className="required">*</span>
+                            </label>
+                            <div className="col-lg-10">
+                              <input
+                                onChange={(e) => setNameAuthor(e.target.value)}
+                                value={nameAuthor}
+                                className="form-control"
+                                id="cname"
+                                name="fullname"
+                                minlength="5"
+                                type="text"
+                                required
+                              />
+                            </div>
+                            <button
+                              onClick={handleAddAuthor}
+                              className="btn-custom"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Close
+                          </Button>
+                          <Button variant="primary" onClick={handleClose}>
+                            Save Changes
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
                     </div>
                   </div>
+
                   <div className="form-group ">
                     <label for="comment" className="control-label col-lg-2">
                       Publisher
@@ -1080,11 +1285,77 @@ export default function BookScreen(props) {
                       <ul className="dropdown-menu" role="menu">
                         {renderMenuPublisher()}
                       </ul>
+
+                      <div className="form-group">
+                        <button
+                          onClick={() => setShowPublisher(true)}
+                          className="btn-custom"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <Modal
+                        show={showPublisher}
+                        onHide={() => setShowPublisher(false)}
+                        animation={false}
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title id="contained-modal-title-vcenter">
+                            Add New Publisher
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="form-group ">
+                            <label
+                              for="cname"
+                              className="control-label col-lg-2"
+                            >
+                              Name <span className="required">*</span>
+                            </label>
+                            <div className="col-lg-10">
+                              <input
+                                onChange={(e) =>
+                                  setNamePublisher(e.target.value)
+                                }
+                                value={namePublisher}
+                                className="form-control"
+                                id="cname"
+                                name="fullname"
+                                minlength="5"
+                                type="text"
+                                required
+                              />
+                            </div>
+                            <button
+                              onClick={handleAddPublisher}
+                              className="btn-custom"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button
+                            variant="secondary"
+                            onClick={() => setShowPublisher(false)}
+                          >
+                            Close
+                          </Button>
+                          <Button
+                            variant="primary"
+                            onClick={() => setShowPublisher(false)}
+                          >
+                            Save Changes
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
                     </div>
                   </div>
                   <div className="form-group ">
                     <label for="comment" className="control-label col-lg-2">
-                      Image upload{" "}
+                      Image upload
                     </label>
                     <div className="col-lg-10">
                       <input
@@ -1105,6 +1376,64 @@ export default function BookScreen(props) {
                       <img src={img} style={{ maxWidth: "300px" }} alt="" />
                     </div>
                   </div>
+
+                  <div className="form-group">
+                    <button onClick={handleImportShow} className="btn-custom">
+                      Import
+                    </button>
+                  </div>
+                  <Modal
+                    show={showImport}
+                    onHide={handleImportClose}
+                    animation={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title id="contained-modal-title-vcenter">
+                        Import excel file
+                      </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      Please download this format excel
+                      <button onClick={props.downloadFile}>Download</button>
+                      to view file before import.
+                      <hr />
+                      <hr />
+                      <div className="form-group ">
+                        <label for="comment" className="control-label col-lg-2">
+                          File upload
+                        </label>
+                        <div className="col-lg-10">
+                          <input
+                            className="form-control "
+                            type="file"
+                            id="ccomment"
+                            name="comment"
+                            required
+                            onChange={(e) =>
+                              handleChangeExcel(e.target.files[0])
+                            }
+                          />
+                        </div>
+                        <button
+                          onClick={handleUploadExcel}
+                          className="btn-custom"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleImportClose}>
+                        Close
+                      </Button>
+                      <Button variant="primary" onClick={handleImportClose}>
+                        Save Changes
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+
                   <div className="form-group">
                     <div className="col-lg-offset-2 col-lg-10">
                       <p>{noti.noti}</p>
@@ -1121,3 +1450,280 @@ export default function BookScreen(props) {
     </section>
   );
 }
+
+/*
+import React, { useEffect } from "react";
+import { Table, Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import ErrorMessage from "../components/Message/errorMessage";
+import { listOrders } from "../actions/orderAction";
+import TableLoader from "../components/Loader/TableLoader";
+import Print from "../components/Print/Print";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+const OrderList = () => {
+  const orderList = useSelector((state) => state.orderList);
+  const userLogin = useSelector((state) => state.userLogin);
+
+  const { orders, loading, error, count } = orderList;
+  const { userInfo } = userLogin;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(listOrders());
+    // eslint-disable-next-line
+  }, [dispatch]);
+
+  const printAs = (e) => {
+    const downloadAs = e.target.value;
+
+    switch (downloadAs) {
+      case "pdf":
+        var docDefinition = {
+          content: [
+            //Header
+            {
+              table: {
+                widths: ["auto", "*"],
+
+                body: [
+                  [
+                    {
+                      text: "SHOPPOINT",
+                      style: "mainheader",
+                      bold: true,
+                      marginTop: 10,
+                    },
+
+                    {
+                      width: "*",
+                      style: "usersOrders",
+                      marginBottom: 30,
+                      stack: [
+                        {
+                          style: "h2",
+                          text: `Name: ${userInfo.name}`,
+                        },
+                        {
+                          style: "h2",
+                          text: `Email: ${userInfo.email}`,
+                        },
+                      ],
+                    },
+                  ],
+                ],
+              },
+              layout: {
+                hLineWidth: function (line) {
+                  return line === 1;
+                },
+                vLineWidth: function () {
+                  return 0;
+                },
+                paddingBottom: function () {
+                  return 5;
+                },
+              },
+            },
+
+            //Vitals Details
+            {
+              style: "header",
+              table: {
+                widths: "*",
+                body: [
+                  [
+                    {
+                      border: ["#5bc0de", false, false, false],
+                      text: "Orders List",
+                    },
+                  ],
+                ],
+              },
+            },
+
+            orders.length > 0
+              ? {
+                  layout: {
+                    hLineWidth: function () {
+                      return 0;
+                    },
+                    vLineWidth: function () {
+                      return 0;
+                    },
+                    paddingBottom: function () {
+                      return 5;
+                    },
+                  },
+                  table: {
+                    headerRows: 1,
+                    body: [
+                      [
+                        {
+                          text: "S.No",
+                          bold: true,
+                          fillColor: "#2B2B52",
+                          color: "white",
+                        },
+                        {
+                          text: "ID",
+                          bold: true,
+                          fillColor: "#2B2B52",
+                          color: "white",
+                        },
+                        {
+                          text: "USER",
+                          bold: true,
+                          fillColor: "#2B2B52",
+                          color: "white",
+                        },
+                        {
+                          text: "DATE",
+                          bold: true,
+                          fillColor: "#2B2B52",
+                          color: "white",
+                        },
+                        {
+                          text: "TOTAL PRICE",
+                          bold: true,
+                          fillColor: "#2B2B52",
+                          color: "white",
+                        },
+                        {
+                          text: "PAID",
+                          bold: true,
+                          fillColor: "#2B2B52",
+                          color: "white",
+                        },
+                        {
+                          text: "DELIVERED",
+                          bold: true,
+                          fillColor: "#2B2B52",
+                          color: "white",
+                        },
+                      ],
+
+                      ...orders.map((o, i) => [
+                        i + 1,
+                        o._id,
+                        o.userId && o.userId.name,
+                        o.createdAt.substring(0, 10),
+                        o.totalPrice,
+                        o.isPaid ? o.paidAt.substring(0, 10) : "Not paid",
+                        o.isDelivered
+                          ? o.deliveredAt.substring(0, 10)
+                          : "Not paid",
+                      ]),
+                    ],
+                  },
+
+                  fontSize: 9,
+                  alignment: "center",
+                }
+              : null,
+          ],
+          styles: {
+            header: {
+              fontSize: 12,
+              marginBottom: 20,
+              marginTop: 20,
+              bold: true,
+            },
+            mainheader: {
+              fontSize: 15,
+            },
+
+            usersOrders: {
+              marginLeft: 315,
+            },
+
+            h2: {
+              marginTop: 5,
+              fontSize: 7,
+            },
+          },
+        };
+        pdfMake.createPdf(docDefinition).download("ordersList.pdf");
+
+        break;
+      case "excel":
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  return (
+    <>
+      <div className="clearfix">
+        <span className="float-left">
+          <h1>Orders ({count})</h1>
+        </span>
+
+        <span className="float-right">
+          {" "}
+          <Print printAs={printAs} />
+        </span>
+      </div>
+
+      {loading ? (
+        <TableLoader />
+      ) : error ? (
+        <ErrorMessage header="Something went wrong" message={error} />
+      ) : (
+        <Table striped bordered hover responsive className="table-sm">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>USER</th>
+              <th>DATE</th>
+              <th>TOTAL</th>
+              <th>PAID</th>
+              <th>DELIVERED</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order._id}>
+                <td>{order._id}</td>
+                <td>{order.userId && order.userId.name}</td>
+                <td>{order.createdAt.substring(0, 10)}</td>
+                <td>${order.totalPrice}</td>
+                <td>
+                  {order.isPaid ? (
+                    order.paidAt.substring(0, 10)
+                  ) : (
+                    <i className="fas fa-times" style={{ color: "red" }}></i>
+                  )}
+                </td>
+                <td>
+                  {order.isDelivered ? (
+                    order.deliveredAt.substring(0, 10)
+                  ) : (
+                    <i className="fas fa-times" style={{ color: "red" }}></i>
+                  )}
+                </td>
+                <td>
+                  <LinkContainer to={`/order/${order._id}`}>
+                    <Button variant="light" className="btn-sm">
+                      Details
+                    </Button>
+                  </LinkContainer>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
+    </>
+  );
+};
+
+export default OrderList;
+*/

@@ -133,6 +133,7 @@ class HeaderBottom extends Component {
                   onChange={(e) => this.props.setSearchText(e.target.value)}
                   onKeyUp={(e) => this.handeSearch(e.keyCode)}
                   disabled={this.props.isDisabled}
+                  value={this.props.text}
                 />
               </div>
             </div>

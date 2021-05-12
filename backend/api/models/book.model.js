@@ -26,11 +26,11 @@ const bookSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    release_date: {
-      type: Date,
-      $dateToString: { format: "%Y-%m-%d", date: "$date" },
-      default: new Date(),
-    },
+    // release_date: {
+    //   type: Date,
+    //   $dateToString: { format: "%Y-%m-%d", date: "$date" },
+    //   default: new Date(),
+    // },
     img: {
       type: String,
       required: [true, "can't be blank"],
@@ -74,6 +74,10 @@ const bookSchema = new Schema(
     timestamps: true,
   }
 );
+
+bookSchema.virtual("id").get(function () {
+  return this._id.toString();
+});
 
 const Book = mongoose.model("Book", bookSchema);
 

@@ -3,15 +3,17 @@ import { Server } from "socket.io";
 import express from "express";
 const app = express();
 const port = process.env.PORT || 8090;
-// import path from 'path';
+import path from "path";
+import { fileURLToPath } from "url";
 // import bodyParser from "body-parser";
 import morgan from "morgan";
-import mongoose from "mongoose";
+import colors from "colors";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
-import bcrypt from "bcrypt";
-import randomstring from "randomstring";
+
+import error from "./api/middleware/error.js";
+import connectDB from "./api/config/db.js";
 
 import userRouter from "./api/routers/user.router.js";
 import categoryRouter from "./api/routers/categoy.router.js";
@@ -22,89 +24,51 @@ import commentRouter from "./api/routers/comment.router.js";
 import billRouter from "./api/routers/bill.router.js";
 import cartRouter from "./api/routers/cart.router.js";
 import adminRouter from "./api/routers/admin.router.js";
-// import addressVnRouter from "./api/routers/addres.vn.router.js";
+import addressVnRouter from "./api/routers/addres.vn.router.js";
 import addressRouter from "./api/routers/address.router.js";
 import favouriteRouter from "./api/routers/favourite.router.js";
 import braintreeRouter from "./api/routers/braintree.router.js";
 
-import User from "./api/models/user.model.js";
-mongoose.Promise = global.Promise;
-mongoose
-  .connect(
-    process.env.MONGO_DB_URI ||
-      "mongodb+srv://myMongoDBUser:Abc123456@cluster0.kpppm.mongodb.net/bookshop?retryWrites=true",
-    {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-      useUnifiedTopology: true,
-    }
-  )
-  .then(() => {
-    console.log("MongoDB is connected!");
-    initial();
-  })
-  .catch((err) => {
-    console.log("Cannot connect to the database!", err);
-    process.exit();
-  });
-function initial() {
-  let password = "abcdef1";
-  const token = randomstring.generate();
-  User.collection.estimatedDocumentCount(async (err, count) => {
-    password = await bcrypt.hash(password, 10);
-    if (!err && count === 0) {
-      new User({
-        email: "admin@gmail.com",
-        firstName: "Admin",
-        lastName: "admin",
-        password: password,
-        phone_number: "0911321145",
-        token: token,
-        is_admin: true,
-        is_verify: true,
-      }).save((err) => {
-        if (err) {
-          console.log("error", err);
-        }
-        console.log("Added 'admin' to users collection");
+connectDB();
+import AddressVn from "./api/models/address.vn.model.js";
+const test = () => {
+  Object.keys(data).forEach(function (k) {
+    var _dic = [];
+    var _ward = [];
+    Object.keys(data[k].district).forEach(function (j) {
+      Object.keys(data[k].district[j].ward).forEach(function (l) {
+        _ward.push({
+          name: data[k].district[j].ward[l].name,
+          code: data[k].district[j].ward[l].code,
+        });
       });
+      _dic.push({
+        name: data[k].district[j].name,
+        code: data[k].district[j].code,
+        ward: _ward,
+      });
+    });
+    const new_address = new AddressVn({
+      city: data[k].name,
+      district: _dic,
+      code: data[k].code,
+    });
+    try {
+      new_address.save();
+    } catch (Err) {
+      console.log(Err);
     }
   });
-}
-// import AddressVn from "./api/models/address.vn.model.js";
-// const test = () => {
-//   Object.keys(data).forEach(function (k) {
-//     var _dic = [];
-//     var _ward = [];
-//     Object.keys(data[k].district).forEach(function (j) {
-//       Object.keys(data[k].district[j].ward).forEach(function (l) {
-//         _ward.push({
-//           name: data[k].district[j].ward[l].name,
-//           code: data[k].district[j].ward[l].code,
-//         });
-//       });
-//       _dic.push({
-//         name: data[k].district[j].name,
-//         code: data[k].district[j].code,
-//         ward: _ward,
-//       });
-//     });
-//     const new_address = new AddressVn({
-//       city: data[k].name,
-//       district: _dic,
-//       code: data[k].code,
-//     });
-//     try {
-//       new_address.save();
-//     } catch (Err) {
-//       console.log(Err);
-//     }
-//   });
-// };
+};
 // test();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+global.__basedir = __dirname + "/..";
+
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(express.static(__basedir + "/files/"));
 app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.json({ limit: "50mb" }));
 // app.use(
@@ -147,7 +111,7 @@ app.use("", commentRouter);
 app.use("/api", favouriteRouter);
 app.use("", cartRouter);
 app.use("", billRouter);
-// app.use("", addressVnRouter);
+app.use("", addressVnRouter);
 app.use("/api/address", addressRouter);
 app.use("/api", braintreeRouter);
 
@@ -157,12 +121,26 @@ app.get("/", (req, res) => {
 app.get("/api/config/paypal", (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || "sb");
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
+}
 // app.get('/api/config/google', (req, res) => {
 //   res.send(process.env.GOOGLE_API_KEY || '');
 // });
 app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });
 });
+app.use(error.unknownEndpoints);
+app.use(error.errorHandler);
 
 const httpServer = http.Server(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
@@ -233,6 +211,23 @@ io.on("connection", (socket) => {
     }
   });
 });
-httpServer.listen(port, () => {
-  console.log(`Serve at http://localhost:${port}`);
+httpServer.listen(
+  port,
+  console.log(
+    `Server running in http://localhost:${port} mode on port ${port}`.yellow
+      .bold
+  )
+  //   () => {
+  //   console.log(`Server is running at http://localhost:${port}`.yellow.bold);
+  // }
+);
+// Handle unhandle promise rejection
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Error: ${err.message}`.red.bold);
+  // close the server
+  httpServer.close(() => process.exit(1));
 });
+// # Import data
+// node seeder -i
+// # Destroy data
+// node seeder -d

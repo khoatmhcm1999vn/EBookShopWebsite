@@ -32,6 +32,8 @@ const Home = ({
   history,
   searchTextSubmit,
   addToCart,
+  text,
+  cart,
 }) => (
   <div>
     <header id="header">
@@ -40,9 +42,11 @@ const Home = ({
         islogin={islogin}
         logout={() => logout()}
         history={history}
+        cart={cart}
       />
       <HeaderBottom
         sortType={sortType}
+        text={text}
         setSortType={(value) => setSortType(value)}
         setSearchText={(value) => setSearchText(value)}
         searchTextSubmit={() => searchTextSubmit()}
@@ -61,6 +65,8 @@ const Home = ({
       title={title}
       setTitle={(title) => setTitle(title)}
       setBranch={(branch) => setBranch(branch)}
+      searchTextSubmit={() => searchTextSubmit()}
+      setSearchText={(value) => setSearchText(value)}
       branch={branch}
       author={author}
       setIDBranch={(id) => setIDBranch(id)}

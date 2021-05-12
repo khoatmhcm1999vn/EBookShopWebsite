@@ -5,6 +5,7 @@ import ProductDetail from "../components/product.detail/product.detail";
 import * as productActions from "../actions/product.action";
 import * as homeActions from "../actions/home.action";
 import * as userActions from "../actions/user.action";
+import * as cartActions from "../actions/cart.action.js";
 import Loading from "../components/loading/loading";
 
 class ProductDetailContainer extends Component {
@@ -19,6 +20,7 @@ class ProductDetailContainer extends Component {
     this.props.productActions.getBookDetail(id);
     this.props.productActions.getBookRelated(id);
     this.props.productActions.getCommentByIDBook(id);
+    this.props.cartActions.getCart();
   }
   componentWillReceiveProps(nextProps, prevState) {
     if (nextProps.mproductDetail !== null) {
@@ -88,6 +90,7 @@ class ProductDetailContainer extends Component {
             nextPage={() => this.props.productActions.nextPage()}
             setPage={(page) => this.props.productActions.setPage(page)}
             history={this.props.history}
+            cart={this.props.cart}
           />
         </div>
       );
@@ -109,12 +112,14 @@ const mapStateToProps = (state) => ({
   comment: state.productReducers.product.comment,
   totalpage: state.productReducers.product.totalpage,
   page: state.productReducers.product.page,
+  cart: state.cart.data,
 });
 const mapDispatchToProps = (dispatch) => {
   return {
     actions: bindActionCreators(userActions, dispatch),
     homeActions: bindActionCreators(homeActions, dispatch),
     productActions: bindActionCreators(productActions, dispatch),
+    cartActions: bindActionCreators(cartActions, dispatch),
   };
 };
 export default connect(

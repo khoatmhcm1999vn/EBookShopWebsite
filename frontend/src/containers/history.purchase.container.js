@@ -20,6 +20,7 @@ class HistoryPurchaseContainer extends Component {
           islogin={this.props.islogin}
           logout={() => this.props.actions.logout()}
           history={this.props.history}
+          cart={this.props.cart}
           purchaseHistory={this.props.purchaseHistory}
           deleteBill={(id) => this.props.purchaseHistoryActions.deleteBill(id)}
         />
@@ -30,6 +31,7 @@ class HistoryPurchaseContainer extends Component {
 const mapStateToProps = (state) => ({
   islogin: state.userReducers.user.islogin,
   purchaseHistory: state.purchaseReducers.purchaseHistory.data,
+  cart: state.cart.data,
 });
 
 const mapDispatchToProps = (dispatch) => {

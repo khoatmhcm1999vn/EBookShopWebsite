@@ -15,9 +15,14 @@ function FavoritePage({ history }) {
   const currentUser = useSelector(
     (state) => state.userReducers.user.currentUser
   );
+  const cart = useSelector(
+    (state) => state.cart.data
+  );
   const [Favorites, setFavorites] = useState([]);
   const [Loading, setLoading] = useState(true);
   let variable = JSON.parse(localStorage.getItem("userInfo"));
+
+  // console.log(cart)
 
   useEffect(() => {
     fetchFavoredMovie();
@@ -78,6 +83,7 @@ function FavoritePage({ history }) {
           islogin={islogin}
           logout={() => dispatch(logout())}
           history={history}
+          cart={cart}
         />
       </header>
       <div class="breadcrumbs">

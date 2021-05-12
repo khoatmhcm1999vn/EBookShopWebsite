@@ -3,6 +3,7 @@ import axiosClient from "../config/axiosClient";
 import { toast } from "react-toastify";
 import { productTypes } from "../constants/action.types";
 import storeConfig from "../config/store.config";
+import { getCart } from "../actions/cart.action";
 
 export const getBookDetail = (id) => async (dispatch, getState) => {
   let res;
@@ -158,6 +159,7 @@ export const addToCart = (product) => async (dispatch, getState) => {
         id_user: storeConfig.getUser().id,
         products: [product],
       });
+      dispatch(getCart());
       if (res.success) toast.success(res.message);
       else toast.error(res.message);
     } catch (err) {
@@ -167,5 +169,6 @@ export const addToCart = (product) => async (dispatch, getState) => {
     }
   } else {
     storeConfig.addProductToCart(product);
+    dispatch(getCart());
   }
 };

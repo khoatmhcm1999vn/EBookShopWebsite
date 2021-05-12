@@ -47,7 +47,7 @@ class UserContainer extends Component {
             email,
             firstName,
             lastName,
-            address,
+            // address,
             phone_number,
             is_admin
           ) =>
@@ -55,7 +55,7 @@ class UserContainer extends Component {
               email,
               firstName,
               lastName,
-              address,
+              // address,
               phone_number,
               is_admin
             )

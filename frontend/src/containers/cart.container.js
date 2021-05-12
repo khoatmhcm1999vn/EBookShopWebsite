@@ -14,7 +14,8 @@ class CartContainer extends Component {
   componentWillMount() {
     this.props.actions.loadUser();
     this.props.cartActions.getCart();
-    // this.props.cartActions.getCity();
+    // console.log(this.props.city)
+    this.props.cartActions.getCity();
   }
   render() {
     return (
@@ -33,24 +34,38 @@ class CartContainer extends Component {
         deteleProductInCart={(id_product) =>
           this.props.cartActions.deteleProductInCart(id_product)
         }
-        // city={this.props.city}
-        // getDistrict={(code) => this.props.cartActions.getDistrict(code)}
-        // district={this.props.district}
-        // getWard={(codecity, codedistrict) =>
-        //   this.props.cartActions.getWard(codecity, codedistrict)
-        // }
-        // ward={this.props.ward}
-        payment={(city, district, ward, address, phone, name) =>
+        city={this.props.city}
+        getDistrict={(code) => this.props.cartActions.getDistrict(code)}
+        district={this.props.district}
+        getWard={(codecity, codedistrict) =>
+          this.props.cartActions.getWard(codecity, codedistrict)
+        }
+        ward={this.props.ward}
+        payment={(
+          city,
+          district,
+          ward,
+          address,
+          phone,
+          name,
+          cart,
+          email,
+          paymentResult
+        ) =>
           this.props.cartActions.payment(
             city,
             district,
             ward,
             address,
             phone,
-            name
+            name,
+            cart,
+            email,
+            paymentResult
           )
         }
         ispay={this.props.ispay}
+        cartPayment={this.props.cartPayment}
       />
     );
   }
@@ -58,9 +73,10 @@ class CartContainer extends Component {
 const mapStateToProps = (state) => ({
   islogin: state.userReducers.user.islogin,
   cart: state.cart.data,
-  // city: state.cartReducers.city,
-  // district: state.cartReducers.district,
-  // ward: state.cartReducers.ward,
+  cartPayment: state.cart.paymentMethod,
+  city: state.cart.city,
+  district: state.cart.district,
+  ward: state.cart.ward,
   ispay: state.cart.ispay,
 });
 

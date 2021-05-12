@@ -17,10 +17,55 @@ export const getTopProduct = () => async (dispatch, getState) => {
   dispatch(setTopProduct(res.data));
 };
 
+export const setCountProductBill = (data) => ({
+  type: homeTypes.SET_COUNT_PRODUCT_BILL,
+  data,
+});
+export const getCountProductBill = () => async (dispatch, getState) => {
+  let res = null;
+  try {
+    res = await axiosClient.post("/bill/count-all-product-bill");
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+  dispatch(setCountProductBill(res.data));
+};
+
+export const setCountProductStock = (data) => ({
+  type: homeTypes.SET_COUNT_PRODUCT_STOCK,
+  data,
+});
+export const getCountProductStock = () => async (dispatch, getState) => {
+  let res = null;
+  try {
+    res = await axiosClient.post("/bill/count-all-product");
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+  dispatch(setCountProductStock(res.data));
+};
+
+export const setCountBill = (data) => ({
+  type: homeTypes.SET_COUNT_BILL,
+  data,
+});
+export const getCountBill = () => async (dispatch, getState) => {
+  let res = null;
+  try {
+    res = await axiosClient.post("/bill/count-all-bill");
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+  dispatch(setCountBill(res.data));
+};
+
 export const getCategory = () => async (dispatch, getState) => {
   let res;
   try {
-    res = await axios.get("http://localhost:8090/category");
+    res = await axios.get("http://localhost:8090/user/category");
   } catch (err) {
     return;
   }
@@ -30,7 +75,7 @@ export const getCategory = () => async (dispatch, getState) => {
 export const getPublisher = () => async (dispatch, getState) => {
   let res;
   try {
-    res = await axios.get("http://localhost:8090/publisher");
+    res = await axios.get("http://localhost:8090/user/publisher");
   } catch (err) {
     return;
   }
@@ -40,21 +85,21 @@ export const getPublisher = () => async (dispatch, getState) => {
 export const getAuthor = () => async (dispatch, getState) => {
   let res;
   try {
-    res = await axios.get("http://localhost:8090/author");
+    res = await axios.get("http://localhost:8090/user/author");
   } catch (err) {
     return;
   }
   dispatch(setAuthor(res.data.data));
 };
 export const getBook = () => async (dispatch, getState) => {
-  let sorttype = "release_date";
+  let sorttype = "createdAt";
   let sortorder = "-1";
   let sortType = getState().homeReducers.book.sortType;
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "-1";
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "1";
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
     sorttype = "price";
@@ -85,7 +130,7 @@ export const getBook = () => async (dispatch, getState) => {
     _link = "http://localhost:8090/book/author";
   }
   let res;
-  console.log(getState().homeReducers.book.page)
+  console.log(getState().homeReducers.book.page);
   try {
     res = await axios.post(_link, {
       page: getState().homeReducers.book.page,
@@ -149,13 +194,13 @@ export const nextPage = () => (dispatch, getState) => {
 };
 export const setSortType = (sortType) => async (dispatch, getState) => {
   dispatch(setPage(1));
-  let sorttype = "release_date";
+  let sorttype = "createdAt";
   let sortorder = "-1";
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "-1";
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "1";
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
     sorttype = "price";
@@ -193,9 +238,8 @@ export const setSortType = (sortType) => async (dispatch, getState) => {
       range: getState().homeReducers.book.range,
       sorttype: sorttype,
       sortorder: sortorder,
-      searchtext: getState,
+      searchtext: getState().homeReducers.book.searchtext,
       id: getState().homeReducers.book.id,
-      searchtext: undefined,
     });
   } catch (err) {
     console.log(err.response);
@@ -210,14 +254,14 @@ export const setSort = (sortType) => ({
 });
 export const setRangeType = (range) => async (dispatch, getState) => {
   dispatch(setPage(1));
-  let sorttype = "release_date";
+  let sorttype = "createdAt";
   let sortorder = "-1";
   let sortType = getState().homeReducers.book.sortType;
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "-1";
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "1";
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
     sorttype = "price";
@@ -248,6 +292,9 @@ export const setRangeType = (range) => async (dispatch, getState) => {
     _link = "http://localhost:8090/book/author";
   }
   let res;
+
+  // console.log(getState().homeReducers.book.id);
+
   try {
     res = await axios.post(_link, {
       page: 1,
@@ -313,14 +360,14 @@ export const branchClick = (branch, id) => async (dispatch, getState) => {
 
 export const searchTextSubmit = () => async (dispatch, getState) => {
   dispatch(setPage(1));
-  let sorttype = "release_date";
+  let sorttype = "createdAt";
   let sortorder = "-1";
   let sortType = getState().homeReducers.book.sortType;
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "-1";
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "release_date";
+    sorttype = "createdAt";
     sortorder = "1";
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
     sorttype = "price";
@@ -342,6 +389,7 @@ export const searchTextSubmit = () => async (dispatch, getState) => {
     sortorder = "1";
   }
   let branch = getState().homeReducers.book.branch;
+  console.log(branch);
   let _link = "http://localhost:8090/book/allbook";
   if (branch === "category") {
     _link = "http://localhost:8090/book/category";

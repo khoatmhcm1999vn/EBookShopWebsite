@@ -558,3 +558,7 @@ img.large {
     opacity: 0.5;
   }
 }
+
+.modal-dialog {
+  left: 0%;
+}

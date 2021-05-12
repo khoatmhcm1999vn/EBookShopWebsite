@@ -2,8 +2,9 @@ import { cartTypes } from "../constants/action.types";
 import {
   CART_SAVE_SHIPPING_ADDRESS,
   CART_SAVE_PAYMENT_METHOD,
+  CART_EMPTY,
 } from "../constants/cartConstants";
-// import Axios from "axios";
+import Axios from "axios";
 import axiosClient from "../config/axiosClient";
 import storeConfig from "../config/store.config";
 
@@ -64,53 +65,53 @@ export const deteleProductInCart = (id_product) => async (
   dispatch(getCart());
 };
 
-// export const setCity = (data) => ({
-//   type: cartTypes.SET_CITY,
-//   data,
-// });
-// export const setDistrict = (data) => ({
-//   type: cartTypes.SET_DICTRICT,
-//   data,
-// });
-// export const setWard = (data) => ({
-//   type: cartTypes.SET_WARD,
-//   data,
-// });
-// export const getCity = () => async (dispatch, getState) => {
-//   let res = null;
-//   try {
-//     res = await axios.get("http://localhost:8090/address/city/all");
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   dispatch(setCity(res.data.data));
-// };
-// export const getDistrict = (code) => async (dispatch, getState) => {
-//   let res = null;
-//   try {
-//     res = await axios.get(
-//       "http://localhost:8090/address/city/district/" + code
-//     );
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   dispatch(setDistrict(res.data.data));
-// };
-// export const getWard = (codecity, codedistrict) => async (
-//   dispatch,
-//   getState
-// ) => {
-//   let res = null;
-//   try {
-//     res = await axios.post("http://localhost:8090/address/city/district/ward", {
-//       codecity: codecity,
-//       codedistrict: codedistrict,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-//   dispatch(setWard(res.data.data));
-// };
+export const setCity = (data) => ({
+  type: cartTypes.SET_CITY,
+  data,
+});
+export const setDistrict = (data) => ({
+  type: cartTypes.SET_DICTRICT,
+  data,
+});
+export const setWard = (data) => ({
+  type: cartTypes.SET_WARD,
+  data,
+});
+export const getCity = () => async (dispatch, getState) => {
+  let res = null;
+  try {
+    res = await Axios.get("http://localhost:8090/address/city/all");
+  } catch (err) {
+    console.log(err);
+  }
+  dispatch(setCity(res.data.data));
+};
+export const getDistrict = (code) => async (dispatch, getState) => {
+  let res = null;
+  try {
+    res = await Axios.get(
+      "http://localhost:8090/address/city/district/" + code
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  dispatch(setDistrict(res.data.data));
+};
+export const getWard = (codecity, codedistrict) => async (
+  dispatch,
+  getState
+) => {
+  let res = null;
+  try {
+    res = await Axios.post("http://localhost:8090/address/city/district/ward", {
+      codecity: codecity,
+      codedistrict: codedistrict,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  dispatch(setWard(res.data.data));
+};
 
 export const paymentSuccess = () => ({
   type: cartTypes.PAYMENT_SUCCESS,
@@ -121,22 +122,39 @@ export const paymentFail = () => ({
 export const resetPayment = () => ({
   type: cartTypes.RESET_PAYMENT,
 });
-export const payment = (city, district, ward, address, phone, name) => async (
-  dispatch,
-  getState
-) => {
+export const payment = (
+  city,
+  district,
+  ward,
+  address,
+  phone,
+  name,
+  cart,
+  email,
+  paymentResult
+) => async (dispatch, getState) => {
   let res = null;
+  console.log(paymentResult);
+
+  const products = {
+    cartItems: cart,
+    totalPrice: cart.totalPrice,
+    paymentMethod: cart.paymentMethod,
+  };
   try {
-    res = await axiosClient.post("/bill/add", {
-      id_user: storeConfig.getUser().id,
+    res = await Axios.post("http://localhost:8090/bill/add", {
+      // id_user: storeConfig.getUser().id,
       city: city,
       district: district,
       ward: ward,
       address: address,
       phone: phone,
       name: name,
-      email: storeConfig.getUser().email,
+      cart: products,
+      email: email,
+      paymentResult,
     });
+    console.log(res.data);
   } catch (err) {
     dispatch(paymentFail());
     console.log(err.response);
@@ -144,6 +162,8 @@ export const payment = (city, district, ward, address, phone, name) => async (
     return;
   }
   dispatch(paymentSuccess());
+  dispatch({ type: CART_EMPTY });
+  localStorage.removeItem("cart");
   dispatch(resetPayment());
   dispatch(getCart());
 };

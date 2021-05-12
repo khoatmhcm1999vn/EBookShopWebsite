@@ -37,10 +37,14 @@ const initialState = {
     data: localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
       : [],
+    ward: [],
+    district: [],
+    city: [],
     shippingAddress: localStorage.getItem("shippingAddress")
       ? JSON.parse(localStorage.getItem("shippingAddress"))
       : {},
     paymentMethod: "PayPal",
+    ispay: false,
   },
 };
 

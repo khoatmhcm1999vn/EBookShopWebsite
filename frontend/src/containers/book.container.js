@@ -13,10 +13,10 @@ import * as productActions from "../actions/product.action";
 
 class BookContainer extends Component {
   async componentWillMount() {
-    this.props.bookActions.getCategory();
-    this.props.bookActions.getPublisher();
+    this.props.bookActions.getCategoryAll();
+    this.props.bookActions.getPublisherAll();
     this.props.bookActions.getBook();
-    this.props.bookActions.getAuthor();
+    this.props.bookActions.getAuthorAll();
     // this.props.productActions.getBookDetail(null);
     let res = await this.props.userActions.loadUser();
     if (!res.is_admin || this.props.currentUser === null)
@@ -61,6 +61,12 @@ class BookContainer extends Component {
           setPage={(page) => this.props.bookActions.setPage(page)}
           isadd={this.props.isadd}
           isupdate={this.props.isupdate}
+          isaddAuthor={this.props.isaddAuthor}
+          addAuthor={(value) => this.props.bookActions.addAuthorBook(value)}
+          addCategory={(value) => this.props.bookActions.addCategoryBook(value)}
+          addPublisher={(value) =>
+            this.props.bookActions.addPublisherBook(value)
+          }
           addBook={(
             id_category,
             name,
@@ -113,6 +119,8 @@ class BookContainer extends Component {
               file
             )
           }
+          uploadFile={(value) => this.props.bookActions.uploadBookFile(value)}
+          downloadFile={() => this.props.bookActions.downloadBookFile()}
         />
         {/* <ToastContainer autoClose={2000} /> */}
       </section>
@@ -127,6 +135,7 @@ const mapStateToProps = (state) => ({
   mproductDetail: state.productReducers.product.productDetail,
   publisher: state.bookReducers.publisher.data,
   author: state.bookReducers.author.data,
+  isaddAuthor: state.bookReducers.author.isadd,
   isadd: state.bookReducers.book.isadd,
   isupdate: state.bookReducers.book.isupdate,
   islogin: state.userReducers.user.islogin,

@@ -2,13 +2,13 @@ import axios from "axios";
 import axiosClient from "../config/axiosClient";
 import { toast } from "react-toastify";
 import swal from "sweetalert";
-import { bookTypes } from "../constants/action.types";
+import { bookTypes, productTypes } from "../constants/action.types";
 
 export const getBook = () => async (dispatch, getState) => {
   let res;
   try {
     res = await axios.post(`${process.env.REACT_APP_API_URL}/api/getAllBook`, {
-      page: getState().bookReducers.book.page,
+      // page: getState().bookReducers.book.page,
       // range: null,
     });
   } catch (err) {
@@ -172,6 +172,36 @@ export const updateCategoryFail = () => ({
 export const resetCategory = () => ({
   type: bookTypes.RESET_CATEGORY,
 });
+
+export const getCategoryAll = () => async (dispatch, getState) => {
+  let res;
+  try {
+    res = await axios.get(`${process.env.REACT_APP_API_URL}/category`);
+  } catch (err) {
+    return;
+  }
+  dispatch(setCategory(res.data.data));
+};
+
+export const addCategoryBook = (name) => async (dispatch, getState) => {
+  let res;
+  try {
+    res = await axiosClient.post("/admin/addcategory", {
+      name: name,
+    });
+    if (res.success) toast.success(res.message);
+    else toast.error(res.message);
+  } catch (err) {
+    toast.error(res.message);
+    dispatch(addCategotyFail());
+    return;
+  }
+
+  dispatch(addCategorySuccess());
+  dispatch(resetCategory());
+  dispatch(getCategoryAll());
+};
+
 export const addCategory = (name) => async (dispatch, getState) => {
   dispatch(resetCategory());
   let res;
@@ -252,6 +282,35 @@ export const updateAuthorFail = () => ({
 export const resetAuthor = () => ({
   type: bookTypes.RESET_AUTHOR,
 });
+
+export const getAuthorAll = () => async (dispatch, getState) => {
+  let res;
+  try {
+    res = await axios.get(`${process.env.REACT_APP_API_URL}/author`);
+  } catch (err) {
+    return;
+  }
+  dispatch(setAuthor(res.data.data));
+};
+export const addAuthorBook = (name) => async (dispatch, getState) => {
+  let res;
+  try {
+    res = await axiosClient.post("/admin/addauthor", {
+      name: name,
+    });
+    if (res.success) toast.success(res.message);
+    else toast.error(res.message);
+  } catch (err) {
+    toast.error(res.message);
+    dispatch(addAuthorFail());
+    return;
+  }
+
+  dispatch(addAuthorSuccess());
+  dispatch(resetAuthor());
+  dispatch(getAuthorAll());
+};
+
 export const addAuthor = (name) => async (dispatch, getState) => {
   dispatch(resetAuthor());
   let res;
@@ -318,6 +377,60 @@ export const deleteAuthor = (id) => async (dispatch, getState) => {
   dispatch(getAuthor());
 };
 
+export const uploadFile = (file) => async (dispatch, getState) => {
+  console.log(file);
+  let data = new FormData();
+  data.append("file", file);
+  let res;
+  try {
+    res = await axiosClient.post("/admin/upload", data);
+    console.log(res);
+    if (res.success) toast.success(res.message);
+    else toast.error(res.message);
+  } catch (err) {
+    console.log(res);
+    toast.error(res.message);
+    // dispatch(updateBookFail());
+    // dispatch(resetBook());
+    return;
+  }
+  // dispatch(updateBookSuccess());
+  // dispatch(resetBook());
+  dispatch(getAuthor());
+};
+export const downloadFile = () => async (dispatch, getState) => {
+  // axiosClient.get("/admin/download");
+  fetch("http://localhost:8090/admin/download", {
+    method: "GET",
+  })
+    .then((response) => response.blob())
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "author.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    });
+};
+// let res;
+// try {
+//   res = await axiosClient.get("/admin/download");
+//   console.log(res);
+//   // if (res.success) toast.success(res.message);
+//   // else toast.error(res.message);
+// } catch (err) {
+//   console.log(res);
+//   // toast.error(res.message);
+//   // dispatch(updateBookFail());
+//   // dispatch(resetBook());
+//   return;
+// }
+// dispatch(updateBookSuccess());
+// dispatch(resetBook());
+// dispatch(getAuthor());
+
 export const addPublisherSuccess = () => ({
   type: bookTypes.ADD_PUBLISHER_SUCCESS,
 });
@@ -333,6 +446,36 @@ export const updatePublisherFail = () => ({
 export const resetPublisher = () => ({
   type: bookTypes.RESET_PUBLISHER,
 });
+
+export const getPublisherAll = () => async (dispatch, getState) => {
+  let res;
+  try {
+    res = await axios.get(`${process.env.REACT_APP_API_URL}/publisher`);
+  } catch (err) {
+    return;
+  }
+  dispatch(setPublisher(res.data.data));
+};
+
+export const addPublisherBook = (name) => async (dispatch, getState) => {
+  let res;
+  try {
+    res = await axiosClient.post("/admin/addpublisher", {
+      name: name,
+    });
+    if (res.success) toast.success(res.message);
+    else toast.error(res.message);
+  } catch (err) {
+    toast.error(res.message);
+    dispatch(addPublisherFail());
+    return;
+  }
+
+  dispatch(addPublisherSuccess());
+  dispatch(resetPublisher());
+  dispatch(getPublisherAll());
+};
+
 export const addPublisher = (name) => async (dispatch, getState) => {
   dispatch(resetPublisher());
   let res;
@@ -480,80 +623,137 @@ export const updateBookSuccess = () => ({
 export const updateBookFail = () => ({
   type: bookTypes.UPDATE_BOOK_FAIL,
 });
-export const addBook = (
-  id_category,
-  name,
-  price,
-  quantity,
-  published,
-  release_date,
-  describe,
-  id_nsx,
-  id_author,
-  file
-) => async (dispatch, getState) => {
+
+export const resetBook = () => ({
+  type: productTypes.RESET_BOOK_DETAIL,
+});
+
+export const addBook =
+  (
+    id_category,
+    name,
+    price,
+    quantity,
+    published,
+    createdAt,
+    describe,
+    id_nsx,
+    id_author,
+    file
+  ) =>
+  async (dispatch, getState) => {
+    let data = new FormData();
+    data.append("file", file);
+    data.append("id_category", id_category);
+    data.append("name", name);
+    data.append("price", price);
+    data.append("quantity", quantity);
+    data.append("published", published);
+    data.append("createdAt", createdAt);
+    data.append("describe", describe);
+    data.append("id_nsx", id_nsx);
+    data.append("id_author", id_author);
+    let res;
+    try {
+      res = await axiosClient.post("/admin/addbook", data);
+      if (res.success) toast.success(res.message);
+      else toast.error(res.message);
+    } catch (err) {
+      toast.error(res.message);
+      dispatch(addBookFail());
+      dispatch(resetBook());
+      return;
+    }
+    dispatch(addBookSuccess());
+    dispatch(resetBook());
+    dispatch(getBook());
+  };
+export const updateBook =
+  (
+    id,
+    name,
+    id_category,
+    price,
+    quantity,
+    published,
+    createdAt,
+    describe,
+    id_nsx,
+    id_author,
+    file
+  ) =>
+  async (dispatch, getState) => {
+    let data = new FormData();
+    data.append("file", file);
+    data.append("id", id);
+    data.append("id_category", id_category);
+    data.append("name", name);
+    data.append("price", price);
+    data.append("quantity", quantity);
+    data.append("published", published);
+    data.append("createdAt", createdAt);
+    data.append("describe", describe);
+    data.append("id_nsx", id_nsx);
+    data.append("id_author", id_author);
+    let res;
+    try {
+      res = await axiosClient.post("/admin/updatebook", data);
+      if (res.success) toast.success(res.message);
+      else toast.error(res.message);
+    } catch (err) {
+      toast.error(res.message);
+      dispatch(updateBookFail());
+      dispatch(resetBook());
+      return;
+    }
+    dispatch(updateBookSuccess());
+    dispatch(resetBook());
+    dispatch(getBook());
+  };
+
+export const uploadBookFile = (file) => async (dispatch, getState) => {
+  // console.log(file);
+
   let data = new FormData();
   data.append("file", file);
-  data.append("id_category", id_category);
-  data.append("name", name);
-  data.append("price", price);
-  data.append("quantity", quantity);
-  data.append("published", published);
-  data.append("release_date", release_date);
-  data.append("describe", describe);
-  data.append("id_nsx", id_nsx);
-  data.append("id_author", id_author);
   let res;
+
   try {
-    res = await axiosClient.post("/admin/addbook", data);
+    res = await axiosClient.post("/admin/uploadBook", data);
+    // console.log(res);
     if (res.success) toast.success(res.message);
     else toast.error(res.message);
   } catch (err) {
+    // console.log(res);
     toast.error(res.message);
-    dispatch(addBookFail());
+    // dispatch(updateBookFail());
+    // dispatch(resetBook());
     return;
   }
-  dispatch(addBookSuccess());
+
+  // dispatch(updateBookSuccess());
+  // dispatch(resetBook());
   dispatch(getBook());
 };
-export const updateBook = (
-  id,
-  name,
-  id_category,
-  price,
-  quantity,
-  published,
-  release_date,
-  describe,
-  id_nsx,
-  id_author,
-  file
-) => async (dispatch, getState) => {
-  let data = new FormData();
-  data.append("file", file);
-  data.append("id", id);
-  data.append("id_category", id_category);
-  data.append("name", name);
-  data.append("price", price);
-  data.append("quantity", quantity);
-  data.append("published", published);
-  data.append("release_date", release_date);
-  data.append("describe", describe);
-  data.append("id_nsx", id_nsx);
-  data.append("id_author", id_author);
-  let res;
-  try {
-    res = await axiosClient.post("/admin/updatebook", data);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    toast.error(res.message);
-    dispatch(updateBookFail());
-    return;
-  }
-  dispatch(updateBookSuccess());
-  dispatch(getBook());
+
+export const downloadBookFile = () => async (dispatch, getState) => {
+  // axiosClient.get("/admin/download");
+
+  fetch("http://localhost:8090/admin/downloadBook", {
+    method: "GET",
+  })
+    .then((response) => response.blob())
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "book.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    });
 };
+
 export const setBill = (data) => ({
   type: bookTypes.BILL_SET_DATA,
   data,

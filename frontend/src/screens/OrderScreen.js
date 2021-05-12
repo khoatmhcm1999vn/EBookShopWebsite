@@ -28,7 +28,7 @@ export default function OrderScreen({
   },
 }) {
   const orderId = id;
-  const [sdkReady, setSdkReady] = useState(false);
+  // const [sdkReady, setSdkReady] = useState(false);
   const [data, setData] = useState({
     loading: false,
     success: false,
@@ -39,10 +39,13 @@ export default function OrderScreen({
   });
 
   const orderDetails = useSelector((state) => state.orderDetails);
+  const cart = useSelector((state) => state.cart.data);
   const islogin = useSelector((state) => state.userReducers.user.islogin);
   const { order, loading, error } = orderDetails;
+
   //  const userSignin = useSelector((state) => state.userSignin);
   // const { userInfo } = userSignin;
+
   console.log(orderDetails);
   // console.log(order._id);
 
@@ -73,19 +76,24 @@ export default function OrderScreen({
       }
     });
   };
+
   const onConfirmOrderPaypal = () => {
     setData({ ...data, loading: true });
+
     let nonce;
     data.instance.requestPaymentMethod().then((res) => {
       nonce = res.nonce;
+
       const paymentData = {
         paymentMethodNonce: nonce,
         amount: order[0].totalPrice,
       };
+
       processPayment(paymentData)
         .then((response) => {
           // console.log(response);
           setData({ ...data, success: response.success });
+
           const payload = {
             id: response.transaction.id,
             status: "COMPLETED",
@@ -94,6 +102,7 @@ export default function OrderScreen({
           };
           dispatch(payOrder(order, payload));
         })
+
         .catch((error) => {
           console.log("DropIn error: ", error);
           setData({ ...data, error: error.message });
@@ -102,21 +111,21 @@ export default function OrderScreen({
   };
 
   useEffect(() => {
-    const addPayPalScript = async () => {
-      const { data } = await Axios.get("/api/config/paypal");
-      // console.log(data);
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true);
-      };
-      document.body.appendChild(script);
-    };
+    // const addPayPalScript = async () => {
+    //   const { data } = await Axios.get("/api/config/paypal");
+    //   // console.log(data);
+    //   const script = document.createElement("script");
+    //   script.type = "text/javascript";
+    //   script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+    //   script.async = true;
+    //   script.onload = () => {
+    //     setSdkReady(true);
+    //   };
+    //   document.body.appendChild(script);
+    // };
+
     if (
       !order ||
-      !data.success ||
       successPay ||
       successDeliver ||
       (order && order._id !== orderId)
@@ -125,24 +134,28 @@ export default function OrderScreen({
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(detailsOrder(orderId));
       getToken();
-    } else {
-      if (!order.isPaid) {
-        if (!window.paypal) {
-          // addPayPalScript();
-        } else {
-          setSdkReady(true);
-        }
-      }
     }
-  }, [dispatch, orderId, sdkReady, successPay, successDeliver, data.success]);
+    //  else {
+    //   if (!order.isPaid) {
+    //     if (!window.paypal) {
+    //       // addPayPalScript();
+    //     } else {
+    //       setSdkReady(true);
+    //     }
+    //   }
+    // }
+  }, [dispatch, orderId, successPay, successDeliver]);
 
   // const successPaymentHandler = (paymentResult) => {
   //   dispatch(payOrder(order, paymentResult));
   // };
+
   // const deliverHandler = () => {
   //   dispatch(deliverOrder(order._id));
   // };
+
   console.log(data);
+
   return loading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
@@ -155,6 +168,7 @@ export default function OrderScreen({
           islogin={islogin}
           logout={() => dispatch(logout())}
           history={history}
+          cart={cart}
         />
       </header>
       <div class="breadcrumbs">
@@ -181,11 +195,9 @@ export default function OrderScreen({
                       <strong>Name:</strong> {order[0].user.firstName} <br />
                       <strong>Phone number:</strong>
                       {order[0].user.phone_number} <strong>Address: </strong>
-                      {order[0].bills[0].address[0].address},
-                      {order[0].bills[0].address[0].ward},
-                      {order[0].bills[0].address[0].district},
-                      {order[0].bills[0].address[0].city},
-                      {order[0].bills[0].address[0].code}
+                      {order[0].bills[0].address},{order[0].bills[0].ward},
+                      {order[0].bills[0].district},{order[0].bills[0].city},
+                      {/* {order[0].bills[0].code} */}
                     </>
                   ) : (
                     <h2>No data</h2>
@@ -255,7 +267,7 @@ export default function OrderScreen({
               <li>
                 <h2>Order Summary</h2>
               </li>
-              <li>
+              {/* <li>
                 <div className="row">
                   <div>Items</div>
                   <div>${order[0].itemsPrice.toFixed(2)}</div>
@@ -272,7 +284,7 @@ export default function OrderScreen({
                   <div>Tax</div>
                   <div>${order[0].taxPrice.toFixed(2)}</div>
                 </div>
-              </li>
+              </li> */}
               <li>
                 <div className="row">
                   <div>

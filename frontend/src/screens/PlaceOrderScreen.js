@@ -32,42 +32,42 @@ export default function PlaceOrderScreen(props) {
   const { loading, success, error, order } = orderCreate;
 
   const toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
-  cart.itemsPrice = toPrice(
+  cart.totalPrice = toPrice(
     cart.data.reduce((a, c) => a + c.count * c.price, 0)
   );
-  cart.shippingPrice = cart.itemsPrice > 100 ? toPrice(0) : toPrice(10);
-  cart.taxPrice = toPrice(0.15 * cart.itemsPrice);
-  cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
+  // cart.shippingPrice = cart.itemsPrice > 100 ? toPrice(0) : toPrice(10);
+  // cart.taxPrice = toPrice(0.15 * cart.itemsPrice);
+  // cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
   const dispatch = useDispatch();
   const placeOrderHandler = () => {
     dispatch(createOrder({ ...cart, products: cart.data }));
   };
 
-  const addressList = useSelector((state) => state.addressListMy);
+  // const addressList = useSelector((state) => state.addressListMy);
   const userAddr = useSelector((state) => state.userReducers.user);
-  const {
-    addresses,
-    loading: addressListLoading,
-    error: addressListError,
-  } = addressList;
+  // const {
+  //   addresses,
+  //   loading: addressListLoading,
+  //   error: addressListError,
+  // } = addressList;
   // const { address } = addresses;
   // console.log(address[0]);
   // console.log(addresses);
   // console.log(cart.paymentMethod);
-  console.log(userAddr);
+  console.log(userAddr.address);
 
-  useEffect(() => {
-    getShippingAddress();
-    getMyCart();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   // dispatch(getMyAddresesAction());
+  //   // dispatch(getCart());
+  // }, [dispatch]);
 
-  const getShippingAddress = async () => {
-    dispatch(getMyAddresesAction());
-  };
-  const getMyCart = () => {
-    dispatch(getCart());
-  };
+  // const getShippingAddress = async () => {
+  //   dispatch(getMyAddresesAction());
+  // };
+  // const getMyCart = () => {
+  //   dispatch(getCart());
+  // };
 
   useEffect(() => {
     if (success) {
@@ -78,7 +78,7 @@ export default function PlaceOrderScreen(props) {
     }
   }, [dispatch, order, props.history, success]);
 
-  // console.log(cart);
+  console.log(cart);
   return (
     <div>
       <header id="header">
@@ -87,6 +87,7 @@ export default function PlaceOrderScreen(props) {
           islogin={islogin}
           logout={() => dispatch(logout())}
           history={props.history}
+          cart={cart.data}
         />
       </header>
       <div class="breadcrumbs">
@@ -111,7 +112,11 @@ export default function PlaceOrderScreen(props) {
                   <strong>Phone number:</strong>
                   {userAddr.address.user.phone_number}
                   <br />
-                  {userAddr.address.address &&
+                  <strong>Address: </strong>
+                  {userAddr.address.address},{userAddr.address.ward},
+                  {userAddr.address.district},{userAddr.address.city},
+                  {userAddr.address.code}
+                  {/* {userAddr.address.address &&
                   userAddr.address.address.length > 0 ? (
                     <>
                       <strong>Address: </strong>
@@ -123,7 +128,7 @@ export default function PlaceOrderScreen(props) {
                     </>
                   ) : (
                     <h2>No data</h2>
-                  )}
+                  )} */}
                 </p>
               </div>
             </li>
@@ -171,7 +176,7 @@ export default function PlaceOrderScreen(props) {
               <li>
                 <h2>Order Summary</h2>
               </li>
-              <li>
+              {/* <li>
                 <div className="row">
                   <div>Items</div>
                   <div>${cart.itemsPrice.toFixed(2)}</div>
@@ -188,7 +193,7 @@ export default function PlaceOrderScreen(props) {
                   <div>Tax</div>
                   <div>${cart.taxPrice.toFixed(2)}</div>
                 </div>
-              </li>
+              </li> */}
               <li>
                 <div className="row">
                   <div>

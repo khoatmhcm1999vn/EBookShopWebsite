@@ -3,6 +3,7 @@ import axiosClient from "../config/axiosClient";
 import { toast } from "react-toastify";
 import swal from "sweetalert";
 import { userTypes } from "../constants/action.types";
+import { getCart } from "../actions/cart.action";
 import { USER_SIGNOUT, userConstants } from "../constants/userConstants";
 import storeConfig from "../config/store.config";
 export const setUser = (data) => ({
@@ -93,67 +94,71 @@ export const updateUserFail = () => ({
 export const resetUser = () => ({
   type: userTypes.RESET_USER,
 });
-export const addUser = (
-  email,
-  password,
-  firstName,
-  lastName,
-  address,
-  phone_number,
-  is_admin
-) => async (dispatch, getState) => {
-  dispatch(resetUser());
-  let res;
-  try {
-    res = await axiosClient.post("/admin/adduser", {
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      password: password,
-      address: address,
-      phone_number: phone_number,
-      is_admin: is_admin,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    console.log(err);
-    toast.error(res.message);
-    dispatch(addUserFail());
-    return;
-  }
-  dispatch(addUserSuccess());
-  dispatch(getUser());
-};
-export const updateUser = (
-  email,
-  firstName,
-  lastName,
-  address,
-  phone_number,
-  is_admin
-) => async (dispatch, getState) => {
-  let res;
-  try {
-    res = await axiosClient.post("/admin/updateuser", {
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      address: address,
-      phone_number: phone_number,
-      is_admin: is_admin,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    console.log(err);
-    toast.error(res.message);
-    dispatch(updateUserFail());
-    return;
-  }
-  dispatch(updateUserSuccess());
-  dispatch(getUser());
-};
+export const addUser =
+  (
+    email,
+    password,
+    firstName,
+    lastName,
+    // address,
+    phone_number,
+    is_admin
+  ) =>
+  async (dispatch, getState) => {
+    dispatch(resetUser());
+    let res;
+    try {
+      res = await axiosClient.post("/admin/adduser", {
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+        // address: address,
+        phone_number: phone_number,
+        is_admin: is_admin,
+      });
+      if (res.success) toast.success(res.message);
+      else toast.error(res.message);
+    } catch (err) {
+      console.log(err);
+      toast.error(res.message);
+      dispatch(addUserFail());
+      return;
+    }
+    dispatch(addUserSuccess());
+    dispatch(getUser());
+  };
+export const updateUser =
+  (
+    email,
+    firstName,
+    lastName,
+    // address,
+    phone_number,
+    is_admin
+  ) =>
+  async (dispatch, getState) => {
+    let res;
+    try {
+      res = await axiosClient.post("/admin/updateuser", {
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        // address: address,
+        phone_number: phone_number,
+        is_admin: is_admin,
+      });
+      if (res.success) toast.success(res.message);
+      else toast.error(res.message);
+    } catch (err) {
+      console.log(err);
+      toast.error(res.message);
+      dispatch(updateUserFail());
+      return;
+    }
+    dispatch(updateUserSuccess());
+    dispatch(getUser());
+  };
 
 export const setCurrentUser = (user) => {
   return {
@@ -177,6 +182,7 @@ export const loginSuccess = (token, user) => async (dispatch, getState) => {
         id_user: user.id,
         products: cart,
       });
+      dispatch(getCart());
     } catch (err) {
       console.log(JSON.stringify(err.response));
       return;
@@ -276,29 +282,27 @@ export const verifyOTPFAIL = () => ({
   type: userTypes.VERIFY_OTP_FAIL,
 });
 
-export const submitEnterNewPassword = (newPassword) => async (
-  dispatch,
-  getState
-) => {
-  let res;
-  try {
-    res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/user/forgotpassword`,
-      {
-        email: getState().userReducers.forgotPassword.email,
-        otp: getState().userReducers.forgotPassword.otp,
-        newPassword: newPassword,
-      }
-    );
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    toast.error(res.message);
-    dispatch(forgotPasswordFail());
-    return;
-  }
-  dispatch(forgotPasswordSuccess());
-};
+export const submitEnterNewPassword =
+  (newPassword) => async (dispatch, getState) => {
+    let res;
+    try {
+      res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/user/forgotpassword`,
+        {
+          email: getState().userReducers.forgotPassword.email,
+          otp: getState().userReducers.forgotPassword.otp,
+          newPassword: newPassword,
+        }
+      );
+      if (res.success) toast.success(res.message);
+      else toast.error(res.message);
+    } catch (err) {
+      toast.error(res.message);
+      dispatch(forgotPasswordFail());
+      return;
+    }
+    dispatch(forgotPasswordSuccess());
+  };
 
 export const forgotPasswordSuccess = () => ({
   type: userTypes.FORGOT_PASSWORD_SUCCESS,
@@ -382,14 +386,14 @@ export const getAddress = () => {
     try {
       const res = await axiosClient.post(`/api/address/user/getaddress`);
       dispatch({ type: userConstants.GET_USER_ADDRESS_REQUEST });
+      console.log(res.success);
       if (res.success) {
         const {
-          userAddress: { address, user },
+          userAddress: { ward, district, address, city, user, _id },
         } = res;
-        console.log(user);
         dispatch({
           type: userConstants.GET_USER_ADDRESS_SUCCESS,
-          payload: { address, user },
+          payload: { ward, district, address, city, user, _id },
         });
       } else {
         const { error } = res;
@@ -406,18 +410,20 @@ export const getAddress = () => {
 export const addAddress = (payload) => {
   return async (dispatch) => {
     try {
+      console.log(payload);
+      // return
       const res = await axiosClient.post(`/api/address/user/address/create`, {
         payload,
       });
+
       dispatch({ type: userConstants.ADD_USER_ADDRESS_REQUEST });
       if (res.success) {
         console.log(res);
-        const {
-          address: { address },
-        } = res;
+        // return;
+        const { addressFind } = res;
         dispatch({
           type: userConstants.ADD_USER_ADDRESS_SUCCESS,
-          payload: { address },
+          payload: { addressFind },
         });
       } else {
         const { error } = res;

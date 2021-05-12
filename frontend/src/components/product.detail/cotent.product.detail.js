@@ -167,8 +167,7 @@ class ContentProductDetail extends Component {
                       {this.props.publisher.map((element, index) => {
                         return (
                           <li>
-                            <a href="#">
-                              {" "}
+                            <a key={1}>
                               <span className="pull-right" />
                               {element.name}
                             </a>
@@ -303,9 +302,9 @@ class ContentProductDetail extends Component {
                       <b>Category:</b> {this.props.nameCategory}
                     </p>
                     <p>
-                      <b>Release date: </b>{" "}
+                      <b>Release date: </b>
                       {new Date(
-                        this.props.mproductDetail.release_date
+                        this.props.mproductDetail.createdAt
                       ).toLocaleDateString()}
                     </p>
                     <p>

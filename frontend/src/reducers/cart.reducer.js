@@ -7,8 +7,8 @@ import {
 // import { combineReducers } from "redux";
 
 export const cartReducer = (
-  // state = { data: [], city: [], district: [], ward: [] },
-  state = { data: [] },
+  state = { data: [], city: [], district: [], ward: [] },
+  // state = { data: [] },
   action
 ) => {
   switch (action.type) {
@@ -19,24 +19,24 @@ export const cartReducer = (
       };
     }
 
-    // case cartTypes.SET_CITY: {
-    //   return {
-    //     ...state,
-    //     city: action.data,
-    //   };
-    // }
-    // case cartTypes.SET_DICTRICT: {
-    //   return {
-    //     ...state,
-    //     district: action.data,
-    //   };
-    // }
-    // case cartTypes.SET_WARD: {
-    //   return {
-    //     ...state,
-    //     ward: action.data,
-    //   };
-    // }
+    case cartTypes.SET_CITY: {
+      return {
+        ...state,
+        city: action.data,
+      };
+    }
+    case cartTypes.SET_DICTRICT: {
+      return {
+        ...state,
+        district: action.data,
+      };
+    }
+    case cartTypes.SET_WARD: {
+      return {
+        ...state,
+        ward: action.data,
+      };
+    }
 
     case CART_SAVE_SHIPPING_ADDRESS:
       return { ...state, shippingAddress: action.payload };

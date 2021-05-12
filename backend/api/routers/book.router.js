@@ -12,6 +12,7 @@ import {
 } from "../controllers/book.controller.js";
 import faker from "faker";
 import Book from "../models/book.model.js";
+import Bill from "../models/bill.model.js";
 
 const bookRouter = express.Router();
 
@@ -42,6 +43,7 @@ bookRouter.post(
   "/api/getAllBook",
   expressAsyncHandler(async (req, res) => {
     let count = null;
+
     try {
       count = await Book.countDocuments();
     } catch (err) {
@@ -49,6 +51,7 @@ bookRouter.post(
       res.status(500).json({ msg: err });
       return;
     }
+
     let perPage = parseInt(req.body.size) || 10; // số lượng sản phẩm xuất hiện trên 1 page
     let totalPage = parseInt((count - 1) / perPage + 1);
     const { name } = req.body;
@@ -57,6 +60,7 @@ bookRouter.post(
       res.status(200).json({ data: [], msg: "Invalid page", totalPage });
       return;
     }
+
     let bookFind;
     if (name) {
       try {
@@ -117,6 +121,7 @@ bookRouter.post(
           // { $skip: perPage * (parseInt(page) - 1) },
           // { $limit: perPage },
         ]);
+
         res.status(200).json({
           result: "success",
           data: bookFind,
@@ -213,11 +218,12 @@ bookRouter.post(
           // { $skip: perPage * (parseInt(page) - 1) },
           // { $limit: perPage },
         ]);
+
         res.status(200).json({
           result: "success",
           data: bookFind,
           totalPage,
-          pageCurrent: page,
+          // pageCurrent: page,
         });
         return;
       } catch (err) {
@@ -247,7 +253,7 @@ bookRouter.get(
             },
           },
           {
-            $sort: { release_date: -1 },
+            $sort: { createdAt: -1 },
           },
         ]);
         res.json({ result: "success", data: productCategories });
@@ -264,7 +270,7 @@ bookRouter.get(
             },
           },
           {
-            $sort: { release_date: -1 },
+            $sort: { createdAt: -1 },
           },
         ]);
         res.json({ result: "success", data: productCategories });
@@ -292,7 +298,7 @@ bookRouter.get(
       productCategories = await Book.find(
         condition
         // sort: { createdAt: +1 },
-      ).sort({ release_date: -1 });
+      ).sort({ createdAt: -1 });
       res.json({ result: "success", data: productCategories });
     } catch (err) {
       res.json({ result: "error", message: err.msg });
@@ -304,5 +310,112 @@ bookRouter.post("/book/category", getBookByCategory);
 bookRouter.post("/book/author", getBookByAuthor);
 bookRouter.get("/book/:id", getBookByID);
 bookRouter.get("/book/related/:bookId", getRelatedBook);
+
+bookRouter.post(
+  "/get/best-seller",
+  expressAsyncHandler(async (req, res) => {
+    const pipeline = [
+      // {
+      //   $project: {
+      //     _id: {
+      //       $toObjectId: "$products._id",
+      //     },
+      //   },
+      // },
+      {
+        $unwind: "$products", // lấy ra param order_list[] chia đều thành mảng các object
+      },
+      { $project: { products: 1 } }, // chỉ hiển thị field order_list
+      {
+        $group: {
+          _id: "$products._id",
+          name: { $first: "$products.name" },
+          price: { $first: "$products.price" },
+          count: { $sum: 1 },
+        },
+      },
+      // {
+      //   $project: {
+      //     name: 1,
+      //     count: 1,
+      //   },
+      // },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 5,
+      },
+    ];
+    const order = await Bill.aggregate(pipeline);
+    // await Product.populate(order, {
+    //   path: "_id",
+    //   select: [
+    //     "name",
+    //     "bigimage",
+    //     "stars",
+    //     "price_min",
+    //     "reviewCount",
+    //     "pathseo",
+    //     "active",
+    //   ],
+    //   populate: { path: "bigimage", select: "public_url" },
+    // });
+    return res.status(200).json({ success: true, code: 200, products: order });
+  })
+);
+
+bookRouter.post(
+  "/api/get-newest-product",
+  expressAsyncHandler(async (req, res) => {
+    let products = await Book.find(
+      { published: true },
+      {
+        name: 1,
+        price: 1,
+        img: 1,
+        quantity: 1,
+        describe: 1,
+        // group: 0,
+        // category: 0,
+        // brand: 0,
+        createdAt: 1,
+        // updatedAt: 0,
+        // price_max: 0,
+      }
+    )
+      // .populate({ path: "bigimage", select: "public_url" })
+      .limit(2)
+      .sort({ createdAt: -1 });
+    return res.status(200).json({ success: true, code: 200, products });
+  })
+);
+
+bookRouter.post(
+  "/api/get-favor-product",
+  expressAsyncHandler(async (req, res) => {
+    const pipeline = [
+      {
+        $sort: { stars: -1 },
+      },
+      {
+        $limit: 2,
+      },
+      {
+        $project: {
+          name: 1,
+          img: 1,
+          stars: 1,
+          price: 1,
+          reviewCount: 1,
+          published: 1,
+        },
+      },
+    ];
+    const products = await Book.aggregate(pipeline);
+    // await Image.populate(products, {path: "bigimage", select: 'public_url'})
+    return res.status(200).json({ success: true, code: 200, products });
+  })
+);
 
 export default bookRouter;

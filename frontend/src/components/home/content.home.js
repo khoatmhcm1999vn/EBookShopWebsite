@@ -80,6 +80,28 @@ class ContentHome extends Component {
           <div className="row">
             <div className="col-sm-3">
               <div className="left-sidebar">
+                <h2>Reset</h2>
+                <div className="panel-group category-products" id="accordian">
+                  <div
+                    key={1}
+                    onClick={() => {
+                      this.resetCheck();
+                      this.props.setTitle("ALL BOOK");
+                      this.props.setBranch("");
+                      this.props.setSearchText("");
+                      this.props.setIDBranch(null);
+                      this.props.setRangeType(null);
+                      // this.props.searchTextSubmit();
+                    }}
+                    className="panel panel-default"
+                  >
+                    <div className="panel-heading">
+                      <h4 className="panel-title item-custom">
+                        <a key={1}>Reset</a>
+                      </h4>
+                    </div>
+                  </div>
+                </div>
                 <h2>Category</h2>
                 <div className="panel-group category-products" id="accordian">
                   {this.props.category.map((element, index) => {
@@ -122,7 +144,6 @@ class ContentHome extends Component {
                             item-custom
                           >
                             <a>
-                              {" "}
                               <span className="pull-right" />
                               {element.name}
                             </a>
@@ -151,7 +172,6 @@ class ContentHome extends Component {
                             item-custom
                           >
                             <a>
-                              {" "}
                               <span className="pull-right" />
                               {element.name}
                             </a>
@@ -257,6 +277,7 @@ class ContentHome extends Component {
                 {this.props.book.map((element, index) => {
                   return (
                     <ProductItem
+                      key={index}
                       book={element}
                       urlImg={element.img}
                       price={element.price}

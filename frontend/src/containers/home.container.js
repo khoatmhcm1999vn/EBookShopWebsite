@@ -6,6 +6,7 @@ import Home from "../components/home/home";
 import * as userActions from "../actions/user.action";
 import * as homeActions from "../actions/home.action";
 import * as productActions from "../actions/product.action";
+import * as cartActions from "../actions/cart.action";
 import Loading from "../components/loading/loading";
 // import { sortTypes } from "../constants/action.types";
 // import localStore from "../config/storage.config";
@@ -20,8 +21,10 @@ class HomeContainer extends React.Component {
     this.props.homeActions.getPublisher();
     this.props.homeActions.getBook();
     this.props.homeActions.getAuthor();
+    this.props.cartActions.getCart();
   }
   componentWillReceiveProps(nextProps) {
+    // console.log(this.props.cart);
     if (nextProps.page !== this.props.page) {
       this.props.homeActions.getBook();
     }
@@ -43,6 +46,7 @@ class HomeContainer extends React.Component {
             category={this.props.category}
             publisher={this.props.publisher}
             book={this.props.book}
+            text={this.props.text}
             totalpage={this.props.totalpage}
             backPage={() => this.props.homeActions.backPage()}
             nextPage={() => this.props.homeActions.nextPage()}
@@ -68,6 +72,7 @@ class HomeContainer extends React.Component {
             addToCart={(product) =>
               this.props.productActions.addToCart(product)
             }
+            cart={this.props.cart}
           />
         </div>
       );
@@ -87,6 +92,8 @@ const mapStateToProps = (state) => ({
   sortType: state.homeReducers.book.sortType,
   title: state.homeReducers.book.title,
   branch: state.homeReducers.book.branch,
+  text: state.homeReducers.book.searchtext,
+  cart: state.cart.data,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -94,6 +101,7 @@ const mapDispatchToProps = (dispatch) => {
     actions: bindActionCreators(userActions, dispatch),
     homeActions: bindActionCreators(homeActions, dispatch),
     productActions: bindActionCreators(productActions, dispatch),
+    cartActions: bindActionCreators(cartActions, dispatch),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

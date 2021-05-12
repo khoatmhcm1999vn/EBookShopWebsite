@@ -18,6 +18,12 @@ const product = (
         productDetail: action.productDetail,
       };
     }
+    case productTypes.RESET_BOOK_DETAIL: {
+      return {
+        ...state,
+        productDetail: null,
+      };
+    }
     case productTypes.SET_NAME_CATEGORY: {
       return {
         ...state,

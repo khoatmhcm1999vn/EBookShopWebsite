@@ -17,7 +17,7 @@ export default function PaymentScreen({ history }) {
   if (!shippingAddress || Object.keys(shippingAddress).length === 0) {
     history.push("/shipping");
   }
-  console.log(cart);
+  // console.log(cart);
   const [paymentMethod, setPaymentMethod] = useState("PayPal");
   const dispatch = useDispatch();
   const submitHandler = (e) => {
@@ -33,6 +33,7 @@ export default function PaymentScreen({ history }) {
           islogin={islogin}
           logout={() => dispatch(logout())}
           history={history}
+          cart={cart.data}
         />
       </header>
       <div class="breadcrumbs">

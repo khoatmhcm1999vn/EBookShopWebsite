@@ -42,7 +42,7 @@ export const getAllBook = async (req, res) => {
   let searchCategory = null;
   searchCategory = await getCategoryIDBySearchText(searchText);
   // Sap xep
-  let sortType = "release_date";
+  let sortType = "createdAt";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -52,7 +52,7 @@ export const getAllBook = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "release_date" &&
+    sortType !== "createdAt" &&
     sortType !== "view_counts" &&
     sortType !== "sales"
   ) {
@@ -75,6 +75,7 @@ export const getAllBook = async (req, res) => {
           { id_category: { $in: searchCategory } },
         ],
         price: { $gte: objRange.low, $lte: objRange.high },
+        published: true,
       });
     } else {
       bookCount = await Book.count({
@@ -84,6 +85,7 @@ export const getAllBook = async (req, res) => {
           { id_author: { $in: searchAuthor } },
           { id_category: { $in: searchCategory } },
         ],
+        published: true,
       });
     }
   } catch (err) {
@@ -110,7 +112,14 @@ export const getAllBook = async (req, res) => {
         { id_category: { $in: searchCategory } },
       ],
       price: { $gte: objRange.low, $lte: objRange.high },
+      published: true,
     })
+
+      // select('-_id');
+
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .skip(9 * (parseInt(page) - 1))
       .limit(9)
       .sort(sortQuery)
@@ -130,7 +139,11 @@ export const getAllBook = async (req, res) => {
         { id_author: { $in: searchAuthor } },
         { id_category: { $in: searchCategory } },
       ],
+      published: true,
     })
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .skip(9 * (parseInt(page) - 1))
       .limit(9)
       .sort(sortQuery)
@@ -168,7 +181,7 @@ export const getBookByPublisher = async (req, res) => {
     searchText = req.body.searchtext;
   }
   //Sap xep
-  let sortType = "release_date";
+  let sortType = "createdAt";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -178,7 +191,7 @@ export const getBookByPublisher = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "release_date" &&
+    sortType !== "createdAt" &&
     sortType !== "view_counts" &&
     sortType !== "sales"
   ) {
@@ -197,11 +210,13 @@ export const getBookByPublisher = async (req, res) => {
         name: new RegExp(searchText, "i"),
         id_nsx: id,
         price: { $gte: objRange.low, $lte: objRange.high },
+        published: true,
       });
     } else {
       bookCount = await Book.count({
         name: new RegExp(searchText, "i"),
         id_nsx: id,
+        published: true,
       });
     }
   } catch (err) {
@@ -222,7 +237,11 @@ export const getBookByPublisher = async (req, res) => {
       name: new RegExp(searchText, "i"),
       id_nsx: id,
       price: { $gte: objRange.low, $lte: objRange.high },
+      published: true,
     })
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .skip(9 * (parseInt(page) - 1))
       .limit(9)
       .sort(sortQuery)
@@ -235,7 +254,14 @@ export const getBookByPublisher = async (req, res) => {
         res.status(200).json({ data: docs, totalPage });
       });
   } else {
-    Book.find({ name: new RegExp(searchText, "i"), id_nsx: id })
+    Book.find({
+      name: new RegExp(searchText, "i"),
+      id_nsx: id,
+      published: true,
+    })
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .skip(9 * (parseInt(page) - 1))
       .limit(9)
       .sort(sortQuery)
@@ -273,7 +299,7 @@ export const getBookByCategory = async (req, res) => {
     searchText = req.body.searchtext;
   }
   //Sap xep
-  let sortType = "release_date";
+  let sortType = "createdAt";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -283,7 +309,7 @@ export const getBookByCategory = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "release_date" &&
+    sortType !== "createdAt" &&
     sortType !== "view_counts" &&
     sortType !== "sales"
   ) {
@@ -301,12 +327,14 @@ export const getBookByCategory = async (req, res) => {
       bookFind = await Book.find({
         id_category: id,
         name: new RegExp(searchText, "i"),
+        published: true,
       });
     } else {
       bookFind = await Book.find({
         id_category: id,
         name: new RegExp(searchText, "i"),
         price: { $gte: objRange.low, $lte: objRange.high },
+        published: true,
       });
     }
   } catch (err) {
@@ -326,7 +354,14 @@ export const getBookByCategory = async (req, res) => {
   sortQuery[sortType] = sortOrder;
   //Lay du lieu
   if (range === null) {
-    Book.find({ id_category: id, name: new RegExp(searchText, "i") })
+    Book.find({
+      id_category: id,
+      name: new RegExp(searchText, "i"),
+      published: true,
+    })
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .limit(9)
       .skip(9 * (page - 1))
       .sort(sortQuery)
@@ -343,7 +378,11 @@ export const getBookByCategory = async (req, res) => {
       id_category: id,
       name: new RegExp(searchText, "i"),
       price: { $gte: objRange.low, $lte: objRange.high },
+      published: true,
     })
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .limit(9)
       .skip(9 * (page - 1))
       .sort(sortQuery)
@@ -380,7 +419,7 @@ export const getBookByAuthor = async (req, res) => {
     searchText = req.body.searchtext;
   }
   //Sap xep
-  let sortType = "release_date";
+  let sortType = "createdAt";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -390,7 +429,7 @@ export const getBookByAuthor = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "release_date" &&
+    sortType !== "createdAt" &&
     sortType !== "view_counts" &&
     sortType !== "sales"
   ) {
@@ -411,12 +450,14 @@ export const getBookByAuthor = async (req, res) => {
       bookFind = await Book.find({
         id_author: id,
         name: new RegExp(searchText, "i"),
+        published: true,
       });
     } else {
       bookFind = await Book.find({
         id_author: id,
         name: new RegExp(searchText, "i"),
         price: { $gte: objRange.low, $lte: objRange.high },
+        published: true,
       });
     }
   } catch (err) {
@@ -433,7 +474,14 @@ export const getBookByAuthor = async (req, res) => {
   }
   //Lay du lieu
   if (typeof req.body.range === "undefined") {
-    Book.find({ id_author: id, name: new RegExp(searchText, "i") })
+    Book.find({
+      id_author: id,
+      name: new RegExp(searchText, "i"),
+      published: true,
+    })
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .limit(9)
       .skip(9 * (page - 1))
       .sort(sortQuery)
@@ -450,7 +498,11 @@ export const getBookByAuthor = async (req, res) => {
       id_author: id,
       name: new RegExp(searchText, "i"),
       price: { $gte: objRange.low, $lte: objRange.high },
+      published: true,
     })
+      .select(
+        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+      )
       .limit(9)
       .skip(9 * (page - 1))
       .sort(sortQuery)
@@ -472,7 +524,21 @@ export const getBookByID = async (req, res) => {
   }
   let result;
   try {
-    result = await Book.findById(req.params.id);
+    result = await Book.findById(req.params.id, {
+      // __v: 0,
+      name: 1,
+      id_category: 1,
+      id_author: 1,
+      id_nsx: 1,
+      img: 1,
+      price: 1,
+      quantity: 1,
+      published: 1,
+      reviewCount: 1,
+      stars: 1,
+      view_counts: 1,
+      createdAt: 1,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: err });
@@ -509,21 +575,42 @@ export const getRelatedBook = async (req, res) => {
     res.status(200).json({ data: [], msg: "Invalid bookId" });
     return;
   }
-  Book.find({
-    $or: [
-      {
-        $and: [
-          { id_category: bookObj.id_category },
-          { _id: { $nin: [bookId] } },
-        ],
-      },
-      {
-        $and: [{ id_author: bookObj.id_author }, { _id: { $nin: [bookId] } }],
-      },
-    ],
-  })
+  Book.find(
+    {
+      $or: [
+        {
+          $and: [
+            { id_category: bookObj.id_category },
+            { _id: { $nin: [bookId] } },
+            { published: true },
+          ],
+        },
+        {
+          $and: [
+            { id_author: bookObj.id_author },
+            { _id: { $nin: [bookId] } },
+            { published: true },
+          ],
+        },
+      ],
+    },
+    {
+      name: 1,
+      id_category: 1,
+      id_author: 1,
+      id_nsx: 1,
+      img: 1,
+      price: 1,
+      quantity: 1,
+      published: 1,
+      stars: 1,
+      view_counts: 1,
+      createdAt: 1,
+    }
+  )
+    // .select("-__v name ")
     .limit(5)
-    .sort({ release_date: -1 })
+    .sort({ createdAt: -1 })
     .exec((err, docs) => {
       if (err) {
         console.log(err);

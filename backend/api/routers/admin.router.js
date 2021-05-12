@@ -30,18 +30,91 @@ import Book from "../models/book.model.js";
 
 import multer from "multer";
 import expressAsyncHandler from "express-async-handler";
+
+const excelFilter = (req, file, cb) => {
+  if (
+    file.mimetype.includes("excel") ||
+    file.mimetype.includes("spreadsheetml")
+  ) {
+    cb(null, true);
+  } else {
+    cb("Please upload only excel file.", false);
+  }
+};
+
 const storage = multer.diskStorage({
-  destination: "./files",
+  destination: (req, file, cb) => {
+    cb(null, __basedir + "/files/");
+  },
   filename(req, file, cb) {
+    console.log(file.originalname);
     cb(
       null,
-      `${new Date().toISOString().replace(/:/g, "-")}-${file.originalname}`
+      `${new Date().toISOString().replace(/:/g, "-")}-khoamk-${
+        file.originalname
+      }`
     );
   },
 });
+// const upload = multer({ storage, fileFilter: excelFilter });
 const upload = multer({ storage });
 
+import {
+  excelController,
+  excelDownloadController,
+  excelBookController,
+  excelDownloadBookController,
+} from "../controllers/admin.controller.js";
+import Author from "../models/author.model.js";
+
 const adminRouter = express.Router();
+
+adminRouter.post(
+  "/admin/upload",
+  upload.single("file"),
+  excelController
+  //  (req, res) => {
+  //   excelController(__basedir + "/files/" + req.file.filename);
+  //   res.json({
+  //     msg: "File uploaded/import successfully!",
+  //     file: req.file,
+  //   });
+);
+adminRouter.get("/admin/download", excelDownloadController);
+// post new place
+adminRouter.post(
+  "/author/upload",
+  upload.single("file"),
+  expressAsyncHandler(async (req, res) => {
+    const authors = new Author();
+    authors.name = req.body.name;
+    authors.image = req.file.filename;
+    authors.isEnabled = false;
+    // console.log(authors);
+    try {
+      authors.save();
+      // res.json(authors);
+    } catch (err) {
+      res.send("Error" + err);
+    }
+    // fs.unlink(req.file.path, (err) => {
+    //   if (err) throw err;
+    //   console.log("path/file.txt was deleted");
+    // });
+    res
+      .status(201)
+      .json({ success: true, message: "👍 Thêm mới thành công!", authors });
+    // res.json({msg: 'fail'})
+    // return
+  })
+);
+
+adminRouter.post(
+  "/admin/uploadBook",
+  upload.single("file"),
+  excelBookController
+);
+adminRouter.get("/admin/downloadBook", excelDownloadBookController);
 
 adminRouter.post(
   "/admin/addbook",

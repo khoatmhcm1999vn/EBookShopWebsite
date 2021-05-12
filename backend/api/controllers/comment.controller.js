@@ -73,7 +73,7 @@ export const getCommentByIDBook = async (req, res) => {
   Comment.find({ id_book: id_book })
     .skip(9 * (parseInt(page) - 1))
     .limit(9)
-    .sort({ date: 1 })
+    .sort({ createdAt: 1 })
     .exec((err, docs) => {
       if (err) {
         console.log(err);

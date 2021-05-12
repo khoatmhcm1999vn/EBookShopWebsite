@@ -95,7 +95,7 @@ export default function App() {
   );
   return (
     <>
-      <ToastContainer autoClose={2000} />
+      <ToastContainer autoClose={1000} />
       <Switch location={location}>
         {/* <Route
           exact

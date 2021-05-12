@@ -47,6 +47,7 @@ favouriteRouter.post(
 
 favouriteRouter.post(
   "/favourite/favoriteNumber",
+  requireSignin,
   expressAsyncHandler(async (req, res) => {
     if (typeof req.body.id_book === "undefined") {
       res
@@ -57,7 +58,7 @@ favouriteRouter.post(
     let { id_book } = req.body;
     let favFind;
     try {
-      favFind = await Favourite.find({ id_book: id_book });
+      favFind = await Favourite.find({ id_user: req.user, id_book: id_book });
     } catch (err) {
       res
         .status(422)
