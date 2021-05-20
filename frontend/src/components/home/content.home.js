@@ -12,6 +12,7 @@ class ContentHome extends Component {
       check_3: false,
       check_4: false,
       check_5: false,
+      listPageSize: [10, 30, 50],
     };
   }
   componentWillMount() {
@@ -37,7 +38,7 @@ class ContentHome extends Component {
       return (
         <ul className="pagination pagination-custom">
           <li onClick={() => this.props.backPage()}>
-            <Link to="/">&laquo;</Link>
+            <Link to="/shop">&laquo;</Link>
           </li>
           {this.state.pagination.map((element, index) => {
             if (this.props.page === element) {
@@ -46,19 +47,19 @@ class ContentHome extends Component {
                   className="active"
                   onClick={() => this.props.setPage(element)}
                 >
-                  <Link to="/">{element}</Link>
+                  <Link to="/shop">{element}</Link>
                 </li>
               );
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
-                  <Link to="/">{element}</Link>
+                  <Link to="/shop">{element}</Link>
                 </li>
               );
             }
           })}
           <li onClick={() => this.props.nextPage()}>
-            <Link to="/">&raquo;</Link>
+            <Link to="/shop">&raquo;</Link>
           </li>
         </ul>
       );
@@ -73,7 +74,11 @@ class ContentHome extends Component {
       check_5: false,
     });
   };
+
   render() {
+    // console.log(this.props.pageSize);
+    // console.log(this.state.listPageSize);
+
     return (
       <section>
         <div className="container">
@@ -270,6 +275,33 @@ class ContentHome extends Component {
             </div>
 
             <div className="col-sm-9 padding-right">
+              <div className="" style={{ marginRight: "40rem" }}>
+                <div className="btn-group">
+                  <button
+                    type="button"
+                    className="btn btn-default dropdown-toggle btn-custom"
+                    data-toggle="dropdown"
+                    disabled={this.props.isDisabled}
+                  >
+                    {this.props.pageSize} <span className="caret"></span>
+                  </button>
+                  <ul className="dropdown-menu" role="menu">
+                    {Object.keys(this.state.listPageSize).map((key, index) => {
+                      return (
+                        <li
+                          onClick={() =>
+                            this.props.setPageSize(this.state.listPageSize[key])
+                          }
+                        >
+                          <a>{this.state.listPageSize[key]}</a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+              {/* <h3> {this.state.listPageSize[key]}</h3>; */}
+
               <div className="features_items">
                 <h2 className="title text-center">
                   {this.props.branch} {this.props.title}

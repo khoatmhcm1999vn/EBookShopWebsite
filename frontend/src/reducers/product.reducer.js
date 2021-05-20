@@ -5,6 +5,7 @@ const product = (
   state = {
     productDetail: null,
     bookrelated: [],
+    bookRelatedByRating: [],
     comment: [],
     page: 1,
     totalpage: null,
@@ -46,6 +47,12 @@ const product = (
       return {
         ...state,
         bookrelated: action.bookrelated,
+      };
+    }
+    case productTypes.SET_BOOK_RELATED_BY_RATING: {
+      return {
+        ...state,
+        bookRelatedByRating: action.payload.similarProductGet,
       };
     }
     case productTypes.SET_COMMENT: {

@@ -17,6 +17,7 @@ const commentSchema = new Schema(
       required: [true, "can't be blank"],
     },
     ratingValue: {
+      // default: 0,
       type: Number,
     },
     comment: {

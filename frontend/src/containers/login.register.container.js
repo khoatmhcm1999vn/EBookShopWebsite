@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import LoginRegister from "../components/login.register/login.register";
 import * as userActions from "../actions/user.action";
+import * as cartActions from "../actions/cart.action";
 import { getUser } from "../config/store.config";
 // import * as homeActions from "../actions/home.action";
 
@@ -22,10 +23,12 @@ class LoginRegisterContainer extends Component {
       confirm: "",
       notificationRegister: "",
       notificationLogin: "",
+      captchaValue: "",
     };
   }
   async componentDidMount() {
     let res = await this.props.actions.loadUser();
+    this.props.cartActions.getCart();
     if (res.is_admin === false && this.props.currentUser !== null)
       this.props.history.push("/");
     // console.log(this.props.currentUser.user);
@@ -56,7 +59,14 @@ class LoginRegisterContainer extends Component {
       return false;
     return true;
   };
+
+  isvalidCaptcha = (captcha) => {
+    if (captcha === "") return false;
+    return true;
+  };
+
   registerSubmit = async () => {
+    console.log(this.state.captchaValue);
     if (!this.isvalidEmail(this.state.email)) {
       this.setState({ notificationRegister: "Email invalid" });
       return;
@@ -84,6 +94,10 @@ class LoginRegisterContainer extends Component {
     if (!this.isvalidLastName(this.state.lastname)) {
       this.setState({ notificationRegister: "Lastname invalid" });
       return;
+    }
+    if (!this.isvalidCaptcha(this.state.captchaValue)) {
+      this.setState({ notificationRegister: "Captcha empty" });
+      return;
     } else {
       this.setState({ notificationRegister: "" });
     }
@@ -93,8 +107,9 @@ class LoginRegisterContainer extends Component {
         password: this.state.password,
         firstName: this.state.firstname,
         lastName: this.state.lastname,
-        address: this.state.address,
+        // address: this.state.address,
         phone_number: this.state.phone,
+        captchaValue: this.state.captchaValue,
       });
     } catch (err) {
       if (err.response.data.message === " 👎 Email đã tồn tại!")
@@ -102,6 +117,7 @@ class LoginRegisterContainer extends Component {
       else this.setState({ notificationRegister: " 👍 Đăng ký thành công!" });
       return;
     }
+    window.grecaptcha.reset();
     this.setState({ notificationRegister: " 👍 Đăng ký thành công!" });
   };
 
@@ -156,6 +172,9 @@ class LoginRegisterContainer extends Component {
           loginSubmit={() => this.loginSubmit()}
           islogin={this.props.islogin}
           currentUser={this.props.currentUser}
+          setCapchaValue={(value) => this.setState({ captchaValue: value })}
+          cart={this.props.cart}
+          history={this.props.history}
           // logout={() => this.props.actions.logout()}
           //   sortType={this.props.sortType}
           //   setSortType={(value) => this.props.homeActions.setSortType(value)}
@@ -171,11 +190,13 @@ class LoginRegisterContainer extends Component {
 const mapStateToProps = (state) => ({
   islogin: state.userReducers.user.islogin,
   currentUser: state.userReducers.user.currentUser,
+  cart: state.cart.data,
 });
 const mapDispatchToProps = (dispatch) => {
   return {
     actions: bindActionCreators(userActions, dispatch),
     // homeActions: bindActionCreators(homeActions, dispatch),
+    cartActions: bindActionCreators(cartActions, dispatch),
   };
 };
 export default connect(

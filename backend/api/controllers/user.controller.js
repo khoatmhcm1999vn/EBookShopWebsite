@@ -12,24 +12,28 @@ export const register = async (req, res) => {
     typeof req.body.password === "undefined" ||
     typeof req.body.firstName === "undefined" ||
     typeof req.body.lastName === "undefined" ||
-    typeof req.body.address === "undefined" ||
+    // typeof req.body.address === "undefined" ||
     typeof req.body.phone_number === "undefined"
   ) {
-    res.status(422).json({
+    res.json({
       result: "error",
       message: " 👎 Vui lòng kiểm tra lại các trường đã nhập!",
     });
     return;
   }
+
   let {
     email,
     password,
     firstName,
     lastName,
-    address,
-    birthday,
+    // address,
+    // birthday,
     phone_number,
   } = req.body;
+
+  // console.log(req.body);
+
   if (
     (email.indexOf("@") === -1 && email.indexOf(".") === -1) ||
     password.length < 6
@@ -40,6 +44,7 @@ export const register = async (req, res) => {
     });
     return;
   }
+
   let userFind = null;
   try {
     userFind = await User.find({ email: email });
@@ -47,10 +52,12 @@ export const register = async (req, res) => {
     res.status(500).json({ result: "error", message: " 👎 Email đã tồn tại!" });
     return;
   }
+
   if (userFind.length > 0) {
     res.status(409).json({ result: "error", message: " 👎 Email đã tồn tại!" });
     return;
   }
+
   const token = randomstring.generate();
   let send_email = await sendEmail(email, token);
   if (!send_email) {
@@ -60,16 +67,18 @@ export const register = async (req, res) => {
     return;
   }
   password = bcrypt.hashSync(password, 10);
+
   const newUser = new User({
     email: email,
     firstName: firstName,
     lastName: lastName,
     password: password,
-    address: address,
-    birthday: birthday,
+    // address: address,
+    // birthday: birthday,
     phone_number: phone_number,
     token: token,
   });
+
   try {
     await newUser.save();
   } catch (err) {
@@ -80,6 +89,7 @@ export const register = async (req, res) => {
     });
     return;
   }
+
   res
     .status(201)
     .json({ result: "success", message: " 👍 Đăng ký thành công!" });

@@ -24,8 +24,11 @@ class HomeContainer extends React.Component {
     this.props.cartActions.getCart();
   }
   componentWillReceiveProps(nextProps) {
-    // console.log(this.props.cart);
-    if (nextProps.page !== this.props.page) {
+    // console.log(nextProps.pageSize);
+    if (
+      nextProps.page !== this.props.page ||
+      nextProps.pageSize !== this.props.pageSize
+    ) {
       this.props.homeActions.getBook();
     }
   }
@@ -52,6 +55,7 @@ class HomeContainer extends React.Component {
             nextPage={() => this.props.homeActions.nextPage()}
             setPage={(page) => this.props.homeActions.setPage(page)}
             page={this.props.page}
+            pageSize={this.props.pageSize}
             sortType={this.props.sortType}
             setSortType={(value) => this.props.homeActions.setSortType(value)}
             setRangeType={(range) => this.props.homeActions.setRangeType(range)}
@@ -73,6 +77,10 @@ class HomeContainer extends React.Component {
               this.props.productActions.addToCart(product)
             }
             cart={this.props.cart}
+            setPageSize={(pageSize) =>
+              this.props.homeActions.setPageSize(pageSize)
+            }
+            isActivatedShop={true}
           />
         </div>
       );
@@ -94,6 +102,7 @@ const mapStateToProps = (state) => ({
   branch: state.homeReducers.book.branch,
   text: state.homeReducers.book.searchtext,
   cart: state.cart.data,
+  pageSize: state.homeReducers.book.pageSize,
 });
 
 const mapDispatchToProps = (dispatch) => {

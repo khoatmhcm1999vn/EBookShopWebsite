@@ -22,7 +22,10 @@ const LoginRegister = ({
   registerSubmit,
   loginSubmit,
   islogin,
-  currentUser
+  currentUser,
+  setCapchaValue,
+  history,
+  cart,
 }) => (
   <ContentLoginRegister
     setEmailogin={(value) => setEmailogin(value)}
@@ -40,6 +43,9 @@ const LoginRegister = ({
     loginSubmit={() => loginSubmit()}
     islogin={islogin}
     currentUser={currentUser}
+    setCapchaValue={(value) => setCapchaValue(value)}
+    history={history}
+    cart={cart}
   />
 );
 

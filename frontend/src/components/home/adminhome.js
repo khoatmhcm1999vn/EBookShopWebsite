@@ -5,7 +5,7 @@ class AdminHome extends Component {
   constructor() {
     super();
     this.state = {
-      sum: 1000,
+      sum: 100,
     };
   }
   tinh(count) {
@@ -614,7 +614,7 @@ class AdminHome extends Component {
           </section>
           <div className="text-right">
             <div className="credits">
-              <a href="https://bootstrapmade.com/">Free Bootstrap Templates</a>{" "}
+              <a href="https://bootstrapmade.com/">Free Bootstrap Templates</a>
               by <a href="https://bootstrapmade.com/">BootstrapMade</a>
             </div>
           </div>

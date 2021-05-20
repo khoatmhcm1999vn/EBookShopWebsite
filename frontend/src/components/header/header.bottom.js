@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { sortTypes } from "../../constants/action.types";
 import _ from "lodash";
+import SearchBox from "../SearchBox/SearchBox";
 
 class HeaderBottom extends Component {
   constructor(props) {
@@ -29,6 +30,10 @@ class HeaderBottom extends Component {
       this.setState({ titleSort: "Sort by views decrease" });
     } else if (sortType === sortTypes.SORT_VIEWS_INCREASED) {
       this.setState({ titleSort: "Sort By views increase" });
+    } else if (sortType === sortTypes.SORT_NAME_INCREASED) {
+      this.setState({ titleSort: "Sort By name increase" });
+    } else if (sortType === sortTypes.SORT_NAME_DECREASED) {
+      this.setState({ titleSort: "Sort By name decrease" });
     }
     this.setState({
       listActionSort: {
@@ -40,6 +45,8 @@ class HeaderBottom extends Component {
         SORT_SALES_INCREASED: "Sort by sales increase",
         SORT_VIEWS_DECREASED: "Sort by views decrease",
         SORT_VIEWS_INCREASED: "Sort By views increase",
+        SORT_NAME_INCREASED: "Sort By name increase",
+        SORT_NAME_DECREASED: "Sort By name decrease",
       },
     });
   }
@@ -80,11 +87,15 @@ class HeaderBottom extends Component {
               <div className="mainmenu pull-left">
                 <ul className="nav navbar-nav collapse navbar-collapse">
                   <li>
-                    <Link to="/" className="active">
-                      Home
-                    </Link>
+                    {this.props.isActivatedHome ? (
+                      <Link to="/" className="active">
+                        Home
+                      </Link>
+                    ) : (
+                      <Link to="/">Home</Link>
+                    )}
                   </li>
-                  <li className="dropdown">
+                  {/* <li className="dropdown">
                     <a href="#">
                       Shop<i className="fa fa-angle-down"></i>
                     </a>
@@ -118,12 +129,27 @@ class HeaderBottom extends Component {
                         <a href="blog-single.html">Blog Single</a>
                       </li>
                     </ul>
+                  </li> */}
+                  <li>
+                    {this.props.isActivatedShop ? (
+                      <Link to="/shop" className="active">
+                        Shop
+                      </Link>
+                    ) : (
+                      <Link to="/shop">Shop</Link>
+                    )}
                   </li>
                   <li>
-                    <a href="contact-us.html">Contact</a>
+                    <Link to="/contacts">Contact</Link>
+                  </li>
+                  <li>
+                    <Link to="/shop-page">Shop Page</Link>
                   </li>
                 </ul>
               </div>
+            </div>
+            <div className="row">
+              <SearchBox history={this.props.history}></SearchBox>
             </div>
             <div className="col-sm-4">
               <div className="search_box pull-right">

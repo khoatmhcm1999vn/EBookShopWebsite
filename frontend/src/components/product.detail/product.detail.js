@@ -27,6 +27,7 @@ class ProductDetail extends Component {
             setSortType={(value) => this.props.setSortType(value)}
             setSearchText={(value) => this.props.setSearchText(value)}
             searchTextSubmit={() => this.props.searchTextSubmit()}
+            history={this.props.history}
             isDisabled={true}
           />
         </header>
@@ -37,6 +38,7 @@ class ProductDetail extends Component {
           nameCategory={this.props.nameCategory}
           namePublicsher={this.props.namePublicsher}
           bookrelated={this.props.bookrelated}
+          bookRelatedByRating={this.props.bookRelatedByRating}
           islogin={this.props.islogin}
           id_book={this.props.id_book}
           submitComment={(name, email, comment, ratingValue, id_book) =>

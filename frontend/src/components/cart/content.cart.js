@@ -463,7 +463,7 @@ class ContentCart extends Component {
                       </Button>
                     </Modal.Footer>
                   </Modal>
-                  <Link class="btn btn-default check_out" to={"/"}>
+                  <Link class="btn btn-default check_out" to={"/shop"}>
                     Continue shopping
                   </Link>
                 </div>

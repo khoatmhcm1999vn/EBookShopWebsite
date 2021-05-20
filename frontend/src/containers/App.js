@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useDispatch, useSelector } from "react-redux";
+import { getListProductCategoryIds } from "../actions/home.action";
 import { loadUser } from "../actions/user.action";
 
 import AdminHomeContainer from "./adminhome.container";
@@ -42,6 +43,13 @@ import OrderScreen from "../screens/OrderScreen";
 import FavoriteScreen from "../screens/FavoriteScreen";
 import BookTable from "../screens/BookScreen/BookTable";
 
+// import LandingScreen from "../screens/LandingScreen";
+import ContactScreen from "../screens/ContactScreen/ContactScreen";
+import HomeScreen from "../screens/HomeScreen/HomeScreen";
+import ShopScreen from "../screens/ShopScreen/ShopScreen";
+import SearchScreen from "../screens/SearchScreen";
+import RankingScreen from "../screens/RankingScreen/RankingScreen";
+
 export default function App() {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -53,7 +61,8 @@ export default function App() {
   }
   useEffect(() => {
     isMounted.current = true;
-  }, []);
+    dispatch(getListProductCategoryIds());
+  }, [dispatch]);
   // const islogin = useSelector((state) => state.userReducers.user.islogin);
   const currentUser = useSelector(
     (state) => state.userReducers.user.currentUser
@@ -104,7 +113,7 @@ export default function App() {
             return <Redirect to="/dashboard" />;
           }}
         /> */}
-        <Route exact path="/" component={HomeContainer} />
+        <Route exact path="/" component={HomeScreen} />
         {/* ADMIN */}
         <Route exact path="/dashboard" component={AdminHomeContainer} />
         <AdminRoute path="/support" component={SupportScreen}></AdminRoute>
@@ -161,6 +170,43 @@ export default function App() {
           exact
           path="/paymentg/:token"
           component={VerifyPaymentContainer}
+        />
+
+        <Route exact path="/contacts" component={ContactScreen} />
+        <Route exact path="/shop" component={HomeContainer} />
+
+        <Route
+          path="/shop-page/name/:name?"
+          component={ShopScreen}
+          exact
+        ></Route>
+        <Route
+          path="/shop-page/id_category/:id_category"
+          component={ShopScreen}
+          exact
+        ></Route>
+        <Route
+          exact
+          path="/shop-page/id_category/:id_category/sales/:sales/updatedAtByDay/:updatedAtByDay"
+          component={ShopScreen}
+        />
+        <Route
+          exact
+          path="/shop-page/sales/:sales/updatedAtByDay/:updatedAtByDay"
+          component={ShopScreen}
+        />
+        <Route
+          exact
+          path="/shop-page/id_category/:id_category/name/:name/min/:min/max/:max/stars/:stars/sales/:sales/updatedAtByDay/:updatedAtByDay/order/:order/pageNumber/:pageNumber/pageSize/:pageSize"
+          component={ShopScreen}
+        />
+        <Route exact path="/shop-page" component={ShopScreen} />
+
+        <Route exact path="/ranking-page" component={RankingScreen} />
+        <Route
+          exact
+          path="/ranking-page/id_category/:id_category"
+          component={RankingScreen}
         />
       </Switch>
     </>

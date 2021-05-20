@@ -85,11 +85,25 @@ const book = (
   state = {
     data: [],
     page: 1,
+    pageSize: 10,
     totalpage: null,
     title: "ALL BOOK",
     searchtext: "",
     sortType: sortTypes.SORT_DAY_DECREASED,
     sortOrder: -1,
+    dataIds: [],
+    dataTop5Rank: [],
+    dataTopAllRank: [],
+    dataByCategory: [],
+    dataTop10ByCategory: [],
+    pageSizeByCategory: 0,
+    dataProductCategoryIds: [],
+    dataProductSoldTop10ByDay: [],
+    dataProductSoldTopAllByDay: [],
+    dataProductSoldTop10ByWeek: [],
+    dataProductSoldTopAllByWeek: [],
+    dataProductFavorTop2: [],
+    dataProductBestSellerTop10: [],
   },
   action
 ) => {
@@ -100,10 +114,110 @@ const book = (
         data: action.data,
       };
     }
+
+    case homeTypes.SET_LIST_FAVOR_PRODUCT_TOP_2: {
+      return {
+        ...state,
+        dataProductFavorTop2: action.payload.products,
+      };
+    }
+    case homeTypes.SET_LIST_BEST_SELLER_PRODUCT_TOP_10: {
+      return {
+        ...state,
+        dataProductBestSellerTop10: action.payload.products,
+      };
+    }
+
+    case homeTypes.SET_LIST_PRODUCT_IDS: {
+      return {
+        ...state,
+        dataIds: action.data,
+      };
+    }
+    case homeTypes.SET_LIST_PRODUCT_CATEGORY_IDS: {
+      return {
+        ...state,
+        dataProductCategoryIds: action.data,
+      };
+    }
+
+    case homeTypes.SET_LIST_PRODUCT_RANK_TOP_5: {
+      return {
+        ...state,
+        dataTop5Rank: action.data,
+      };
+    }
+    case homeTypes.SET_LIST_PRODUCT_RANK_TOP_ALL: {
+      return {
+        ...state,
+        dataTopAllRank: action.payload.data,
+      };
+    }
+
+    case homeTypes.SET_LIST_PRODUCT_TOP_10_BY_CATEGORY: {
+      return {
+        ...state,
+        dataTop10ByCategory: action.payload.data,
+        totalPageCateTop10: action.payload.totalPage,
+        currPageCateTop10: action.payload.currPage,
+        pageSizeOnePage: action.payload.pageSizeOnePage,
+      };
+    }
+    case homeTypes.SET_LIST_PRODUCT_BY_CATEGORY: {
+      return {
+        ...state,
+        dataByCategory: action.payload.products,
+        pagesCate: action.payload.pages,
+        pageCate: action.payload.page,
+      };
+    }
+    case homeTypes.SET_PAGE_SIZE_LIST_PRODUCT_BY_CATEGORY: {
+      return {
+        ...state,
+        pageSizeByCategory: action.data,
+      };
+    }
+
+    case homeTypes.SET_LIST_PRODUCT_SOLD_TOP_10_BY_DAY: {
+      return {
+        ...state,
+        dataProductSoldTop10ByDay: action.payload.data,
+      };
+    }
+    case homeTypes.SET_LIST_PRODUCT_SOLD_TOP_ALL_BY_DAY: {
+      return {
+        ...state,
+        dataProductSoldTopAllByDay: action.payload.data,
+      };
+    }
+
+    case homeTypes.SET_LIST_PRODUCT_SOLD_TOP_10_BY_WEEK: {
+      return {
+        ...state,
+        dataProductSoldTop10ByWeek: action.payload.data,
+      };
+    }
+    case homeTypes.SET_LIST_PRODUCT_SOLD_TOP_ALL_BY_WEEK: {
+      return {
+        ...state,
+        dataProductSoldTopAllByWeek: action.payload.data,
+        totalPageProductSoldTopAllByWeek: action.payload.totalPage,
+        currPageProductSoldTopAllByWeek: action.payload.currPage,
+        pageSizeOnePageProductSoldTopAllByWeek: action.payload.pageSizeOnePage,
+      };
+    }
+
     case homeTypes.SET_PAGE: {
       return {
         ...state,
         page: action.page,
+      };
+    }
+    case homeTypes.SET_PAGE_SIZE: {
+      return {
+        ...state,
+        page: 1,
+        pageSize: action.pageSize,
       };
     }
     case homeTypes.SET_TOTAL_PAGE: {
@@ -147,6 +261,7 @@ const book = (
       return {
         data: [],
         page: 1,
+        pageSize: 10,
         totalpage: null,
         title: "ALL BOOK",
         sortType: sortTypes.SORT_DAY_DECREASED,

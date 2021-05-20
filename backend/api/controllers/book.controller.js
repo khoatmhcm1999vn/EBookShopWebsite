@@ -54,7 +54,8 @@ export const getAllBook = async (req, res) => {
     sortType !== "price" &&
     sortType !== "createdAt" &&
     sortType !== "view_counts" &&
-    sortType !== "sales"
+    sortType !== "sales" &&
+    sortType !== "name"
   ) {
     res.status(422).json({ msg: "Invalid sort type" });
     return;
@@ -92,12 +93,16 @@ export const getAllBook = async (req, res) => {
     res.status(500).json({ msg: err });
     return;
   }
-  let totalPage = parseInt((bookCount - 1) / 9 + 1);
+
   let { page } = req.body;
+  let pageSize = parseInt(req.body.pageSize) || 10;
+  let totalPage = parseInt((bookCount - 1) / pageSize + 1);
+
   if (parseInt(page) < 1 || parseInt(page) > totalPage) {
     res.status(200).json({ data: [], msg: "Invalid page", totalPage });
     return;
   }
+
   // De sort
   let sortQuery = {};
   sortQuery[sortType] = sortOrder;
@@ -114,14 +119,12 @@ export const getAllBook = async (req, res) => {
       price: { $gte: objRange.low, $lte: objRange.high },
       published: true,
     })
-
       // select('-_id');
-
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .skip(9 * (parseInt(page) - 1))
-      .limit(9)
+      .skip(pageSize * (parseInt(page) - 1))
+      .limit(pageSize)
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -144,8 +147,8 @@ export const getAllBook = async (req, res) => {
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .skip(9 * (parseInt(page) - 1))
-      .limit(9)
+      .skip(pageSize * (parseInt(page) - 1))
+      .limit(pageSize)
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -193,7 +196,8 @@ export const getBookByPublisher = async (req, res) => {
     sortType !== "price" &&
     sortType !== "createdAt" &&
     sortType !== "view_counts" &&
-    sortType !== "sales"
+    sortType !== "sales" &&
+    sortType !== "name"
   ) {
     res.status(422).json({ msg: "Invalid sort type" });
     return;
@@ -223,11 +227,14 @@ export const getBookByPublisher = async (req, res) => {
     res.status(500).json({ msg: err });
     return;
   }
-  let totalPage = parseInt((bookCount - 1) / 9 + 1);
+
+  let pageSize = parseInt(req.body.pageSize) || 10;
+  let totalPage = parseInt((bookCount - 1) / pageSize + 1);
   if (parseInt(page) < 1 || parseInt(page) > totalPage) {
     res.status(200).json({ data: [], msg: "Invalid page", totalPage });
     return;
   }
+
   //De sort
   let sortQuery = {};
   sortQuery[sortType] = sortOrder;
@@ -242,8 +249,8 @@ export const getBookByPublisher = async (req, res) => {
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .skip(9 * (parseInt(page) - 1))
-      .limit(9)
+      .skip(pageSize * (parseInt(page) - 1))
+      .limit(pageSize)
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -262,8 +269,8 @@ export const getBookByPublisher = async (req, res) => {
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .skip(9 * (parseInt(page) - 1))
-      .limit(9)
+      .skip(pageSize * (parseInt(page) - 1))
+      .limit(pageSize)
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -311,7 +318,8 @@ export const getBookByCategory = async (req, res) => {
     sortType !== "price" &&
     sortType !== "createdAt" &&
     sortType !== "view_counts" &&
-    sortType !== "sales"
+    sortType !== "sales" &&
+    sortType !== "name"
   ) {
     res.status(422).json({ msg: "Invalid sort type" });
     return;
@@ -341,14 +349,17 @@ export const getBookByCategory = async (req, res) => {
     res.status(500).json({ msg: err });
     return;
   }
+
   bookCount = bookFind.length;
-  let totalPage = parseInt((bookCount - 1) / 9 + 1);
+  let pageSize = parseInt(req.body.pageSize) || 10;
+  let totalPage = parseInt((bookCount - 1) / pageSize + 1);
   if (parseInt(page) < 1 || parseInt(page) > totalPage) {
     res
       .status(200)
       .json({ data: [], msg: "Invalid page", totalPage: totalPage });
     return;
   }
+
   //De sort
   let sortQuery = {};
   sortQuery[sortType] = sortOrder;
@@ -362,8 +373,8 @@ export const getBookByCategory = async (req, res) => {
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .limit(9)
-      .skip(9 * (page - 1))
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -383,8 +394,8 @@ export const getBookByCategory = async (req, res) => {
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .limit(9)
-      .skip(9 * (page - 1))
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -431,7 +442,8 @@ export const getBookByAuthor = async (req, res) => {
     sortType !== "price" &&
     sortType !== "createdAt" &&
     sortType !== "view_counts" &&
-    sortType !== "sales"
+    sortType !== "sales" &&
+    sortType !== "name"
   ) {
     res.status(422).json({ msg: "Invalid sort type" });
     return;
@@ -464,14 +476,17 @@ export const getBookByAuthor = async (req, res) => {
     res.status(500).json({ msg: err });
     return;
   }
+
   bookCount = bookFind.length;
-  let totalPage = parseInt((bookCount - 1) / 9 + 1);
+  let pageSize = parseInt(req.body.pageSize) || 10;
+  let totalPage = parseInt((bookCount - 1) / pageSize + 1);
   if (parseInt(page) < 1 || parseInt(page) > totalPage) {
     res
       .status(200)
       .json({ data: [], msg: "Invalid page", totalPage: totalPage });
     return;
   }
+
   //Lay du lieu
   if (typeof req.body.range === "undefined") {
     Book.find({
@@ -482,8 +497,8 @@ export const getBookByAuthor = async (req, res) => {
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .limit(9)
-      .skip(9 * (page - 1))
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -503,8 +518,8 @@ export const getBookByAuthor = async (req, res) => {
       .select(
         "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
       )
-      .limit(9)
-      .skip(9 * (page - 1))
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
       .sort(sortQuery)
       .exec((err, docs) => {
         if (err) {
@@ -527,6 +542,7 @@ export const getBookByID = async (req, res) => {
     result = await Book.findById(req.params.id, {
       // __v: 0,
       name: 1,
+      describe: 1,
       id_category: 1,
       id_author: 1,
       id_nsx: 1,
@@ -548,12 +564,14 @@ export const getBookByID = async (req, res) => {
     res.status(404).json({ msg: "not found" });
     return;
   }
-  result.view_counts = result.view_counts + 1;
-  result.save((err, docs) => {
-    if (err) {
-      console.log(err);
-    }
-  });
+
+  // result.view_counts = result.view_counts + 1;
+  // result.save((err, docs) => {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  // });
+
   res.status(200).json({ data: result });
 };
 

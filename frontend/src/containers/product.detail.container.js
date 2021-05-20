@@ -19,6 +19,7 @@ class ProductDetailContainer extends Component {
     this.props.homeActions.getPublisher();
     this.props.productActions.getBookDetail(id);
     this.props.productActions.getBookRelated(id);
+    this.props.productActions.getBookRelatedByRating(id);
     this.props.productActions.getCommentByIDBook(id);
     this.props.cartActions.getCart();
   }
@@ -41,6 +42,9 @@ class ProductDetailContainer extends Component {
       // console.log(nextProps.match.params.id);
       this.props.productActions.getBookDetail(nextProps.match.params.id);
       this.props.productActions.getBookRelated(nextProps.match.params.id);
+      this.props.productActions.getBookRelatedByRating(
+        nextProps.match.params.id
+      );
       this.props.productActions.getCommentByIDBook(nextProps.match.params.id);
     }
   }
@@ -68,6 +72,7 @@ class ProductDetailContainer extends Component {
             setSortType={(value) => this.props.homeActions.setSortType(value)}
             searchTextSubmit={() => this.props.homeActions.searchTextSubmit()}
             bookrelated={this.props.bookrelated}
+            bookRelatedByRating={this.props.bookRelatedByRating}
             logout={() => this.props.actions.logout()}
             id_book={this.props.match.params.id}
             submitComment={(name, email, comment, ratingValue, id_book) =>
@@ -109,6 +114,7 @@ const mapStateToProps = (state) => ({
   nameAuthor: state.productReducers.product.nameAuthor,
   islogin: state.userReducers.user.islogin,
   bookrelated: state.productReducers.product.bookrelated,
+  bookRelatedByRating: state.productReducers.product.bookRelatedByRating,
   comment: state.productReducers.product.comment,
   totalpage: state.productReducers.product.totalpage,
   page: state.productReducers.product.page,

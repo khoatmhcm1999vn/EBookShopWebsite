@@ -29,12 +29,17 @@ import addressRouter from "./api/routers/address.router.js";
 import favouriteRouter from "./api/routers/favourite.router.js";
 import braintreeRouter from "./api/routers/braintree.router.js";
 
+import fileUpload from "express-fileupload";
+
 connectDB();
+
 import AddressVn from "./api/models/address.vn.model.js";
+
 const test = () => {
   Object.keys(data).forEach(function (k) {
     var _dic = [];
     var _ward = [];
+
     Object.keys(data[k].district).forEach(function (j) {
       Object.keys(data[k].district[j].ward).forEach(function (l) {
         _ward.push({
@@ -42,17 +47,20 @@ const test = () => {
           code: data[k].district[j].ward[l].code,
         });
       });
+
       _dic.push({
         name: data[k].district[j].name,
         code: data[k].district[j].code,
         ward: _ward,
       });
     });
+
     const new_address = new AddressVn({
       city: data[k].name,
       district: _dic,
       code: data[k].code,
     });
+
     try {
       new_address.save();
     } catch (Err) {
@@ -60,6 +68,7 @@ const test = () => {
     }
   });
 };
+
 // test();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -70,6 +79,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.static(__basedir + "/files/"));
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
+
 // app.use(bodyParser.json({ limit: "50mb" }));
 // app.use(
 //   bodyParser.urlencoded({
@@ -78,6 +93,7 @@ app.use(express.urlencoded({ extended: true }));
 //     parameterLimit: 50000,
 //   })
 // );
+
 const allowedOrigins = [
   "http://localhost:4000",
   "http://localhost:3000",
@@ -118,6 +134,7 @@ app.use("/api", braintreeRouter);
 app.get("/", (req, res) => {
   res.send("Welcome to Book Shop MIA!");
 });
+
 app.get("/api/config/paypal", (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || "sb");
 });
@@ -133,9 +150,29 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running....");
   });
 }
+
 // app.get('/api/config/google', (req, res) => {
 //   res.send(process.env.GOOGLE_API_KEY || '');
 // });
+
+// Catch 404 error and forward them to error handler
+app.use((req, res, next) => {
+  const err = new HttpError("Not Found");
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  const error = app.get("env") === "development" ? err : {};
+  const status = err.status || 500;
+
+  return res.status(status).json({
+    error: {
+      message: error.message,
+    },
+  });
+});
+
 app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });
 });
@@ -148,6 +185,7 @@ const users = [];
 
 io.on("connection", (socket) => {
   console.log("connection", socket.id);
+
   socket.on("disconnect", () => {
     const user = users.find((x) => x.socketId === socket.id);
     if (user) {
@@ -159,6 +197,7 @@ io.on("connection", (socket) => {
       }
     }
   });
+
   socket.on("onLogin", (user) => {
     const updatedUser = {
       ...user,
@@ -182,6 +221,7 @@ io.on("connection", (socket) => {
       io.to(updatedUser.socketId).emit("listUsers", users);
     }
   });
+
   socket.on("onUserSelected", (user) => {
     const admin = users.find((x) => x.is_admin && x.online);
     if (admin) {
@@ -189,6 +229,7 @@ io.on("connection", (socket) => {
       io.to(admin.socketId).emit("selectUser", existUser);
     }
   });
+
   socket.on("onMessage", (message) => {
     if (message.is_admin) {
       const user = users.find((x) => x._id === message._id && x.online);
@@ -211,6 +252,7 @@ io.on("connection", (socket) => {
     }
   });
 });
+
 httpServer.listen(
   port,
   console.log(
@@ -221,12 +263,14 @@ httpServer.listen(
   //   console.log(`Server is running at http://localhost:${port}`.yellow.bold);
   // }
 );
+
 // Handle unhandle promise rejection
 process.on("unhandledRejection", (err, promise) => {
   console.log(`Error: ${err.message}`.red.bold);
   // close the server
   httpServer.close(() => process.exit(1));
 });
+
 // # Import data
 // node seeder -i
 // # Destroy data

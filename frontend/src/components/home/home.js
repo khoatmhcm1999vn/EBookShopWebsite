@@ -18,6 +18,8 @@ const Home = ({
   nextPage,
   setPage,
   page,
+  pageSize,
+  setPageSize,
   sortType,
   setSortType,
   setRangeType,
@@ -34,6 +36,7 @@ const Home = ({
   addToCart,
   text,
   cart,
+  isActivatedShop,
 }) => (
   <div>
     <header id="header">
@@ -50,6 +53,8 @@ const Home = ({
         setSortType={(value) => setSortType(value)}
         setSearchText={(value) => setSearchText(value)}
         searchTextSubmit={() => searchTextSubmit()}
+        isActivatedShop={isActivatedShop}
+        history={history}
       />
     </header>
     <ContentHome
@@ -61,6 +66,8 @@ const Home = ({
       nextPage={() => nextPage()}
       setPage={(page) => setPage(page)}
       page={page}
+      pageSize={pageSize}
+      setPageSize={setPageSize}
       setRangeType={(range) => setRangeType(range)}
       title={title}
       setTitle={(title) => setTitle(title)}

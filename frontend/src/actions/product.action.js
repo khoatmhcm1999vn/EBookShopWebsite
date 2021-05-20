@@ -25,6 +25,23 @@ export const getBookRelated = (id) => async (dispatch, getState) => {
   }
   dispatch(setBookRelated(res.data.data));
 };
+
+export const getBookRelatedByRating = (id) => async (dispatch, getState) => {
+  // let res;
+  try {
+    const { data } = await axios.post(
+      "http://localhost:8090/book/get-all-books/" + id
+    );
+    dispatch({
+      type: productTypes.SET_BOOK_RELATED_BY_RATING,
+      payload: data,
+    });
+  } catch (err) {
+    return;
+  }
+  // dispatch(setBookRelated(res.data.data));
+};
+
 export const getNameCategoryByID = (id) => async (dispatch) => {
   let res;
   try {
@@ -76,39 +93,35 @@ export const setNameAuthor = (name) => ({
   name,
 });
 
-export const submitComment = (
-  name,
-  email,
-  comment,
-  ratingValue,
-  id_book
-) => async (dispatch, getState) => {
-  let id = null;
-  if (
-    storeConfig.getUser() &&
-    storeConfig.getUser().id &&
-    storeConfig.getUser().id
-  )
-    id = storeConfig.getUser().id;
-  let res;
-  try {
-    res = await axiosClient.post("/comment", {
-      id_user: id,
-      id_book: id_book,
-      name: name,
-      comment: comment,
-      ratingValue,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    toast.error(res.message);
-    console.log(JSON.stringify(err.response));
-    return;
-  }
-  dispatch(getCommentByIDBook(id_book));
-  dispatch(getBookDetail(id_book));
-};
+export const submitComment =
+  (name, email, comment, ratingValue, id_book) =>
+  async (dispatch, getState) => {
+    let id = null;
+    if (
+      storeConfig.getUser() &&
+      storeConfig.getUser().id &&
+      storeConfig.getUser().id
+    )
+      id = storeConfig.getUser().id;
+    let res;
+    try {
+      res = await axiosClient.post("/comment", {
+        id_user: id,
+        id_book: id_book,
+        name: name,
+        comment: comment,
+        ratingValue,
+      });
+      if (res.success) toast.success(res.message);
+      else toast.error(res.message);
+    } catch (err) {
+      toast.error(res.message);
+      console.log(JSON.stringify(err.response));
+      return;
+    }
+    dispatch(getCommentByIDBook(id_book));
+    dispatch(getBookDetail(id_book));
+  };
 export const setTotalPage = (totalpage) => ({
   type: productTypes.SET_COMMENT_TOTAL_PAGE,
   totalpage,

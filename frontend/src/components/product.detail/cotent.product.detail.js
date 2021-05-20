@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import storeConfig from "../../config/store.config";
 import Favorite from "../../components/Favorite";
 import Rating from "../../components/rating/Rating";
+import PointRating from "../../components/PointRating";
+import ReactStars from "react-rating-stars-component";
 
 class ContentProductDetail extends Component {
   constructor(props) {
@@ -138,8 +140,35 @@ class ContentProductDetail extends Component {
     product.count = this.state.quantity;
     this.props.addToCart(product);
   };
+
+  percentage(partialValue, totalValue) {
+    return (100 * partialValue) / totalValue;
+  }
+
+  calculateTotalCommentStar = (value) => {
+    let total = 0;
+    value.map((c, i) => {
+      total += c.ratingValue;
+    });
+    // console.log(total);
+    return total;
+  };
+
+  getRatingPercentage = (value) => {
+    return parseFloat(
+      this.percentage(
+        value,
+        this.calculateTotalCommentStar(this.props.comment)
+      ).toFixed(2)
+    );
+  };
+
+  // averageRating =
+  // totalRatings > 0 && Math.round(totalRatings / totalReviews);
+
   render() {
-    // console.log(this.state.quantity);
+    console.log(this.state.ratingValue);
+
     return (
       <section>
         <div className="container">
@@ -258,15 +287,72 @@ class ContentProductDetail extends Component {
                       value={this.props.mproductDetail.stars}
                       text={`${this.props.mproductDetail.reviewCount} reviews`}
                     ></Rating> */}
-                    {this.props.mproductDetail.stars &&
-                    this.props.mproductDetail.stars ? (
-                      <Rating
-                        value={this.props.mproductDetail.stars}
-                        text={`${this.props.mproductDetail.reviewCount} reviews`}
-                      />
-                    ) : (
-                      <h3>Chưa có star nào.</h3>
-                    )}
+                    <div className="bg-white p-4 box-shadow-primary review-summary">
+                      <h2 className="mb-0">Rating</h2>
+                      {this.props.mproductDetail.stars &&
+                      this.props.mproductDetail.stars ? (
+                        <div className="d-flex flex-wrap align-items-center mt-2">
+                          <Rating value={this.props.mproductDetail.stars} />
+                          {/* <ReactStars
+                            classNames="mr-2"
+                            size={16}
+                            edit={false}
+                            color={"#adb5bd"}
+                            activeColor={"#ffb302"}
+                            a11y={true}
+                            isHalf={true}
+                            emptyIcon={<i className="fa fa-star" />}
+                            halfIcon={<i className="fa fa-star-half-alt" />}
+                            filledIcon={<i className="fa fa-star" />}
+                            value={this.props.mproductDetail.stars}
+                          /> */}
+                          {this.props.mproductDetail.reviewCount > 0 && (
+                            <span>
+                              based on {this.props.mproductDetail.reviewCount}
+                              &nbsp;reviews.
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <h3>Chưa có star nào.</h3>
+                      )}
+                      <hr style={{ border: "3px solid #f1f1f1" }} />
+                      {this.props.comment.length > 0 ? (
+                        this.props.comment.map((c, i) => (
+                          <div
+                            key={c}
+                            className="d-flex align-items-center mb-2"
+                          >
+                            <div className="left">
+                              <span>{parseInt(c.ratingValue)} star</span>
+                            </div>
+                            <div className="middle">
+                              <div className="bar-container">
+                                <div
+                                  className={`bar-${parseInt(c.ratingValue)}`}
+                                  style={{
+                                    width: `${this.getRatingPercentage(
+                                      parseInt(c.ratingValue)
+                                    )}%`,
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                            <div className="ml-2 right">
+                              <span className="fw-2">
+                                {this.getRatingPercentage(
+                                  parseInt(c.ratingValue)
+                                )}
+                                %
+                              </span>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <h3>abc</h3>
+                      )}
+                    </div>
+
                     {/* {this.props.mproductDetail.reviewCount &&
                     this.props.mproductDetail.reviewCount ? (
                       <Rating value={this.props.mproductDetail.reviewCount}>
@@ -275,6 +361,10 @@ class ContentProductDetail extends Component {
                     ) : (
                       <h3>Chưa có review nào.</h3>
                     )} */}
+                    {/* <Rating
+                        value={this.props.mproductDetail.stars}
+                        text={`${this.props.mproductDetail.reviewCount} reviews`}
+                      /> */}
 
                     <span>
                       <span>US ${this.props.mproductDetail.price}</span>
@@ -337,6 +427,28 @@ class ContentProductDetail extends Component {
                         </div>
                       )}
                     </div>
+                    <div
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      {this.props.islogin && this.props.islogin ? (
+                        <PointRating
+                          id_book={this.props.mproductDetail._id}
+                          id_user={storeConfig.getUser().id}
+                        />
+                      ) : (
+                        <div key={1} className="panel panel-default">
+                          <div className="panel-heading">
+                            <h4 className="panel-title">
+                              <a key={1}>
+                                You are not logged in. Please
+                                <Link to="/login_register"> log in</Link> to add
+                                point.
+                              </a>
+                            </h4>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                     {/* <a href="">
                       <img
                         src="/img/product-details/share.png"
@@ -363,9 +475,22 @@ class ContentProductDetail extends Component {
                           {this.props.comment.map((element, index) => {
                             return (
                               <p style={{ backgroundColor: "white" }}>
-                                <Rating
-                                  value={this.props.mproductDetail.stars}
-                                />
+                                <Rating value={element.ratingValue} />
+                                {/* <ReactStars
+                                  classNames="mr-2"
+                                  size={16}
+                                  edit={false}
+                                  color={"#adb5bd"}
+                                  activeColor={"#ffb302"}
+                                  a11y={true}
+                                  isHalf={true}
+                                  emptyIcon={<i className="fa fa-star" />}
+                                  halfIcon={
+                                    <i className="fa fa-star-half-alt" />
+                                  }
+                                  filledIcon={<i className="fa fa-star" />}
+                                  value={element.ratingValue}
+                                /> */}
                                 <span>
                                   Name
                                   {element.name}:
@@ -407,7 +532,24 @@ class ContentProductDetail extends Component {
                             }
                           />
                           <label>Star</label>
-                          <select
+                          <ReactStars
+                            name={"rating"}
+                            starCount={5}
+                            size={30}
+                            color={"#adb5bd"}
+                            activeColor={"#ffb302"}
+                            a11y={true}
+                            isHalf={false}
+                            emptyIcon={<i className="fa fa-star" />}
+                            halfIcon={<i className="fa fa-star-half-alt" />}
+                            filledIcon={<i className="fa fa-star" />}
+                            value={this.state.ratingValue}
+                            onChange={(value) => {
+                              this.setState({ ratingValue: value });
+                            }}
+                          />
+
+                          {/* <select
                             onChange={(e) =>
                               this.setState({ ratingValue: e.target.value })
                             }
@@ -418,7 +560,7 @@ class ContentProductDetail extends Component {
                             <option value="3">3 - Good</option>
                             <option value="4">4 - Very Good</option>
                             <option value="5">5 - Excellent</option>
-                          </select>
+                          </select> */}
                           {this.props.islogin && this.props.islogin ? (
                             <button
                               type="button"
@@ -501,6 +643,66 @@ class ContentProductDetail extends Component {
                     </a>
                   </div>
                 </div>
+
+                <div className="recommended_items">
+                  <h2 className="title text-center">
+                    recommended items by rating user
+                  </h2>
+                  <div
+                    id="recommended-item-carousel"
+                    className="carousel slide"
+                    data-ride="carousel"
+                  >
+                    <div className="carousel-inner">
+                      <div className="item active">
+                        {this.props.bookRelatedByRating.map(
+                          (element, index) => {
+                            return (
+                              <div className="col-sm-4">
+                                <div className="product-image-wrapper">
+                                  <div className="single-products">
+                                    <div className="productinfo text-center">
+                                      <Link to={"/product/" + element._id}>
+                                        <img src={element.img} alt="" />
+                                        <h2>${element.price}</h2>
+                                        <p>{element.name}</p>
+                                      </Link>
+                                      <button
+                                        onClick={() => {
+                                          element.count = 1;
+                                          this.props.addToCart(element);
+                                        }}
+                                        type="button"
+                                        className="btn btn-default add-to-cart"
+                                      >
+                                        <i className="fa fa-shopping-cart" />
+                                        Add to cart
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    </div>
+                    <a
+                      className="left recommended-item-control"
+                      href="#recommended-item-carousel"
+                      data-slide="prev"
+                    >
+                      <i className="fa fa-angle-left" />
+                    </a>
+                    <a
+                      className="right recommended-item-control"
+                      href="#recommended-item-carousel"
+                      data-slide="next"
+                    >
+                      <i className="fa fa-angle-right" />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -509,4 +711,5 @@ class ContentProductDetail extends Component {
     );
   }
 }
+
 export default ContentProductDetail;

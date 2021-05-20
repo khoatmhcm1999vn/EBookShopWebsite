@@ -28,12 +28,14 @@ import { generateToken } from "../utils/utils.js";
 
 const uploadImg = async (path) => {
   let res;
+
   try {
     res = await cloudinaryConfig.uploader.upload(path);
   } catch (err) {
     console.log(err);
     return false;
   }
+
   return res.secure_url;
 };
 
@@ -50,11 +52,10 @@ export const addBook = async (req, res) => {
     typeof req.body.id_nsx === "undefined" ||
     typeof req.body.id_author === "undefined"
   ) {
-    res
-      .status(422)
-      .json({ success: false, message: " 👎 Dữ liệu nhập vào bị lỗi!" });
+    res.json({ success: false, message: "👎 Dữ liệu nhập vào bị lỗi!" });
     return;
   }
+
   const {
     id_category,
     name,
@@ -66,14 +67,17 @@ export const addBook = async (req, res) => {
     id_nsx,
     id_author,
   } = req.body;
+
   let urlImg = await uploadImg(req.file.path);
+
   if (urlImg === false) {
-    res.status(500).json({
+    res.json({
       success: false,
-      message: " 👎 Có sự cố xảy ra khi upload ảnh lên cloud!",
+      message: "👎 Có sự cố xảy ra khi upload ảnh lên cloud!",
     });
     return;
   }
+
   const newBook = new Book({
     id_category: id_category,
     name: name,
@@ -86,20 +90,23 @@ export const addBook = async (req, res) => {
     id_nsx: id_nsx,
     id_author: id_author,
   });
+
   try {
     newBook.save();
   } catch (err) {
-    res.status(500).json({
+    res.json({
       success: false,
-      message: " 👎 Có sự cố xảy ra khi lưu vào trong database!",
+      message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
     });
     return;
   }
+
   fs.unlink(req.file.path, (err) => {
     if (err) throw err;
     console.log("path/file.txt was deleted");
   });
-  res.status(201).json({ success: true, message: " 👍 Thêm mới thành công!" });
+
+  res.status(201).json({ success: true, message: "👍 Thêm mới thành công!" });
 };
 
 export const updateBook = async (req, res) => {

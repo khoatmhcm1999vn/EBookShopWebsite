@@ -20,6 +20,7 @@ const bookSchema = new Schema(
     },
     quantity: {
       type: Number,
+      required: [true, "can't be blank"],
     },
     published: {
       required: false,
@@ -48,9 +49,11 @@ const bookSchema = new Schema(
       required: [true, "can't be blank"],
     },
     stars: {
+      default: 0,
       type: Number,
     },
     reviewCount: {
+      default: 0,
       type: Number,
     },
     view_counts: {
@@ -69,6 +72,11 @@ const bookSchema = new Schema(
         message: "{VALUE} is not an integer value",
       },
     },
+    ratings: {
+      type: Array,
+      default: 0,
+    },
+    // ratingx1: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
   },
   {
     timestamps: true,
