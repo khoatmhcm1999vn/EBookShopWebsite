@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Modal, Button } from "react-bootstrap";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
+import { Modal, Button } from "react-bootstrap"
 
-import { getBraintreeClientToken, processPayment } from "../../utils/api";
-import DropIn from "braintree-web-drop-in-react";
+import { getBraintreeClientToken, processPayment } from "../../utils/api"
+import DropIn from "braintree-web-drop-in-react"
 
 class ContentCart extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       total: 0,
       show: false,
@@ -26,58 +26,60 @@ class ContentCart extends Component {
       notiCart: "",
       ispay: false,
       showpaymentfail: false,
+      inputValue: "",
 
       data: {
         loading: false,
         success: false,
         clientToken: null,
         error: "",
-        instance: {},
-      },
-    };
+        instance: {}
+      }
+    }
+    //this.handleQuantity = this.handleQuantity.bind(this)
   }
   componentWillMount() {
-    let total = 0;
+    let total = 0
     for (let i = 0; i < this.props.cart.length; i++) {
       total +=
-        Number(this.props.cart[i].price) * Number(this.props.cart[i].count);
+        Number(this.props.cart[i].price) * Number(this.props.cart[i].count)
     }
     // console.log(total)
 
     if (!this.props.islogin) {
-      getBraintreeClientToken().then((res) => {
+      getBraintreeClientToken().then(res => {
         if (!res) {
           this.setState({
             data: {
               ...this.state.data,
-              error: "fail",
-            },
-          });
+              error: "fail"
+            }
+          })
         } else {
           this.setState({
             data: {
               ...this.state.data,
-              clientToken: res.clientToken,
-            },
-          });
+              clientToken: res.clientToken
+            }
+          })
         }
-      });
+      })
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.cart !== this.props.cart) {
-      let total = 0;
+      let total = 0
       for (let i = 0; i < nextProps.cart.length; i++) {
         total +=
-          Number(nextProps.cart[i].price) * Number(nextProps.cart[i].count);
+          Number(nextProps.cart[i].price) * Number(nextProps.cart[i].count)
       }
-      this.setState({ total: total });
+      this.setState({ total: total })
     }
     if (nextProps.ispay !== this.props.ispay && nextProps.ispay === true) {
-      this.setState({ ispay: true });
+      this.setState({ ispay: true })
     }
     if (nextProps.ispay !== this.props.ispay && nextProps.ispay === false) {
-      this.setState({ showpaymentfail: true });
+      this.setState({ showpaymentfail: true })
     }
   }
   reset = () => {
@@ -103,19 +105,36 @@ class ContentCart extends Component {
         success: false,
         clientToken: null,
         error: "",
-        instance: {},
-      },
-    });
-  };
-  handleQuantity = (e) => {
-    const { value } = e.target;
-    console.log(value);
-    if (value < 1) {
-      alert("Quantity must be greater than or equal to 1");
-      return;
+        instance: {}
+      }
+    })
+  }
+  handleQuantity({ target }, element) {
+    let { value } = target
+    console.log(typeof value)
+    console.log(element)
+    // Replace all non-numeric characters to ''
+    value = String(value).replace(/[^0-9]/g, "")
+    console.log(value)
+    if (value == "0") {
+      element.count = 1
+      this.props.updateProductInCart(element)
+    } else if (value == "") {
+      element.count = ""
+      this.props.updateProductInCart(element)
+      return alert("Quantity must be > 0 and not empty")
+    } else {
+      element.count = +value
+      this.props.updateProductInCart(element)
     }
-    this.setState({ quantity: e.target.value });
-  };
+    //this.setState({ inputValue: value })
+
+    // if (value < 1) {
+    //   alert("Quantity must be greater than or equal to 1")
+    //   return
+    // }
+    // this.setState({ quantity: e.target.value })
+  }
   handlePayment = () => {
     // if (!this.props.islogin) {
     //   this.setState({ show: true });
@@ -123,30 +142,30 @@ class ContentCart extends Component {
     // } else {
     //   this.setState({ show: false });
     // }
-    let check = true;
+    let check = true
     if (!this.isvalidEmail(this.state.email)) {
-      this.setState({ notiEmail: "Email invalid" });
-      check = false;
+      this.setState({ notiEmail: "Email invalid" })
+      check = false
     } else {
-      this.setState({ notiEmail: "" });
+      this.setState({ notiEmail: "" })
     }
     if (this.state.name.length < 3) {
       this.setState({
-        notiName: "Name invalid",
-      });
-      check = false;
+        notiName: "Name invalid"
+      })
+      check = false
     } else {
       this.setState({
-        notiName: "",
-      });
+        notiName: ""
+      })
     }
     if (!this.isvaidPhone(this.state.phone)) {
       this.setState({
-        notiPhone: "Phone invalid",
-      });
-      check = false;
+        notiPhone: "Phone invalid"
+      })
+      check = false
     } else {
-      this.setState({ notiPhone: "" });
+      this.setState({ notiPhone: "" })
     }
     if (
       this.state.city.name === "" ||
@@ -154,32 +173,32 @@ class ContentCart extends Component {
       this.state.ward.name === ""
     ) {
       this.setState({
-        notiAddress: "Address invalid",
-      });
-      check = false;
+        notiAddress: "Address invalid"
+      })
+      check = false
     } else {
       this.setState({
-        notiAddress: "",
-      });
+        notiAddress: ""
+      })
     }
     if (this.state.address === "") {
-      this.setState({ notiDetailAddress: "Address invalid" });
-      check = false;
+      this.setState({ notiDetailAddress: "Address invalid" })
+      check = false
     } else {
-      this.setState({ notiDetailAddress: "" });
+      this.setState({ notiDetailAddress: "" })
     }
     if (this.props.cart.length == 0) {
-      this.setState({ notiCart: "Please buy one product!" });
-      check = false;
+      this.setState({ notiCart: "Please buy one product!" })
+      check = false
     } else {
-      this.setState({ notiCart: "" });
+      this.setState({ notiCart: "" })
     }
-    if (check === false) return;
+    if (check === false) return
 
     this.props.cart.totalPrice = this.toPrice(
       this.props.cart.reduce((a, c) => a + c.count * c.price, 0)
-    );
-    this.props.cart.paymentMethod = this.props.cartPayment;
+    )
+    this.props.cart.paymentMethod = this.props.cartPayment
     // console.log(this.props.cart);
     // this.props.cart.shippingPrice = cart.itemsPrice > 100 ? toPrice(0) : toPrice(10);
     // this.props.cart.taxPrice = toPrice(0.15 * cart.itemsPrice);
@@ -189,60 +208,58 @@ class ContentCart extends Component {
     this.setState({
       data: {
         ...this.state.data,
-        loading: true,
-      },
-    });
-    let nonce;
-    let getNonce = this.state.data.instance
-      .requestPaymentMethod()
-      .then((res) => {
-        nonce = res.nonce;
+        loading: true
+      }
+    })
+    let nonce
+    let getNonce = this.state.data.instance.requestPaymentMethod().then(res => {
+      nonce = res.nonce
 
-        const paymentData = {
-          paymentMethodNonce: nonce,
-          amount: this.props.cart.totalPrice,
-        };
+      const paymentData = {
+        paymentMethodNonce: nonce,
+        amount: this.props.cart.totalPrice
+      }
 
-        processPayment(paymentData)
-          .then((response) => {
-            // console.log(response);
-            this.setState({
-              data: {
-                ...this.state.data,
-                success: response.success,
-              },
-            });
-
-            const paymentResult = {
-              id: response.transaction.id,
-              status: "COMPLETED",
-              update_time: response.transaction.updatedAt,
-              email_address: response.transaction.paypal.payerEmail,
-            };
-            console.log(paymentResult);
-
-            this.props.payment(
-              this.state.city.name,
-              this.state.district.name,
-              this.state.ward.name,
-              this.state.address,
-              this.state.phone,
-              this.state.name,
-              this.props.cart,
-              this.state.email,
-              paymentResult
-            );
+      processPayment(paymentData)
+        .then(response => {
+          // console.log(response);
+          this.setState({
+            data: {
+              ...this.state.data,
+              success: response.success
+            }
           })
-          .catch((error) => {
-            console.log("DropIn error: ", error);
-            this.setState({
-              data: {
-                ...this.state.data,
-                error: error.message,
-              },
-            });
-          });
-      });
+
+          const paymentResult = {
+            id: response.transaction.id,
+            status: "COMPLETED",
+            update_time: response.transaction.updatedAt,
+            email_address: response.transaction.paypal.payerEmail
+          }
+          console.log(paymentResult)
+
+          this.props.payment(
+            this.state.city.name,
+            this.state.district.name,
+            this.state.ward.name,
+            this.state.address,
+            this.state.phone,
+            this.state.name,
+            this.props.cart,
+            this.state.email,
+            paymentResult
+          )
+        })
+        .catch(error => {
+          console.log("DropIn error: ", error)
+          this.setState({
+            data: {
+              ...this.state.data,
+              error: error.message
+            }
+          })
+        })
+    })
 
     // this.props.payment(
     //   this.state.city.name,
@@ -254,71 +271,95 @@ class ContentCart extends Component {
     //   this.props.cart,
     //   this.state.email
     // );
-  };
+  }
 
-  toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
+  toPrice = num => Number(num.toFixed(2)) // 5.123 => "5.12" => 5.12
 
-  isvaidPhone = (phone) => {
-    if (phone.length < 10 || phone.length > 11) return false;
+  isvaidPhone = phone => {
+    if (phone.length < 10 || phone.length > 11) return false
     for (let i = 0; i < phone.length; i++) {
-      if (phone.charAt(i) < "0" || phone.charAt(i) > "9") return false;
+      if (phone.charAt(i) < "0" || phone.charAt(i) > "9") return false
     }
-    return true;
-  };
-  isvalidEmail = (email) => {
+    return true
+  }
+  isvalidEmail = email => {
     if (email === "" || email.indexOf("@") === -1 || email.indexOf(".") === -1)
-      return false;
-    return true;
-  };
+      return false
+    return true
+  }
   handleSelectCity(value) {
     // console.log(value)
-    let city = value.split("/");
-    let name = city[0];
-    let code = city[1];
+    let city = value.split("/")
+    let name = city[0]
+    let code = city[1]
     this.setState({
-      city: { name: name, code: code },
-    });
-    this.props.getDistrict(code);
+      city: { name: name, code: code }
+    })
+    this.props.getDistrict(code)
   }
   handleSelectDistrict(value) {
-    let district = value.split("/");
-    let name = district[0];
-    let code = district[1];
+    let district = value.split("/")
+    let name = district[0]
+    let code = district[1]
     this.setState({
-      district: { name: name, code: code },
-    });
-    this.props.getWard(this.state.city.code, code);
+      district: { name: name, code: code }
+    })
+    this.props.getWard(this.state.city.code, code)
   }
   handleSelectWard(value) {
-    let ward = value.split("/");
-    let name = ward[0];
-    let code = ward[1];
+    let ward = value.split("/")
+    let name = ward[0]
+    let code = ward[1]
     this.setState({
-      ward: { name: name, code: code },
-    });
+      ward: { name: name, code: code }
+    })
   }
   render() {
     // console.log(this.props.ispay);
-    console.log(this.state.data);
+    // console.log(this.state.data);
     // console.log(this.state.show);
     return (
       <div>
         <section id="cart_items">
           <div className="container">
-            <div className="breadcrumbs">
+            <div>
+              <div
+                className="container"
+                style={{ backgroundColor: "transparent!important" }}
+              >
+                <div className="mb-breadcrumbs">
+                  <div id="ves-breadcrumbs" className="breadcrumbs hidden-xs">
+                    <div className="container-inner breadcrumbs">
+                      <ol className="breadcrumb">
+                        <li className="home">
+                          <Link to="/" title="Tới trang chủ">
+                            Trang chủ
+                          </Link>
+                          <span>/</span>
+                        </li>
+                        <li className="active">
+                          <strong>Shopping Cart</strong>
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* <div className="breadcrumbs">
               <ol className="breadcrumb">
                 <li>
                   <Link to="/">Home</Link>
                 </li>
                 <li className="active">Shopping Cart</li>
               </ol>
-            </div>
+            </div> */}
             <div className="table-responsive cart_info">
               <table className="table table-condensed">
                 <thead>
                   <tr className="cart_menu">
                     <td className="image">Item</td>
-                    <td className="description" />
+                    <td className="description">Name</td>
                     <td className="price">Price</td>
                     <td className="quantity">Quantity</td>
                     <td className="total">Total</td>
@@ -348,50 +389,63 @@ class ContentCart extends Component {
                         <td className="cart_quantity">
                           <div className="cart_quantity_button">
                             <span
-                              className="cart_quantity_up"
+                              className="cart_quantity_down"
                               onClick={() => {
-                                element.count += 1;
-                                // if (typeof element.count === "number") {
-                                //   console.log("number");
-                                // }
-                                // console.log(element.count);
-                                this.props.updateProductInCart(element);
+                                if (element.count <= 1) {
+                                  return
+                                } else {
+                                  element.count -= 1
+                                  this.props.updateProductInCart(element)
+                                }
                               }}
                             >
-                              +
+                              -
                             </span>
                             <input
                               className="cart_quantity_input"
                               type="text"
                               name="quantity"
-                              onChange={(e) => {
-                                if (e.target.value < 1) {
-                                  return;
+                              autocomplete="off"
+                              size="2"
+                              value={element.count}
+                              onChange={event =>
+                                this.handleQuantity(event, element)
+                              }
+                            />
+                            {/* <input
+                              className="cart_quantity_input"
+                              type="number"
+                              min="0"
+                              name="quantity"
+                              onChange={e => {
+                                if (Number(e.target.value) < 1) {
+                                  console.log(e.target.value)
+                                  return
                                 } else {
-                                  element.count = +e.target.value;
+                                  element.count = +e.target.value
                                   // if (typeof element.count === "number") {
                                   //   console.log("number");
                                   // }
                                   // console.log(element.count);
-                                  this.props.updateProductInCart(element);
+                                  this.props.updateProductInCart(element)
                                 }
                               }}
                               value={element.count}
                               autocomplete="off"
                               size="2"
-                            />
+                            /> */}
                             <span
-                              className="cart_quantity_down"
+                              className="cart_quantity_up"
                               onClick={() => {
-                                if (element.count <= 1) {
-                                  return;
-                                } else {
-                                  element.count -= 1;
-                                  this.props.updateProductInCart(element);
-                                }
+                                element.count += 1
+                                // if (typeof element.count === "number") {
+                                //   console.log("number");
+                                // }
+                                // console.log(element.count);
+                                this.props.updateProductInCart(element)
                               }}
                             >
-                              -
+                              +
                             </span>
                           </div>
                         </td>
@@ -411,7 +465,7 @@ class ContentCart extends Component {
                           </button>
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -476,9 +530,7 @@ class ContentCart extends Component {
                       <input
                         type="text"
                         value={this.state.email}
-                        onChange={(e) =>
-                          this.setState({ email: e.target.value })
-                        }
+                        onChange={e => this.setState({ email: e.target.value })}
                       />
                       <span>{this.state.notiEmail}</span>
                     </li>
@@ -487,9 +539,7 @@ class ContentCart extends Component {
                       <input
                         type="text"
                         value={this.state.name}
-                        onChange={(e) =>
-                          this.setState({ name: e.target.value })
-                        }
+                        onChange={e => this.setState({ name: e.target.value })}
                       />
                       <span>{this.state.notiName}</span>
                     </li>
@@ -498,9 +548,7 @@ class ContentCart extends Component {
                       <input
                         type="text"
                         value={this.state.phone}
-                        onChange={(e) =>
-                          this.setState({ phone: e.target.value })
-                        }
+                        onChange={e => this.setState({ phone: e.target.value })}
                       />
                       <span>{this.state.notiPhone}</span>
                     </li>
@@ -509,7 +557,7 @@ class ContentCart extends Component {
                     <li className="single_field">
                       <label>Province / city</label>
                       <select
-                        onChange={(e) => this.handleSelectCity(e.target.value)}
+                        onChange={e => this.handleSelectCity(e.target.value)}
                       >
                         <option
                           value=""
@@ -524,14 +572,14 @@ class ContentCart extends Component {
                             <option value={element.name + "/" + element.code}>
                               {element.name}
                             </option>
-                          );
+                          )
                         })}
                       </select>
                     </li>
                     <li className="single_field">
                       <label>District</label>
                       <select
-                        onChange={(e) =>
+                        onChange={e =>
                           this.handleSelectDistrict(e.target.value)
                         }
                       >
@@ -548,14 +596,14 @@ class ContentCart extends Component {
                             <option value={element.name + "/" + element.code}>
                               {element.name}
                             </option>
-                          );
+                          )
                         })}
                       </select>
                     </li>
                     <li className="single_field">
                       <label>Ward</label>
                       <select
-                        onChange={(e) => this.handleSelectWard(e.target.value)}
+                        onChange={e => this.handleSelectWard(e.target.value)}
                       >
                         <option
                           value=""
@@ -570,7 +618,7 @@ class ContentCart extends Component {
                             <option value={element.name + "/" + element.code}>
                               {element.name}
                             </option>
-                          );
+                          )
                         })}
                       </select>
                     </li>
@@ -582,7 +630,7 @@ class ContentCart extends Component {
                       <input
                         type="text"
                         value={this.state.address}
-                        onChange={(e) =>
+                        onChange={e =>
                           this.setState({ address: e.target.value })
                         }
                       />
@@ -607,8 +655,8 @@ class ContentCart extends Component {
                     <Modal.Footer>
                       <Button
                         onClick={() => {
-                          this.reset();
-                          document.location.href = "/";
+                          this.reset()
+                          document.location.href = "/"
                           // window.location.reload();
                         }}
                       >
@@ -647,15 +695,15 @@ class ContentCart extends Component {
                         options={{
                           authorization: this.state.data.clientToken,
                           paypal: {
-                            flow: "vault",
-                          },
+                            flow: "vault"
+                          }
                         }}
-                        onInstance={(instance) =>
+                        onInstance={instance =>
                           this.setState({
                             data: {
                               ...this.state.data,
-                              instance: instance,
-                            },
+                              instance: instance
+                            }
                           })
                         }
                       />
@@ -692,7 +740,7 @@ class ContentCart extends Component {
           </div>
         </section>
       </div>
-    );
+    )
   }
 }
-export default ContentCart;
+export default ContentCart

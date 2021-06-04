@@ -1,31 +1,30 @@
-import { createStore, compose, applyMiddleware, combineReducers } from "redux";
-import thunk from "redux-thunk";
+import { createStore, applyMiddleware, combineReducers } from "redux"
+import thunk from "redux-thunk"
+import { composeWithDevTools } from "redux-devtools-extension"
 
-import bookReducers from "./reducers/book.reducer";
-import bookReducer from "./reducers/bookReducers";
-import billReducer from "./reducers/billReducers";
-import userReducers from "./reducers/user.reducer";
-import homeReducers from "./reducers/home.reducer";
-import productReducers from "./reducers/product.reducer";
-import profileReducers from "./reducers/profile.reducer";
-import { cartReducer } from "./reducers/cart.reducer";
-import purchaseReducers from "./reducers/purchase.reducer";
+import bookReducers from "./reducers/book.reducer"
+import userReducers from "./reducers/user.reducer"
+import homeReducers from "./reducers/home.reducer"
+import productReducers from "./reducers/product.reducer"
+import profileReducers from "./reducers/profile.reducer"
+import { cartReducer } from "./reducers/cart.reducer"
+import purchaseReducers from "./reducers/purchase.reducer"
 import {
   addressSaveReducer,
   addressListMyReducer,
-  addressDeleteReducer,
-} from "./reducers/address.reducer";
+  addressDeleteReducer
+} from "./reducers/address.reducer"
 import {
   orderCreateReducer,
   orderDetailsReducer,
   orderDeliverReducer,
   orderPayReducer,
-  orderSummaryReducer,
-} from "./reducers/orderReducers";
+  orderSummaryReducer
+} from "./reducers/orderReducers"
 import {
   paymentMethodListMyReducer,
-  paymentMethodSaveReducer,
-} from "./reducers/paymentReducers";
+  paymentMethodSaveReducer
+} from "./reducers/paymentReducers"
 
 const initialState = {
   //   userReducers: {
@@ -44,39 +43,46 @@ const initialState = {
       ? JSON.parse(localStorage.getItem("shippingAddress"))
       : {},
     paymentMethod: "PayPal",
-    ispay: false,
-  },
-};
-
+    ispay: false
+  }
+}
 const reducer = combineReducers({
-  bookReducers: bookReducers,
-  book: bookReducer,
-  bill: billReducer,
-  userReducers: userReducers,
-  homeReducers: homeReducers,
-  productReducers: productReducers,
-  profileReducers: profileReducers,
+  bookReducers,
+  userReducers,
+  homeReducers,
+  productReducers,
+  profileReducers,
   cart: cartReducer,
-  purchaseReducers: purchaseReducers,
+  purchaseReducers,
   addressSave: addressSaveReducer,
   addressListMy: addressListMyReducer,
   addressDelete: addressDeleteReducer,
-  // order: orderReducer,
-  // orderListMy: orderListMyReducer,
-  // orderListAll: orderListAllReducer,
-  // orderPreview: orderPreviewReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderDeliver: orderDeliverReducer,
   orderSummary: orderSummaryReducer,
   orderPay: orderPayReducer,
   paymentMethodSave: paymentMethodSaveReducer,
-  paymentMethodListMy: paymentMethodListMyReducer,
-});
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  paymentMethodListMy: paymentMethodListMyReducer
+})
+const rootReducer = (state, action) => {
+  if (action.type === "USER_LOGOUT") {
+    console.log("Logout Root Reducer")
+    state = undefined
+  }
+  return reducer(state, action)
+}
+const middleware = [thunk]
 const store = createStore(
-  reducer,
+  rootReducer,
   initialState,
-  composeEnhancer(applyMiddleware(thunk))
-);
-export default store;
+  composeWithDevTools(applyMiddleware(...middleware))
+)
+export default store
+
+// const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// const store = createStore(
+//   rootReducer,
+//   initialState,
+//   composeEnhancer(applyMiddleware(...middleware))
+// );

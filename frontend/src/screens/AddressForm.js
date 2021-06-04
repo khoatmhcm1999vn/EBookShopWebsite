@@ -1,80 +1,78 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addAddress } from "../actions/user.action";
-import { saveShippingAddress } from "../actions/cart.action";
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { addAddress } from "../actions/user.action"
+import { saveShippingAddress } from "../actions/cart.action"
 // import { MaterialButton, MaterialInput } from "../../components/MaterialUI";
-import SearchBar from "../components/searchbar/SearchBar";
+import SearchBar from "../components/searchbar/SearchBar"
 
 /**
  * @author
  * @function AddressForm
  **/
 
-const AddressForm = (props) => {
-  const { initialData } = props;
+const AddressForm = props => {
+  const { initialData } = props
 
-  const [address, setAddress] = useState(
-    initialData ? initialData.address : ""
-  );
-  const [ward, setWard] = useState(initialData ? initialData.ward : "");
+  const [address, setAddress] = useState(initialData ? initialData.address : "")
+  const [ward, setWard] = useState(initialData ? initialData.ward : "")
   const [district, setDistrict] = useState(
     initialData ? initialData.district : ""
-  );
-  const [city, setCity] = useState(initialData ? initialData.city : "");
+  )
+  const [city, setCity] = useState(initialData ? initialData.city : "")
   // const [code, setCode] = useState(initialData ? initialData.code : "");
 
-  const dispatch = useDispatch();
-  const userAddr = useSelector((state) => state.userReducers.user);
-  const [submitFlag, setSubmitFlag] = useState(false);
-  const [id, setId] = useState(initialData ? initialData._id : "");
+  const dispatch = useDispatch()
+  const userAddr = useSelector(state => state.userReducers.user)
+  const [submitFlag, setSubmitFlag] = useState(false)
+  const [id, setId] = useState(initialData ? initialData._id : "")
 
-  console.log(props.initialData);
+  console.log(props.initialData)
 
   const inputContainer = {
     width: "100%",
-    marginRight: 10,
-  };
-  const onAddressSubmit = (e) => {
+    marginRight: 10
+  }
+  const onAddressSubmit = e => {
     const payload = {
       address: {
         address,
         ward,
         district,
-        city,
+        city
         // code,
-      },
-    };
-    console.log(payload);
-    if (id) {
-      payload.address._id = id;
-      dispatch(saveShippingAddress(payload.address._id));
+      }
     }
-    dispatch(addAddress(payload));
-    setSubmitFlag(true);
-  };
+    console.log(payload)
+    if (id) {
+      payload.address._id = id
+      dispatch(saveShippingAddress(payload.address._id))
+    }
+    dispatch(addAddress(payload))
+    setSubmitFlag(true)
+  }
   // console.log(submitFlag);
 
   useEffect(() => {
-    console.log("addressCount", initialData);
+    console.log("addressCount", initialData)
     if (submitFlag) {
       // console.log("where are we", userAddr);
-      let _address = {};
+      let _address = {}
       if (id) {
         _address = {
           _id: id,
           address,
           ward,
           district,
-          city,
+          city
           // code,
-        };
+        }
       } else {
-        _address = initialData;
+        _address = initialData
       }
-      console.log(_address);
-      props.onSubmitForm(_address);
+      console.log(_address)
+      props.onSubmitForm(_address)
     }
-  }, [initialData, submitFlag, userAddr.address]);
+  }, [initialData, submitFlag, userAddr.address])
 
   const renderAddressForm = () => {
     return (
@@ -90,7 +88,7 @@ const AddressForm = (props) => {
             <label
               style={{
                 top: 0,
-                lineHeight: "none",
+                lineHeight: "none"
               }}
             >
               Address: &nbsp;
@@ -99,7 +97,7 @@ const AddressForm = (props) => {
               placeholder="Enter Address"
               label="Address"
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={e => setAddress(e.target.value)}
             />
           </div>
         </div>
@@ -108,7 +106,7 @@ const AddressForm = (props) => {
             <label
               style={{
                 top: 0,
-                lineHeight: "none",
+                lineHeight: "none"
               }}
             >
               Ward: &nbsp;
@@ -117,7 +115,7 @@ const AddressForm = (props) => {
               placeholder="Enter Ward"
               label="Ward"
               value={ward}
-              onChange={(e) => setWard(e.target.value)}
+              onChange={e => setWard(e.target.value)}
             />
           </div>
         </div>
@@ -126,7 +124,7 @@ const AddressForm = (props) => {
             <label
               style={{
                 top: 0,
-                lineHeight: "none",
+                lineHeight: "none"
               }}
             >
               District: &nbsp;
@@ -135,7 +133,7 @@ const AddressForm = (props) => {
               placeholder="Enter District"
               label="District"
               value={district}
-              onChange={(e) => setDistrict(e.target.value)}
+              onChange={e => setDistrict(e.target.value)}
             />
           </div>
         </div>
@@ -144,7 +142,7 @@ const AddressForm = (props) => {
             <label
               style={{
                 top: 0,
-                lineHeight: "none",
+                lineHeight: "none"
               }}
             >
               City: &nbsp;
@@ -153,7 +151,7 @@ const AddressForm = (props) => {
               placeholder="Enter City"
               label="City"
               value={city}
-              onChange={(e) => setCity(e.target.value)}
+              onChange={e => setCity(e.target.value)}
             />
           </div>
         </div>
@@ -182,7 +180,7 @@ const AddressForm = (props) => {
             onClick={onAddressSubmit}
             style={{
               width: "250px",
-              margin: "20px 0",
+              margin: "20px 0"
             }}
           >
             Save and Delivery here!
@@ -218,10 +216,10 @@ const AddressForm = (props) => {
           </div>
         )}
       </>
-    );
-  };
+    )
+  }
   if (props.withoutLayout) {
-    return <div>{renderAddressForm()}</div>;
+    return <div>{renderAddressForm()}</div>
   }
 
   // return (
@@ -243,6 +241,6 @@ const AddressForm = (props) => {
   //     </div>
   //   </div>
   // );
-};
+}
 
-export default AddressForm;
+export default AddressForm

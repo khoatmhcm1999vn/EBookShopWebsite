@@ -1,51 +1,51 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { createOrder } from "../actions/orderActions";
-import { logout } from "../actions/user.action";
-import CheckoutSteps from "../components/checkoutsteps/CheckoutSteps";
-import { ORDER_CREATE_RESET } from "../constants/orderConstants";
-import LoadingBox from "../components/loading/loading";
-import MessageBox from "../components/message/Message";
-import HeaderTop from "../components/header/header.top";
-import HeaderMiddle from "../components/header/header.middle";
-import FooterTop from "../components/footer/footer.top";
-import FooterMiddle from "../components/footer/footer.middle";
-import FooterBottom from "../components/footer/footer.bottom";
+import React, { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { createOrder } from "../actions/orderActions"
+import { logout } from "../actions/user.action"
+import CheckoutSteps from "../components/checkoutsteps/CheckoutSteps"
+import { ORDER_CREATE_RESET } from "../constants/orderConstants"
+import LoadingBox from "../components/loading/loading"
+import MessageBox from "../components/message/Message"
+import HeaderTop from "../components/header/header.top"
+import HeaderMiddle from "../components/header/header.middle"
+import FooterTop from "../components/footer/footer.top"
+import FooterMiddle from "../components/footer/footer.middle"
+import FooterBottom from "../components/footer/footer.bottom"
 
 import {
   getMyAddresesAction,
   saveAddressAction,
-  deleteAddressAction,
-} from "../actions/address.action";
-import { getCart } from "../actions/cart.action";
+  deleteAddressAction
+} from "../actions/address.action"
+import { getCart } from "../actions/cart.action"
 
 export default function PlaceOrderScreen(props) {
-  const cart = useSelector((state) => state.cart);
-  const islogin = useSelector((state) => state.userReducers.user.islogin);
+  const cart = useSelector(state => state.cart)
+  const islogin = useSelector(state => state.userReducers.user.islogin)
 
   if (!cart.paymentMethod) {
-    props.history.push("/payment");
+    props.history.push("/payment")
   }
 
-  const orderCreate = useSelector((state) => state.orderCreate);
-  const { loading, success, error, order } = orderCreate;
+  const orderCreate = useSelector(state => state.orderCreate)
+  const { loading, success, error, order } = orderCreate
 
-  const toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
+  const toPrice = num => Number(num.toFixed(2)) // 5.123 => "5.12" => 5.12
   cart.totalPrice = toPrice(
     cart.data.reduce((a, c) => a + c.count * c.price, 0)
-  );
+  )
   // cart.shippingPrice = cart.itemsPrice > 100 ? toPrice(0) : toPrice(10);
   // cart.taxPrice = toPrice(0.15 * cart.itemsPrice);
   // cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const placeOrderHandler = () => {
-    dispatch(createOrder({ ...cart, products: cart.data }));
-  };
+    dispatch(createOrder({ ...cart, products: cart.data }))
+  }
 
   // const addressList = useSelector((state) => state.addressListMy);
-  const userAddr = useSelector((state) => state.userReducers.user);
+  const userAddr = useSelector(state => state.userReducers.user)
   // const {
   //   addresses,
   //   loading: addressListLoading,
@@ -55,7 +55,7 @@ export default function PlaceOrderScreen(props) {
   // console.log(address[0]);
   // console.log(addresses);
   // console.log(cart.paymentMethod);
-  console.log(userAddr.address);
+  console.log(userAddr.address)
 
   // useEffect(() => {
   //   // dispatch(getMyAddresesAction());
@@ -71,14 +71,14 @@ export default function PlaceOrderScreen(props) {
 
   useEffect(() => {
     if (success) {
-      props.history.push(`/order/${order._id}`);
-      dispatch({ type: ORDER_CREATE_RESET });
+      props.history.push(`/order/${order._id}`)
+      dispatch({ type: ORDER_CREATE_RESET })
       // alert("success");
       // return;
     }
-  }, [dispatch, order, props.history, success]);
+  }, [dispatch, order, props.history, success])
 
-  console.log(cart);
+  console.log(cart)
   return (
     <div>
       <header id="header">
@@ -144,7 +144,7 @@ export default function PlaceOrderScreen(props) {
               <div className="card card-body">
                 <h2>Order Items</h2>
                 <ul>
-                  {cart.data.map((item) => (
+                  {cart.data.map(item => (
                     <li key={item._id}>
                       <div className="row">
                         <div>
@@ -226,5 +226,5 @@ export default function PlaceOrderScreen(props) {
         <FooterBottom />
       </footer>
     </div>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
 class Login extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       email: "",
-      password: "",
-    };
+      password: ""
+    }
   }
   render() {
     return (
@@ -29,7 +29,7 @@ class Login extends Component {
                   placeholder="Username"
                   autofocus
                   value={this.state.email}
-                  onChange={(e) => this.setState({ email: e.target.value })}
+                  onChange={e => this.setState({ email: e.target.value })}
                 />
               </div>
               <div className="input-group">
@@ -41,7 +41,7 @@ class Login extends Component {
                   className="form-control"
                   placeholder="Password"
                   value={this.state.password}
-                  onChange={(e) => this.setState({ password: e.target.value })}
+                  onChange={e => this.setState({ password: e.target.value })}
                 />
               </div>
               <label className="checkbox">
@@ -63,7 +63,7 @@ class Login extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
-export default Login;
+export default Login

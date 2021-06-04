@@ -1,7 +1,7 @@
-import React from "react";
+import React from "react"
 
 export default function RatingNormal(props) {
-  const { rating, numReviews, caption } = props;
+  const { rating, numReviews, caption } = props
   return (
     <div className="rating">
       <span>
@@ -61,7 +61,7 @@ export default function RatingNormal(props) {
       </span>
       {caption ? <span>{caption}</span> : null}
     </div>
-  );
+  )
 }
 
 // {

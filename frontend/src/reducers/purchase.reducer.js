@@ -1,5 +1,5 @@
-import { combineReducers } from "redux";
-import { purchaseHistoryTypes } from "../constants/action.types";
+import { combineReducers } from "redux"
+import { purchaseHistoryTypes } from "../constants/action.types"
 
 const purchaseHistory = (
   state = { data: [], page: 1, totalpage: null },
@@ -9,25 +9,25 @@ const purchaseHistory = (
     case purchaseHistory.SET_PURCHASE_PAGE: {
       return {
         ...state,
-        page: action.page,
-      };
+        page: action.page
+      }
     }
     case purchaseHistory.SET_PURCHASE_TOTAL_PAGE: {
       return {
         ...state,
-        totalpage: action.totalpage,
-      };
+        totalpage: action.totalpage
+      }
     }
     case purchaseHistoryTypes.SET_PURCHASED_HISTORY: {
       return {
         ...state,
-        data: action.data,
-      };
+        data: action.data
+      }
     }
     default:
-      return state;
+      return state
   }
-};
+}
 export default combineReducers({
-  purchaseHistory,
-});
+  purchaseHistory
+})

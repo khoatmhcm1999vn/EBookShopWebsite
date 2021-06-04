@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import BTable from "react-bootstrap/Table";
+import BTable from "react-bootstrap/Table"
 
 import {
   useTable,
@@ -10,23 +10,23 @@ import {
   useExpanded,
   usePagination,
   useSortBy,
-  useRowSelect,
-} from "react-table";
+  useRowSelect
+} from "react-table"
 
-import { matchSorter } from "match-sorter";
+import { matchSorter } from "match-sorter"
 
-import { useExportData } from "react-table-plugins";
-import { useSelector, useDispatch } from "react-redux";
-import Papa from "papaparse";
-import XLSX from "xlsx";
-import JsPDF from "jspdf";
-import "jspdf-autotable";
+import { useExportData } from "react-table-plugins"
+import { useSelector, useDispatch } from "react-redux"
+import Papa from "papaparse"
+import XLSX from "xlsx"
+import JsPDF from "jspdf"
+import "jspdf-autotable"
 
-import "./Table.css";
+import "./Table.css"
 
-import swal from "sweetalert";
-import styled from "styled-components";
-import Filters from "../../screens/BookScreen/Filters";
+import swal from "sweetalert"
+import styled from "styled-components"
+import Filters from "../../screens/BookScreen/Filters"
 
 // const EditableCell = ({
 //   value: initialValue,
@@ -78,39 +78,39 @@ import Filters from "../../screens/BookScreen/Filters";
 // dateBetweenFilterFn.autoRemove = (val) => !val;
 // Define a default UI for filtering
 function DefaultColumnFilter({
-  column: { filterValue, preFilteredRows, setFilter },
+  column: { filterValue, preFilteredRows, setFilter }
 }) {
-  const count = preFilteredRows.length;
+  const count = preFilteredRows.length
   return (
     <input
       value={filterValue || ""}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+      onChange={e => {
+        setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
       placeholder={`Search ${count} records...`}
     />
-  );
+  )
 }
 // This is a custom filter UI for selecting
 // a unique option from a list
 export function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
+  column: { filterValue, setFilter, preFilteredRows, id }
 }) {
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = React.useMemo(() => {
-    const options = new Set();
-    preFilteredRows.forEach((row) => {
-      options.add(row.values[id]);
-    });
-    return [...options.values()];
-  }, [id, preFilteredRows]);
+    const options = new Set()
+    preFilteredRows.forEach(row => {
+      options.add(row.values[id])
+    })
+    return [...options.values()]
+  }, [id, preFilteredRows])
   // Render a multi-select box
   return (
     <select
       value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
+      onChange={e => {
+        setFilter(e.target.value || undefined)
       }}
     >
       <option value="">All</option>
@@ -120,25 +120,25 @@ export function SelectColumnFilter({
         </option>
       ))}
     </select>
-  );
+  )
 }
 // This is a custom filter UI that uses a
 // slider to set the filter value between a column's
 // min and max values
 export function SliderColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
+  column: { filterValue, setFilter, preFilteredRows, id }
 }) {
   // Calculate the min and max
   // using the preFilteredRows
   const [min, max] = React.useMemo(() => {
-    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    preFilteredRows.forEach((row) => {
-      min = Math.min(row.values[id], min);
-      max = Math.max(row.values[id], max);
-    });
-    return [min, max];
-  }, [id, preFilteredRows]);
+    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    preFilteredRows.forEach(row => {
+      min = Math.min(row.values[id], min)
+      max = Math.max(row.values[id], max)
+    })
+    return [min, max]
+  }, [id, preFilteredRows])
   return (
     <>
       <input
@@ -146,77 +146,71 @@ export function SliderColumnFilter({
         min={min}
         max={max}
         value={filterValue || min}
-        onChange={(e) => {
-          setFilter(parseInt(e.target.value, 10));
+        onChange={e => {
+          setFilter(parseInt(e.target.value, 10))
         }}
       />
       <button onClick={() => setFilter(undefined)}>Off</button>
     </>
-  );
+  )
 }
 // This is a custom UI for our 'between' or number range
 // filter. It uses two number boxes and filters rows to
 // ones that have values between the two
 export function NumberRangeColumnFilter({
-  column: { filterValue = [], preFilteredRows, setFilter, id },
+  column: { filterValue = [], preFilteredRows, setFilter, id }
 }) {
   const [min, max] = React.useMemo(() => {
-    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
-    preFilteredRows.forEach((row) => {
-      min = Math.min(row.values[id], min);
-      max = Math.max(row.values[id], max);
-    });
-    return [min, max];
-  }, [id, preFilteredRows]);
+    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
+    preFilteredRows.forEach(row => {
+      min = Math.min(row.values[id], min)
+      max = Math.max(row.values[id], max)
+    })
+    return [min, max]
+  }, [id, preFilteredRows])
   return (
     <div
       style={{
-        display: "flex",
+        display: "flex"
       }}
     >
       <input
         value={filterValue[0] || ""}
         type="number"
-        onChange={(e) => {
-          const val = e.target.value;
-          setFilter((old = []) => [
-            val ? parseInt(val, 10) : undefined,
-            old[1],
-          ]);
+        onChange={e => {
+          const val = e.target.value
+          setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]])
         }}
         placeholder={`Min (${min})`}
         style={{
           width: "70px",
-          marginRight: "0.5rem",
+          marginRight: "0.5rem"
         }}
       />
       to
       <input
         value={filterValue[1] || ""}
         type="number"
-        onChange={(e) => {
-          const val = e.target.value;
-          setFilter((old = []) => [
-            old[0],
-            val ? parseInt(val, 10) : undefined,
-          ]);
+        onChange={e => {
+          const val = e.target.value
+          setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined])
         }}
         placeholder={`Max (${max})`}
         style={{
           width: "70px",
-          marginLeft: "0.5rem",
+          marginLeft: "0.5rem"
         }}
       />
     </div>
-  );
+  )
 }
 
 function fuzzyTextFilterFn(rows, id, filterValue) {
-  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
+  return matchSorter(rows, filterValue, { keys: [row => row.values[id]] })
 }
 // Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = (val) => !val;
+fuzzyTextFilterFn.autoRemove = val => !val
 // This could be inlined into SubRowAsync, this this lets you reuse it across tables
 // function SubRows({ row, rowProps, visibleColumns, data, loading }) {
 //   if (loading) {
@@ -280,10 +274,10 @@ export default function Table({
   // renderRowSubComponent,
   // updateMyData,
   // skipPageReset,
-  style,
+  style
 }) {
-  const dispatchx1 = useDispatch();
-  const [filterInput, setFilterInput] = useState("");
+  const dispatchx1 = useDispatch()
+  const [filterInput, setFilterInput] = useState("")
   // Create an editable cell renderer
   const Styles = styled.div`
     padding: 1rem;
@@ -321,35 +315,35 @@ export default function Table({
     .table {
       width: 30%;
     }
-  `;
+  `
 
   const filterTypes = React.useMemo(
     () => ({
       dateFilter: (rows, id, filterValue) => {
-        return (rows = rows.filter((row) => {
+        return (rows = rows.filter(row => {
           return (
             new Date(row.values.createdAt) >= filterValue[0] &&
             new Date(row.values.createdAt) <= filterValue[1]
-          );
-        }));
+          )
+        }))
       },
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
       // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
-        return rows.filter((row) => {
-          const rowValue = row.values[id];
+        return rows.filter(row => {
+          const rowValue = row.values[id]
           return rowValue !== undefined
             ? String(rowValue)
                 .toLowerCase()
                 .startsWith(String(filterValue).toLowerCase())
-            : true;
-        });
-      },
+            : true
+        })
+      }
     }),
     []
-  );
+  )
   // const filterTypes = React.useMemo(
   //   () => ({
   //     // Add a new fuzzyTextFilterFn filter type.
@@ -371,27 +365,27 @@ export default function Table({
   const defaultColumn = React.useMemo(
     () => ({
       // Let's set up our default Filter UI
-      Filter: DefaultColumnFilter,
+      Filter: DefaultColumnFilter
       // And also our default editable cell
       // Cell: EditableCell,
     }),
     []
-  );
+  )
   function getExportFileBlob({ columns, data, fileType, fileName }) {
     if (fileType === "csv") {
       // CSV example
       const headerNames = columns
-        .filter((c) => c.Header !== "Action")
-        .map((col) => col.exportValue);
-      const csvString = Papa.unparse({ fields: headerNames, data });
-      return new Blob([csvString], { type: "text/csv" });
+        .filter(c => c.Header !== "Action")
+        .map(col => col.exportValue)
+      const csvString = Papa.unparse({ fields: headerNames, data })
+      return new Blob([csvString], { type: "text/csv" })
     } else if (fileType === "xlsx") {
       // XLSX example
       const header = columns
-        .filter((c) => c.Header !== "Action")
-        .map((c) => c.exportValue);
-      const compatibleData = data.map((row) => {
-        const obj = {};
+        .filter(c => c.Header !== "Action")
+        .map(c => c.exportValue)
+      const compatibleData = data.map(row => {
+        const obj = {}
         header.forEach((col, index) => {
           // if (Array.isArray(row[index])) {
           //   // console.log(row[index]);
@@ -406,25 +400,25 @@ export default function Table({
           //   console.log(row[index]);
           //   // obj[col] = row[index];
           // }
-          obj[col] = row[index];
-        });
-        return obj;
-      });
-      let wb = XLSX.utils.book_new();
+          obj[col] = row[index]
+        })
+        return obj
+      })
+      let wb = XLSX.utils.book_new()
       let ws1 = XLSX.utils.json_to_sheet(compatibleData, {
-        header,
-      });
-      XLSX.utils.book_append_sheet(wb, ws1, "React Table Data");
-      XLSX.writeFile(wb, `${fileName}.xlsx`);
+        header
+      })
+      XLSX.utils.book_append_sheet(wb, ws1, "React Table Data")
+      XLSX.writeFile(wb, `${fileName}.xlsx`)
       // Returning false as downloading of file is already taken care of
-      return false;
+      return false
     }
     // PDF example
     if (fileType === "pdf") {
       const headerNames = columns
-        .filter((c) => c.Header !== "Action")
-        .map((column) => column.exportValue);
-      const doc = new JsPDF();
+        .filter(c => c.Header !== "Action")
+        .map(column => column.exportValue)
+      const doc = new JsPDF()
       doc.autoTable({
         head: [headerNames],
         body: data,
@@ -432,14 +426,14 @@ export default function Table({
           minCellHeight: 40,
           halign: "left",
           valign: "center",
-          fontSize: 6,
-        },
-      });
-      doc.save(`${fileName}.pdf`);
-      return false;
+          fontSize: 6
+        }
+      })
+      doc.save(`${fileName}.pdf`)
+      return false
     }
     // Other formats goes here
-    return false;
+    return false
   }
 
   const {
@@ -478,8 +472,8 @@ export default function Table({
       groupBy,
       expanded,
       filters,
-      hiddenColumns,
-    },
+      hiddenColumns
+    }
   } = useTable(
     {
       columns,
@@ -489,7 +483,7 @@ export default function Table({
       // skipPageReset,
       initialState: { pageIndex: 0 },
       getExportFileBlob,
-      filterTypes,
+      filterTypes
       // autoResetPage: !skipPageReset,
       // autoResetSelectedRows: !skipPageReset,
       // disableMultiSort: true,
@@ -507,8 +501,8 @@ export default function Table({
     usePagination,
     useExportData,
     useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
+    hooks => {
+      hooks.visibleColumns.push(columns => [
         // Let's make a column for selection
         {
           id: "selection",
@@ -527,42 +521,42 @@ export default function Table({
             <div>
               <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
             </div>
-          ),
+          )
         },
-        ...columns,
-      ]);
+        ...columns
+      ])
     }
-  );
+  )
 
-  const handleFilterChange = (e) => {
-    const value = e.target.value || undefined;
+  const handleFilterChange = e => {
+    const value = e.target.value || undefined
     // setFilter("name", value);
-    setFilter("name", value);
-    setFilterInput(value);
-  };
+    setFilter("name", value)
+    setFilterInput(value)
+  }
   const BulkDelete = (selectedFlatRows, parent_action) => {
-    let selected_id = selectedFlatRows.map((data) => {
-      return data.values._id;
-    });
-    console.log(selected_id);
+    let selected_id = selectedFlatRows.map(data => {
+      return data.values._id
+    })
+    console.log(selected_id)
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
         // dispatchx1(parent_action.bulk_delete(selected_id));
-        parent_action.bulk_delete(selected_id);
-        console.log(selected_id);
+        parent_action.bulk_delete(selected_id)
+        console.log(selected_id)
         // dispatch(parent_action.bulk_delete(selected_id));
         swal("Poof! Your Bill data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
-  };
+    })
+  }
   // Render the UI for your table
   // console.log(footerGroups)
   // Listen for changes in pagination and use the state to fetch our new data
@@ -617,7 +611,7 @@ export default function Table({
         <button
           class="btn btnexport mr-1"
           onClick={() => {
-            exportData("csv", true);
+            exportData("csv", true)
           }}
         >
           <i className="fa fa-file-csv"></i> Export as CSV
@@ -626,7 +620,7 @@ export default function Table({
           class="btn btnexport mr-1"
           style={style}
           onClick={() => {
-            exportData("xlsx", true);
+            exportData("xlsx", true)
           }}
         >
           <i class="fa fa-file-excel"></i> Export as xlsx
@@ -634,7 +628,7 @@ export default function Table({
         <button
           class="btn btnexport mr-1"
           onClick={() => {
-            exportData("pdf", true);
+            exportData("pdf", true)
           }}
         >
           <i class="fa fa-file-pdf"></i>
@@ -644,7 +638,7 @@ export default function Table({
           <button
             class="btn btn-danger"
             onClick={() => {
-              BulkDelete(selectedFlatRows, parent_action);
+              BulkDelete(selectedFlatRows, parent_action)
             }}
           >
             <i class="fa fa-trash"></i>
@@ -675,9 +669,9 @@ export default function Table({
         style={{ display: "table" }}
       >
         <thead>
-          {headerGroups.map((headerGroup) => (
+          {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+              {headerGroup.headers.map(column => (
                 <th {...column.getHeaderProps()}>
                   <div>
                     {column.canGroupBy ? (
@@ -705,12 +699,12 @@ export default function Table({
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
-            prepareRow(row);
-            const rowProps = row.getRowProps();
+            prepareRow(row)
+            const rowProps = row.getRowProps()
             return (
               <>
                 <tr {...rowProps}>
-                  {row.cells.map((cell) => {
+                  {row.cells.map(cell => {
                     return (
                       <td
                         {...cell.getCellProps()}
@@ -721,7 +715,7 @@ export default function Table({
                             ? "#ffa50078"
                             : cell.isPlaceholder
                             ? "#ff000042"
-                            : "white",
+                            : "white"
                         }}
                       >
                         {cell.isGrouped ? (
@@ -733,8 +727,8 @@ export default function Table({
                                   // We can even use the row.depth property
                                   // and paddingLeft to indicate the depth
                                   // of the row
-                                  paddingLeft: `${row.depth * 2}rem`,
-                                },
+                                  paddingLeft: `${row.depth * 2}rem`
+                                }
                               })}
                             >
                               {row.isExpanded ? "👇" : "👉"}
@@ -751,7 +745,7 @@ export default function Table({
                           cell.render("Cell", { editable: true })
                         )}
                       </td>
-                    );
+                    )
                   })}
                 </tr>
                 {/* {row.isExpanded &&
@@ -768,13 +762,13 @@ export default function Table({
                   )}
                 </tr> */}
               </>
-            );
+            )
           })}
         </tbody>
         <tfoot>
-          {footerGroups.map((group) => (
+          {footerGroups.map(group => (
             <tr {...group.getFooterGroupProps()}>
-              {group.headers.map((column) => (
+              {group.headers.map(column => (
                 <td {...column.getFooterProps()}>{column.render("Footer")}</td>
               ))}
             </tr>
@@ -810,21 +804,21 @@ export default function Table({
           <input
             type="number"
             defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              console.log(page);
-              gotoPage(page);
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              console.log(page)
+              gotoPage(page)
             }}
             style={{ width: "100px" }}
           />
         </span>{" "}
         <select
           value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
+          onChange={e => {
+            setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
+          {[10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -855,7 +849,7 @@ export default function Table({
                 groupBy,
                 expanded: expanded,
                 filters,
-                selectedRowIds: selectedRowIds,
+                selectedRowIds: selectedRowIds
               },
               null,
               2
@@ -865,56 +859,56 @@ export default function Table({
         </pre>
       </div>
     </Styles>
-  );
+  )
 }
 // Define a custom filter filter function!
 export function filterGreaterThan(rows, id, filterValue) {
-  return rows.filter((row) => {
-    const rowValue = row.values[id];
-    return rowValue >= filterValue;
-  });
+  return rows.filter(row => {
+    const rowValue = row.values[id]
+    return rowValue >= filterValue
+  })
 }
 // This is an autoRemove method on the filter function that
 // when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
-filterGreaterThan.autoRemove = (val) => typeof val !== "number";
+filterGreaterThan.autoRemove = val => typeof val !== "number"
 function roundedMedian(leafValues) {
-  let min = leafValues[0] || 0;
-  let max = leafValues[0] || 0;
-  leafValues.forEach((value) => {
-    min = Math.min(min, value);
-    max = Math.max(max, value);
-  });
-  return Math.round((min + max) / 2);
+  let min = leafValues[0] || 0
+  let max = leafValues[0] || 0
+  leafValues.forEach(value => {
+    min = Math.min(min, value)
+    max = Math.max(max, value)
+  })
+  return Math.round((min + max) / 2)
 }
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef();
-    const resolvedRef = ref || defaultRef;
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
     React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate;
-    }, [resolvedRef, indeterminate]);
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
     return (
       <>
         <input type="checkbox" ref={resolvedRef} {...rest} />
       </>
-    );
+    )
   }
-);
+)
 // const data = React.useMemo(() => makeData(10000), [])
 function Legend() {
   return (
     <div
       style={{
-        padding: "0.5rem 0",
+        padding: "0.5rem 0"
       }}
     >
       <span
         style={{
           display: "inline-block",
           background: "#0aff0082",
-          padding: "0.5rem",
+          padding: "0.5rem"
         }}
       >
         Grouped
@@ -923,7 +917,7 @@ function Legend() {
         style={{
           display: "inline-block",
           background: "#ffa50078",
-          padding: "0.5rem",
+          padding: "0.5rem"
         }}
       >
         Aggregated
@@ -932,11 +926,11 @@ function Legend() {
         style={{
           display: "inline-block",
           background: "#ff000042",
-          padding: "0.5rem",
+          padding: "0.5rem"
         }}
       >
         Repeated Value
       </span>
     </div>
-  );
+  )
 }

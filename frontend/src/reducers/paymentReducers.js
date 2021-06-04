@@ -6,32 +6,32 @@ import {
   PAYMENT_METHOD_LIST_MY_REQUEST,
   PAYMENT_METHOD_LIST_MY_SUCCESS,
   PAYMENT_METHOD_LIST_MY_FAIL,
-  PAYMENT_METHOD_LIST_MY_RESET,
-} from "../constants/paymentConstants";
+  PAYMENT_METHOD_LIST_MY_RESET
+} from "../constants/paymentConstants"
 
 export const paymentMethodSaveReducer = (state = {}, action) => {
   switch (action.type) {
     case PAYMENT_METHOD_ADD_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case PAYMENT_METHOD_ADD_SUCCESS:
       return {
         loading: false,
-        success: true,
-      };
+        success: true
+      }
     case PAYMENT_METHOD_ADD_FAIL:
       return {
         loading: false,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     case PAYMENT_METHOD_ADD_RESET:
-      return {};
+      return {}
     default:
-      return state;
+      return state
   }
-};
+}
 
 export const paymentMethodListMyReducer = (
   state = { paymentMethods: [] },
@@ -41,21 +41,21 @@ export const paymentMethodListMyReducer = (
     case PAYMENT_METHOD_LIST_MY_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case PAYMENT_METHOD_LIST_MY_SUCCESS:
       return {
         loading: false,
-        paymentMethods: action.payload,
-      };
+        paymentMethods: action.payload
+      }
     case PAYMENT_METHOD_LIST_MY_FAIL:
       return {
         loading: false,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     case PAYMENT_METHOD_LIST_MY_RESET:
-      return { paymentMethods: [] };
+      return { paymentMethods: [] }
     default:
-      return state;
+      return state
   }
-};
+}

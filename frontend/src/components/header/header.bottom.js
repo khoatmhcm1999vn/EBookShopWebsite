@@ -1,39 +1,39 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { sortTypes } from "../../constants/action.types";
-import _ from "lodash";
-import SearchBox from "../SearchBox/SearchBox";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
+import { sortTypes } from "../../constants/action.types"
+import _ from "lodash"
+import SearchBox from "../SearchBox/SearchBox"
 
 class HeaderBottom extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       titleSort: "Sort",
-      listActionSort: [],
-    };
+      listActionSort: []
+    }
   }
   componentWillMount() {
-    const { sortType } = this.props;
+    const { sortType } = this.props
     if (sortType === sortTypes.SORT_DAY_DECREASED) {
-      this.setState({ titleSort: "Sort by day decrease" });
+      this.setState({ titleSort: "Sort by day decrease" })
     } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-      this.setState({ titleSort: "Sort by day increase" });
+      this.setState({ titleSort: "Sort by day increase" })
     } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
-      this.setState({ titleSort: "Sort by price decrease" });
+      this.setState({ titleSort: "Sort by price decrease" })
     } else if (sortType === sortTypes.SORT_PRICE_INCREASED) {
-      this.setState({ titleSort: "Sort by price increase" });
+      this.setState({ titleSort: "Sort by price increase" })
     } else if (sortType === sortTypes.SORT_SALES_DECREASED) {
-      this.setState({ titleSort: "Sort by sales decrease" });
+      this.setState({ titleSort: "Sort by sales decrease" })
     } else if (sortType === sortTypes.SORT_SALES_INCREASED) {
-      this.setState({ titleSort: "Sort by sales increase" });
+      this.setState({ titleSort: "Sort by sales increase" })
     } else if (sortType === sortTypes.SORT_VIEWS_DECREASED) {
-      this.setState({ titleSort: "Sort by views decrease" });
+      this.setState({ titleSort: "Sort by views decrease" })
     } else if (sortType === sortTypes.SORT_VIEWS_INCREASED) {
-      this.setState({ titleSort: "Sort By views increase" });
+      this.setState({ titleSort: "Sort By views increase" })
     } else if (sortType === sortTypes.SORT_NAME_INCREASED) {
-      this.setState({ titleSort: "Sort By name increase" });
+      this.setState({ titleSort: "Sort By name increase" })
     } else if (sortType === sortTypes.SORT_NAME_DECREASED) {
-      this.setState({ titleSort: "Sort By name decrease" });
+      this.setState({ titleSort: "Sort By name decrease" })
     }
     this.setState({
       listActionSort: {
@@ -46,9 +46,9 @@ class HeaderBottom extends Component {
         SORT_VIEWS_DECREASED: "Sort by views decrease",
         SORT_VIEWS_INCREASED: "Sort By views increase",
         SORT_NAME_INCREASED: "Sort By name increase",
-        SORT_NAME_DECREASED: "Sort By name decrease",
-      },
-    });
+        SORT_NAME_DECREASED: "Sort By name decrease"
+      }
+    })
   }
   componentWillReceiveProps(nextProps) {
     if (
@@ -56,15 +56,15 @@ class HeaderBottom extends Component {
       nextProps.sortType !== undefined
     ) {
       this.setState({
-        titleSort: this.state.listActionSort[nextProps.sortType],
-      });
+        titleSort: this.state.listActionSort[nextProps.sortType]
+      })
     }
   }
-  handeSearch = (e) => {
+  handeSearch = e => {
     if (e === 13) {
-      this.props.searchTextSubmit();
+      this.props.searchTextSubmit()
     }
-  };
+  }
   render() {
     return (
       <div className="header-bottom">
@@ -140,24 +140,39 @@ class HeaderBottom extends Component {
                     )}
                   </li>
                   <li>
-                    <Link to="/contacts">Contact</Link>
+                    {this.props.isActivatedShopPage ? (
+                      <Link to="/shop-page" className="active">
+                        Shop Page
+                      </Link>
+                    ) : (
+                      <Link to="/shop-page">Shop Page</Link>
+                    )}
                   </li>
                   <li>
-                    <Link to="/shop-page">Shop Page</Link>
+                    {this.props.isActivatedContactPage ? (
+                      <Link to="/contacts" className="active">
+                        Contact
+                      </Link>
+                    ) : (
+                      <Link to="/contacts">Contact</Link>
+                    )}
+                  </li>
+                  <li>
+                    <Link to="/testadmin" className="">
+                      Test
+                    </Link>
                   </li>
                 </ul>
               </div>
             </div>
-            <div className="row">
-              <SearchBox history={this.props.history}></SearchBox>
-            </div>
+            <SearchBox history={this.props.history} />
             <div className="col-sm-4">
               <div className="search_box pull-right">
                 <input
                   type="text"
                   placeholder="Gõ từ khóa và Enter để tìm"
-                  onChange={(e) => this.props.setSearchText(e.target.value)}
-                  onKeyUp={(e) => this.handeSearch(e.keyCode)}
+                  onChange={e => this.props.setSearchText(e.target.value)}
+                  onKeyUp={e => this.handeSearch(e.keyCode)}
                   disabled={this.props.isDisabled}
                   value={this.props.text}
                 />
@@ -179,7 +194,7 @@ class HeaderBottom extends Component {
                       <li onClick={() => this.props.setSortType(key)}>
                         <a>{this.state.listActionSort[key]}</a>
                       </li>
-                    );
+                    )
                   })}
                 </ul>
               </div>
@@ -187,7 +202,7 @@ class HeaderBottom extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
-export default HeaderBottom;
+export default HeaderBottom

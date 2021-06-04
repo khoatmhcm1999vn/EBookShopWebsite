@@ -21,9 +21,9 @@ table td:last-child {
   border-right: 0;
 }
 
-table tr:nth-child(even) {
+/* table tr:nth-child(even) {
   background-color: #fafafa;
-}
+} */
 
 table th::before {
   position: absolute;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 const Rating = ({ value, text, color }) => {
   // console.log(value)
@@ -66,11 +66,11 @@ const Rating = ({ value, text, color }) => {
       </span>
       {text && <span className="mx-2">[{text && text}]</span>}
     </div>
-  );
-};
+  )
+}
 
 Rating.defaultProps = {
-  color: "#fee825",
-};
+  color: "#fee825"
+}
 
-export default Rating;
+export default Rating

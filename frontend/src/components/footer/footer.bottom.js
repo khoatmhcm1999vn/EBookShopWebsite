@@ -1,5 +1,5 @@
-import React from "react";
-import Scroll from "../scroll/Scroll";
+import React from "react"
+import Scroll from "../scroll/Scroll"
 
 const FooterBottom = () => (
   <>
@@ -20,5 +20,5 @@ const FooterBottom = () => (
       </div>
     </div>
   </>
-);
-export default FooterBottom;
+)
+export default FooterBottom

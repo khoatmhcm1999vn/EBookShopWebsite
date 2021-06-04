@@ -27,7 +27,9 @@ export const sendEmail = async (email, token) => {
       "<br/>" +
       "<span>http://localhost:3000/confirm/" +
       token +
-      "</span>",
+      "</span>" +
+      "<br/>" +
+      "<span>Token sẽ hết hạn trong vòng 3 phút.</span>",
   };
   try {
     await transporter.sendMail(mailOptions);
@@ -49,7 +51,9 @@ export const sendEmailForgotPassword = async (email, token) => {
       "<br/>" +
       "<span>" +
       token +
-      "</span>",
+      "</span>" +
+      "<br/>" +
+      "<span>Token sẽ hết hạn trong vòng 3 phút.</span>",
   };
   try {
     await transporter.sendMail(mailOptions);

@@ -1,11 +1,11 @@
-import React from "react";
-import HeaderTop from "../header/header.top";
-import HeaderMiddle from "../header/header.middle";
-import HeaderBottom from "../header/header.bottom";
-import ContentHome from "./content.home";
-import FooterTop from "../footer/footer.top";
-import FooterMiddle from "../footer/footer.middle";
-import FooterBottom from "../footer/footer.bottom";
+import React from "react"
+import HeaderTop from "../header/header.top"
+import HeaderMiddle from "../header/header.middle"
+import HeaderBottom from "../header/header.bottom"
+import ContentHome from "./content.home"
+import FooterTop from "../footer/footer.top"
+import FooterMiddle from "../footer/footer.middle"
+import FooterBottom from "../footer/footer.bottom"
 
 const Home = ({
   islogin,
@@ -36,7 +36,7 @@ const Home = ({
   addToCart,
   text,
   cart,
-  isActivatedShop,
+  isActivatedShop
 }) => (
   <div>
     <header id="header">
@@ -50,8 +50,8 @@ const Home = ({
       <HeaderBottom
         sortType={sortType}
         text={text}
-        setSortType={(value) => setSortType(value)}
-        setSearchText={(value) => setSearchText(value)}
+        setSortType={value => setSortType(value)}
+        setSearchText={value => setSearchText(value)}
         searchTextSubmit={() => searchTextSubmit()}
         isActivatedShop={isActivatedShop}
         history={history}
@@ -64,21 +64,21 @@ const Home = ({
       totalpage={totalpage}
       backPage={() => backPage()}
       nextPage={() => nextPage()}
-      setPage={(page) => setPage(page)}
+      setPage={page => setPage(page)}
       page={page}
       pageSize={pageSize}
       setPageSize={setPageSize}
-      setRangeType={(range) => setRangeType(range)}
+      setRangeType={range => setRangeType(range)}
       title={title}
-      setTitle={(title) => setTitle(title)}
-      setBranch={(branch) => setBranch(branch)}
+      setTitle={title => setTitle(title)}
+      setBranch={branch => setBranch(branch)}
       searchTextSubmit={() => searchTextSubmit()}
-      setSearchText={(value) => setSearchText(value)}
+      setSearchText={value => setSearchText(value)}
       branch={branch}
       author={author}
-      setIDBranch={(id) => setIDBranch(id)}
+      setIDBranch={id => setIDBranch(id)}
       branchClick={(branch, id) => branchClick(branch, id)}
-      addToCart={(product) => addToCart(product)}
+      addToCart={product => addToCart(product)}
     />
     <footer id="footer">
       <FooterTop />
@@ -86,6 +86,6 @@ const Home = ({
       <FooterBottom />
     </footer>
   </div>
-);
+)
 
-export default Home;
+export default Home

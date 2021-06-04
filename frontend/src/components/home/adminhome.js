@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import DashboardScreen from "../../screens/DashboardScreen";
+import React, { Component } from "react"
+import DashboardScreen from "../../screens/DashboardScreen"
 
 class AdminHome extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
-      sum: 100,
-    };
+      sum: 100
+    }
   }
   tinh(count) {
-    return (count / this.state.sum) * 100 + "%";
+    return (count / this.state.sum) * 100 + "%"
   }
   render() {
     // console.log(this.props.top_product);
@@ -193,7 +193,7 @@ class AdminHome extends Component {
                                 <span className="sr-only">73%</span>
                               </td>
                             </tr>
-                          );
+                          )
                         })}
                       </tbody>
                     </table>
@@ -615,12 +615,12 @@ class AdminHome extends Component {
           <div className="text-right">
             <div className="credits">
               <a href="https://bootstrapmade.com/">Free Bootstrap Templates</a>
-              by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+              &nbsp;by <a href="https://bootstrapmade.com/">BootstrapMade</a>
             </div>
           </div>
         </section>
       </div>
-    );
+    )
   }
 }
-export default AdminHome;
+export default AdminHome

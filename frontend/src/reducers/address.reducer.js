@@ -1,4 +1,4 @@
-import { addressTypes } from "../constants/action.types";
+import { addressTypes } from "../constants/action.types"
 
 const {
   ADDRESS_ADD_REQUEST,
@@ -12,77 +12,77 @@ const {
   ADDRESS_DELETE_REQUEST,
   ADDRESS_DELETE_SUCCESS,
   ADDRESS_DELETE_FAIL,
-  ADDRESS_DELETE_RESET,
-} = addressTypes;
+  ADDRESS_DELETE_RESET
+} = addressTypes
 
 export const addressSaveReducer = (state = {}, action) => {
   switch (action.type) {
     case ADDRESS_ADD_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case ADDRESS_ADD_SUCCESS:
       return {
         loading: false,
-        success: true,
-      };
+        success: true
+      }
     case ADDRESS_ADD_FAIL:
       return {
         loading: false,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     case ADDRESS_ADD_RESET:
-      return {};
+      return {}
     default:
-      return state;
+      return state
   }
-};
+}
 
 export const addressListMyReducer = (state = { addresses: [] }, action) => {
   switch (action.type) {
     case ADDRESS_LIST_MY_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case ADDRESS_LIST_MY_SUCCESS:
       return {
         loading: false,
-        addresses: action.payload,
-      };
+        addresses: action.payload
+      }
     case ADDRESS_LIST_MY_FAIL:
       return {
         loading: false,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     case ADDRESS_LIST_MY_RESET:
-      return { addresses: [] };
+      return { addresses: [] }
     default:
-      return state;
+      return state
   }
-};
+}
 
 export const addressDeleteReducer = (state = {}, action) => {
   switch (action.type) {
     case ADDRESS_DELETE_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case ADDRESS_DELETE_SUCCESS:
       return {
         loading: false,
-        success: true,
-      };
+        success: true
+      }
     case ADDRESS_DELETE_FAIL:
       return {
         loading: false,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     case ADDRESS_DELETE_RESET:
-      return {};
+      return {}
     default:
-      return state;
+      return state
   }
-};
+}

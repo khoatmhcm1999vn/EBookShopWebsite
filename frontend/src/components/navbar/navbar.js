@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import Scroll from "../scroll/Scroll";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
+import Scroll from "../scroll/Scroll"
+import { getUser } from "../../config/store.config"
 
 class Navbar extends Component {
   render() {
@@ -280,7 +281,7 @@ class Navbar extends Component {
                   <span className="profile-ava">
                     <img alt="" src="img/avatar1_small.jpg" />
                   </span>
-                  <span className="username">Jenifer Smith</span>
+                  <span className="username">{getUser().user_name}</span>
                   <b className="caret"></b>
                 </a>
                 <ul className="dropdown-menu extended logout">
@@ -327,7 +328,7 @@ class Navbar extends Component {
           </div>
         </header>
       </>
-    );
+    )
   }
 }
-export default Navbar;
+export default Navbar

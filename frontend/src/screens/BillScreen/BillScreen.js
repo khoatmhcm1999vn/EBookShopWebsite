@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import * as billActions from "../../actions/billActions";
+import React, { useState, useEffect } from "react"
+import * as billActions from "../../actions/billActions"
 // import { useSelector, useDispatch } from "react-redux";
 
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 
-import swal from "sweetalert";
-import Table from "../../components/table/Table";
+import swal from "sweetalert"
+import Table from "../../components/table/Table"
 // import { getToken, getUser } from "../../config/store.config";
 // import * as moment from "moment";
 // import "./BillScreen.css";
-import Loading from "../../components/loading/loading";
+import Loading from "../../components/loading/loading"
 // import DateRangeColumnFilter from "./DateRangeColumnFilter";
 // import { SubRowAsync } from "../../components/table/Table";
 // import makeData from "../BookScreen/makeData";
@@ -18,11 +18,11 @@ import {
   NumberRangeColumnFilter,
   SliderColumnFilter,
   SelectColumnFilter,
-  filterGreaterThan,
-} from "../../components/table/Table";
+  filterGreaterThan
+} from "../../components/table/Table"
 
 export default function BillScreen(props) {
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(true)
 
   const columns = React.useMemo(
     () => [
@@ -39,7 +39,7 @@ export default function BillScreen(props) {
           </span>
         ),
         // We can override the cell renderer with a SubCell to be used with an expanded row
-        SubCell: () => null, // No expander on an expanded row
+        SubCell: () => null // No expander on an expanded row
       },
       //   {
       //     Header: 'Name',
@@ -76,46 +76,46 @@ export default function BillScreen(props) {
       {
         Header: "User Name",
         accessor: "user.firstName",
-        Cell: (props) => {
-          return props.value == null ? <h3>No data</h3> : props.value;
-        },
+        Cell: props => {
+          return props.value == null ? <h3>No data</h3> : props.value
+        }
       },
       {
         Header: "User Namex1",
         accessor: "name",
-        Cell: (props) => {
-          return props.value == null ? <h3>No data</h3> : props.value;
-        },
+        Cell: props => {
+          return props.value == null ? <h3>No data</h3> : props.value
+        }
       },
 
       {
         Header: "User Address",
         accessor: "addressId.address",
-        Cell: (props) => {
-          return props.value == null ? <h3>No data</h3> : props.value;
-        },
+        Cell: props => {
+          return props.value == null ? <h3>No data</h3> : props.value
+        }
       },
       {
         Header: "User Addressx1",
         accessor: "address",
-        Cell: (props) => {
-          return props.value == null ? <h3>No data</h3> : props.value;
-        },
+        Cell: props => {
+          return props.value == null ? <h3>No data</h3> : props.value
+        }
       },
 
       {
         Header: "User Phone",
         accessor: "user.phone_number",
-        Cell: (props) => {
-          return props.value == null ? <h3>No data</h3> : props.value;
-        },
+        Cell: props => {
+          return props.value == null ? <h3>No data</h3> : props.value
+        }
       },
       {
         Header: "User Phonex1",
         accessor: "phone",
-        Cell: (props) => {
-          return props.value == null ? <h3>No data</h3> : props.value;
-        },
+        Cell: props => {
+          return props.value == null ? <h3>No data</h3> : props.value
+        }
       },
 
       // {
@@ -129,13 +129,13 @@ export default function BillScreen(props) {
 
       {
         Header: "Product Name",
-        accessor: (data) => {
-          let output = [];
-          data.products.map((item) => {
-            return output.push(item.name + " - " + item.count + " quantity");
-          });
-          return output.join(", ");
-        },
+        accessor: data => {
+          let output = []
+          data.products.map(item => {
+            return output.push(item.name + " - " + item.count + " quantity")
+          })
+          return output.join(", ")
+        }
         // aggregate: "count",
         // Aggregated: ({ value }) => `${value} Names`,
       },
@@ -152,23 +152,23 @@ export default function BillScreen(props) {
                   className="transaction-status"
                   style={{ background: "green" }}
                 ></div>
-              );
+              )
             case "false":
               return (
                 <div
                   className="transaction-status"
                   style={{ background: "red" }}
                 ></div>
-              );
+              )
             default:
               return (
                 <div
                   className="transaction-status"
                   style={{ background: "yellow" }}
                 ></div>
-              );
+              )
           }
-        },
+        }
       },
       // {
       //   Header: "Quantity",
@@ -193,30 +193,30 @@ export default function BillScreen(props) {
         filter: "between",
         aggregate: "sum",
         Aggregated: ({ value }) => `${value} (total)`,
-        Footer: (info) => {
+        Footer: info => {
           // Only calculate total visits if rows change
           const total = React.useMemo(
             () =>
               info.rows.reduce((sum, row) => row.values.totalPrice + sum, 0),
             [info.rows]
-          );
-          return <>Total: {total}</>;
-        },
+          )
+          return <>Total: {total}</>
+        }
       },
       {
         Header: "Date Created",
         accessor: "createdAt",
         Cell: ({ cell: { value } }) => {
-          let date = new Date(value).toDateString();
-          console.log(date);
-          let day = date.split(" ")["2"];
-          let month = date.split(" ")["1"];
+          let date = new Date(value).toDateString()
+          console.log(date)
+          let day = date.split(" ")["2"]
+          let month = date.split(" ")["1"]
           if (day.charAt(0) === "0") {
-            day = day.charAt(1);
+            day = day.charAt(1)
           }
-          return new Date(value).toLocaleDateString();
+          return new Date(value).toLocaleDateString()
         },
-        filter: "dateFilter",
+        filter: "dateFilter"
         // Filter: DateRangeColumnFilter,
         // filter: "dateBetween" /* Custom Filter Type */,
       },
@@ -239,14 +239,14 @@ export default function BillScreen(props) {
                 <i className="icon_close_alt2" />
               </button>
             </div>
-          );
-        },
-      },
+          )
+        }
+      }
     ],
     []
-  );
+  )
 
-  const Holdon = (columns) => {
+  const Holdon = columns => {
     if (props.bill) {
       return (
         <Table
@@ -260,11 +260,11 @@ export default function BillScreen(props) {
           // skipPageReset={skipPageReset}
           // renderRowSubComponent={renderRowSubComponent}
         />
-      );
+      )
     } else {
-      return <Loading />;
+      return <Loading />
     }
-  };
+  }
 
   function confirmDelete(id, history) {
     swal({
@@ -272,15 +272,15 @@ export default function BillScreen(props) {
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
-        billActions.Remove(id, history);
+        billActions.Remove(id, history)
         swal("Poof! Your Bill data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
+    })
   }
 
   // const billReducer = useSelector(({ bill }) => bill);
@@ -493,7 +493,7 @@ export default function BillScreen(props) {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
 /* <section id="container" className="">

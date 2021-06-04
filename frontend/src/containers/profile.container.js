@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import axios from "axios";
-import { bindActionCreators } from "redux";
-import Profile from "../components/profile/profile";
-import * as userActions from "../actions/user.action";
-import * as profileActions from "../actions/profile.action";
-import Loading from "../components/loading/loading";
-import storeConfig from "../config/store.config";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import axios from "axios"
+import { bindActionCreators } from "redux"
+import Profile from "../components/profile/profile"
+import * as userActions from "../actions/user.action"
+import * as profileActions from "../actions/profile.action"
+import Loading from "../components/loading/loading"
+import storeConfig from "../config/store.config"
 
 class ProfileContainer extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       email: null,
       firstName: null,
@@ -18,11 +18,12 @@ class ProfileContainer extends Component {
       address: null,
       phone_number: null,
       notiupdatePassword: null,
-    };
+      notiUpdatePasswordInfo: ""
+    }
   }
   async componentWillMount() {
-    let res = await this.props.actions.loadUser();
-    if (res === false) this.props.history.push("/");
+    let res = await this.props.actions.loadUser()
+    if (res === false) this.props.history.push("/")
     // console.log(this.props.params.email)
     //console.log(storeConfig.getUser().email)
     // if(this.props.match.params.email !==  storeConfig.getUser().email)
@@ -33,35 +34,43 @@ class ProfileContainer extends Component {
         firstName: storeConfig.getUser().firstName,
         lastName: storeConfig.getUser().lastName,
         address: storeConfig.getUser().address,
-        phone_number: storeConfig.getUser().phone_number,
-      });
+        phone_number: storeConfig.getUser().phone_number
+      })
     }
   }
   componentWillUnmount() {
-    this.props.profileActions.resetProfile();
+    this.props.profileActions.resetProfile()
   }
   updatePassword = async (oldpassword, newpassword) => {
-    let res = null;
+    let res = null
     try {
       res = await axios.post("http://localhost:8090/user/updatepassword", {
         email: storeConfig.getUser().email,
         oldpassword: oldpassword,
-        newpassword: newpassword,
-      });
+        newpassword: newpassword
+      })
     } catch (err) {
-      console.log(err);
-      this.setState({ notiupdatePassword: false });
-      return false;
+      console.log(err.response.data)
+      this.setState({
+        notiupdatePassword: false,
+        notiUpdatePasswordInfo: err.response.data.message
+      })
+      return false
     }
 
-    this.setState({ notiupdatePassword: true });
-  };
+    this.setState({
+      notiupdatePassword: true,
+      notiUpdatePasswordInfo: res.data.message
+    })
+  }
   resetUpdatePassword = () => {
     this.setState({
-      notiupdatePassword: null,
-    });
-  };
+      notiupdatePassword: null
+      // notiUpdatePasswordInfo: "",
+    })
+  }
   render() {
+    // console.log(this.state.notiUpdatePasswordInfo);
     if (this.props.islogin) {
       return (
         <div>
@@ -73,10 +82,10 @@ class ProfileContainer extends Component {
             lastName={this.state.lastName}
             address={this.state.address}
             phone_number={this.state.phone_number}
-            setFirstName={(value) => this.setState({ firstName: value })}
-            setLastName={(value) => this.setState({ lastName: value })}
-            setAddress={(value) => this.setState({ address: value })}
-            setPhoneNumber={(value) => this.setState({ phone_number: value })}
+            setFirstName={value => this.setState({ firstName: value })}
+            setLastName={value => this.setState({ lastName: value })}
+            setAddress={value => this.setState({ address: value })}
+            setPhoneNumber={value => this.setState({ phone_number: value })}
             updateInfor={() =>
               this.props.profileActions.updateInfor(
                 this.state.email,
@@ -92,26 +101,27 @@ class ProfileContainer extends Component {
               this.updatePassword(oldpassword, newpassword)
             }
             notiupdatePassword={this.state.notiupdatePassword}
+            notiUpdatePasswordInfo={this.state.notiUpdatePasswordInfo}
             resetUpdatePassword={() => this.resetUpdatePassword()}
             cart={this.props.cart}
           />
         </div>
-      );
+      )
     } else {
-      return <Loading />;
+      return <Loading />
     }
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   islogin: state.userReducers.user.islogin,
   isupdate: state.profileReducers.profile.isupdate,
-  cart: state.cart.data,
-});
+  cart: state.cart.data
+})
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(userActions, dispatch),
-    profileActions: bindActionCreators(profileActions, dispatch),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileContainer);
+    profileActions: bindActionCreators(profileActions, dispatch)
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileContainer)

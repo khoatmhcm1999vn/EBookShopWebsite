@@ -1,7 +1,7 @@
-import React from "react";
-import ScrollToTop from "react-scroll-up";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowAltCircleUp } from "@fortawesome/free-solid-svg-icons";
+import React from "react"
+import ScrollToTop from "react-scroll-up"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faArrowAltCircleUp } from "@fortawesome/free-solid-svg-icons"
 
 const ScrollButton = () => {
   return (
@@ -11,7 +11,7 @@ const ScrollButton = () => {
     >
       <FontAwesomeIcon className="fa-3x" icon={faArrowAltCircleUp} />
     </ScrollToTop>
-  );
-};
+  )
+}
 
-export default ScrollButton;
+export default ScrollButton

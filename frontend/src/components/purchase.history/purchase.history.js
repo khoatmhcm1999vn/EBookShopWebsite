@@ -1,28 +1,28 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import HeaderTop from "../header/header.top";
-import HeaderMiddle from "../header/header.middle";
-import FooterTop from "../footer/footer.top";
-import FooterMiddle from "../footer/footer.middle";
-import FooterBottom from "../footer/footer.bottom";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
+import HeaderTop from "../header/header.top"
+import HeaderMiddle from "../header/header.middle"
+import FooterTop from "../footer/footer.top"
+import FooterMiddle from "../footer/footer.middle"
+import FooterBottom from "../footer/footer.bottom"
 
 class HistoryPurchase extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
-  caculatorTotalBill = (products) => {
-    let total = 0;
+  caculatorTotalBill = products => {
+    let total = 0
     products.map((element, index) => {
-      total += element.count * element.price;
-      return total;
-    });
-    return total;
-  };
-  deleteHandler = (order) => {
+      total += element.count * element.price
+      return total
+    })
+    return total
+  }
+  deleteHandler = order => {
     if (window.confirm("Are you sure to delete?")) {
-      this.props.deleteBill(order._id);
+      this.props.deleteBill(order._id)
     }
-  };
+  }
   renderBill = () => {
     return this.props.purchaseHistory.map((element, index) => {
       if (element.isPaid) {
@@ -104,13 +104,13 @@ class HistoryPurchase extends Component {
                         )}
                       </td>
                     </tr>
-                  );
+                  )
                 })}
               </tbody>
             </table>
             <hr />
           </div>
-        );
+        )
       } else {
         return (
           <div
@@ -192,16 +192,16 @@ class HistoryPurchase extends Component {
                         )}
                       </td>
                     </tr>
-                  );
+                  )
                 })}
               </tbody>
             </table>
             <hr />
           </div>
-        );
+        )
       }
-    });
-  };
+    })
+  }
   render() {
     return (
       <div>
@@ -235,7 +235,7 @@ class HistoryPurchase extends Component {
           <FooterBottom />
         </footer>
       </div>
-    );
+    )
   }
 }
-export default HistoryPurchase;
+export default HistoryPurchase

@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as userActions from "../actions/user.action";
-import * as purchaseHistoryActions from "../actions/purchase.history.action";
-import HistoryPurchase from "../components/purchase.history/purchase.history";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import * as userActions from "../actions/user.action"
+import * as purchaseHistoryActions from "../actions/purchase.history.action"
+import HistoryPurchase from "../components/purchase.history/purchase.history"
 
 class HistoryPurchaseContainer extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   componentWillMount() {
     // this.props.actions.loadUser();
-    this.props.purchaseHistoryActions.getPurchaseHitory();
+    this.props.purchaseHistoryActions.getPurchaseHitory()
   }
   render() {
     return (
@@ -22,28 +22,25 @@ class HistoryPurchaseContainer extends Component {
           history={this.props.history}
           cart={this.props.cart}
           purchaseHistory={this.props.purchaseHistory}
-          deleteBill={(id) => this.props.purchaseHistoryActions.deleteBill(id)}
+          deleteBill={id => this.props.purchaseHistoryActions.deleteBill(id)}
         />
       </div>
-    );
+    )
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   islogin: state.userReducers.user.islogin,
   purchaseHistory: state.purchaseReducers.purchaseHistory.data,
-  cart: state.cart.data,
-});
+  cart: state.cart.data
+})
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(userActions, dispatch),
-    purchaseHistoryActions: bindActionCreators(
-      purchaseHistoryActions,
-      dispatch
-    ),
-  };
-};
+    purchaseHistoryActions: bindActionCreators(purchaseHistoryActions, dispatch)
+  }
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(HistoryPurchaseContainer);
+)(HistoryPurchaseContainer)

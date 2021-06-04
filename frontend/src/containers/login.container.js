@@ -1,51 +1,51 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as userActions from "../actions/user.action";
-import Login from "../components/login/login";
+import React, { Component } from "react"
+import axios from "axios"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import * as userActions from "../actions/user.action"
+import Login from "../components/login/login"
 // import { Redirect } from "react-router-dom";
 
 class LoginContainer extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      notiLogin: "",
-    };
+      notiLogin: ""
+    }
   }
   loginSubmit = async (email, password) => {
     if (!this.isvalidEmail(email)) {
-      this.setState({ notiLogin: "Email invalid" });
-      return;
+      this.setState({ notiLogin: "Email invalid" })
+      return
     } else {
-      this.setState({ notiLogin: "" });
+      this.setState({ notiLogin: "" })
     }
-    let res;
+    let res
     try {
       res = await axios.post("http://localhost:8090/admin/login", {
         email: email,
-        password: password,
-      });
+        password: password
+      })
     } catch (err) {
       if (err.response !== undefined) {
         if (err.response.data.msg === "no_registration_confirmation")
-          this.setState({ notiLogin: "The account has not been activated" });
+          this.setState({ notiLogin: "The account has not been activated" })
         else {
-          this.setState({ notiLogin: "Email or password invalid" });
+          this.setState({ notiLogin: "Email or password invalid" })
         }
       } else {
-        this.setState({ notiLogin: "Some thing went wrong" });
+        this.setState({ notiLogin: "Some thing went wrong" })
       }
-      return;
+      return
     }
-    this.props.userActions.loginSuccess(res.data.token, res.data.user);
-    window.location.replace("/dashboard");
-  };
-  isvalidEmail = (email) => {
+    this.props.userActions.loginSuccess(res.data.token, res.data.user)
+    window.location.replace("/dashboard")
+  }
+  isvalidEmail = email => {
     if (email === "" || email.indexOf("@") === -1 || email.indexOf(".") === -1)
-      return false;
-    return true;
-  };
+      return false
+    return true
+  }
   render() {
     return (
       <div>
@@ -54,16 +54,16 @@ class LoginContainer extends Component {
           notiLogin={this.state.notiLogin}
         />
       </div>
-    );
+    )
   }
 }
 
-const mapStateToProps = (state) => ({
-  islogin: state.userReducers.user.islogin,
-});
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = state => ({
+  islogin: state.userReducers.user.islogin
+})
+const mapDispatchToProps = dispatch => {
   return {
-    userActions: bindActionCreators(userActions, dispatch),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
+    userActions: bindActionCreators(userActions, dispatch)
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer)

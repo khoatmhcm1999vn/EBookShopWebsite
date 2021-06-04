@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 // import * as bookActions from "../../actions/bookActions";
 // import { useSelector, useDispatch } from "react-redux";
 
 // import { Link } from "react-router-dom";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap"
 
-import swal from "sweetalert";
-import Table from "../../components/table/Table";
+import swal from "sweetalert"
+import Table from "../../components/table/Table"
 // import { getToken, getUser } from "../../config/store.config";
-import Loading from "../../components/loading/loading";
+import Loading from "../../components/loading/loading"
 // import * as moment from "moment";
-import "./BookScreen.css";
+import "./BookScreen.css"
 // import { SubRowAsync } from "../../components/table/Table";
 // import makeData from "../BookScreen/makeData";
 // import Axios from "axios";
@@ -19,79 +19,79 @@ import {
   NumberRangeColumnFilter,
   SliderColumnFilter,
   SelectColumnFilter,
-  filterGreaterThan,
-} from "../../components/table/Table";
+  filterGreaterThan
+} from "../../components/table/Table"
 
 export default function BookScreen(props) {
   // const [book, setBook] = useState(null);
 
-  const [file, setFile] = useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+  const [file, setFile] = useState(null)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(null)
 
-  const [curr, setCurr] = useState("add");
-  const [category, setCategory] = useState("category");
-  const [publisher, setPublisher] = useState("publisher");
-  const [author, setAuthor] = useState("author");
-  const [name, setName] = useState("");
-  const [createdAt, setCreatedAt] = useState(null);
-  const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [published, setPublished] = useState(true);
-  const [img, setImg] = useState("");
-  const [describe, setDescribe] = useState("");
+  const [curr, setCurr] = useState("add")
+  const [category, setCategory] = useState("category")
+  const [publisher, setPublisher] = useState("publisher")
+  const [author, setAuthor] = useState("author")
+  const [name, setName] = useState("")
+  const [createdAt, setCreatedAt] = useState(null)
+  const [price, setPrice] = useState("")
+  const [quantity, setQuantity] = useState("")
+  const [published, setPublished] = useState(true)
+  const [img, setImg] = useState("")
+  const [describe, setDescribe] = useState("")
 
-  const [id_nsx, setId_Nsx] = useState("");
-  const [id_author, setId_Author] = useState("");
-  const [id_category, setId_Category] = useState("");
+  const [id_nsx, setId_Nsx] = useState("")
+  const [id_author, setId_Author] = useState("")
+  const [id_category, setId_Category] = useState("")
 
-  const [noti, setNoti] = useState("");
-  const [id, setId] = useState(null);
+  const [noti, setNoti] = useState("")
+  const [id, setId] = useState(null)
 
-  const [show, setShow] = useState(false);
-  const [nameAuthor, setNameAuthor] = useState("");
+  const [show, setShow] = useState(false)
+  const [nameAuthor, setNameAuthor] = useState("")
 
-  const [nameCategory, setNameCategory] = useState("");
-  const [showCategory, setShowCategory] = useState(false);
+  const [nameCategory, setNameCategory] = useState("")
+  const [showCategory, setShowCategory] = useState(false)
 
-  const [namePublisher, setNamePublisher] = useState("");
-  const [showPublisher, setShowPublisher] = useState(false);
+  const [namePublisher, setNamePublisher] = useState("")
+  const [showPublisher, setShowPublisher] = useState(false)
 
-  const [showImport, setShowImport] = useState(false);
-  const [fileExcel, setFileExcel] = useState(null);
+  const [showImport, setShowImport] = useState(false)
+  const [fileExcel, setFileExcel] = useState(null)
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
-  const handleImportClose = () => setShowImport(false);
-  const handleImportShow = () => setShowImport(true);
+  const handleImportClose = () => setShowImport(false)
+  const handleImportShow = () => setShowImport(true)
 
   useEffect(() => {
     // console.log("Prop Received: ", props.mproductDetail);
     if (props.book !== null) {
-      setImagePreviewUrl(props.book.img);
+      setImagePreviewUrl(props.book.img)
     }
     if (props.isadd === true) {
-      reset();
+      reset()
     }
     if (props.isupdate === true) {
-      reset();
+      reset()
     }
     if (props.mproductDetail !== null) {
-      setCurr("update");
-      setName(props.mproductDetail.name);
-      setCreatedAt(props.mproductDetail.createdAt.slice(0, 10));
-      setPrice(props.mproductDetail.price);
-      setQuantity(props.mproductDetail.quantity);
-      setPublished(props.mproductDetail.published);
-      setDescribe(props.mproductDetail.describe);
-      setCategory(getNameCategoryByID(props.mproductDetail.id_category));
-      setId_Category(props.mproductDetail.id_category);
-      setId_Author(props.mproductDetail.id_author);
-      setAuthor(getNameAuthorByID(props.mproductDetail.id_author));
-      setId_Nsx(props.mproductDetail.id_nsx);
-      setPublisher(getNamePublisherByID(props.mproductDetail.id_nsx));
-      setImg(props.mproductDetail.img);
-      setId(props.mproductDetail._id);
+      setCurr("update")
+      setName(props.mproductDetail.name)
+      setCreatedAt(props.mproductDetail.release_date.slice(0, 10))
+      setPrice(props.mproductDetail.price)
+      setQuantity(props.mproductDetail.quantity)
+      setPublished(props.mproductDetail.published)
+      setDescribe(props.mproductDetail.describe)
+      setCategory(getNameCategoryByID(props.mproductDetail.id_category))
+      setId_Category(props.mproductDetail.id_category)
+      setId_Author(props.mproductDetail.id_author)
+      setAuthor(getNameAuthorByID(props.mproductDetail.id_author))
+      setId_Nsx(props.mproductDetail.id_nsx)
+      setPublisher(getNamePublisherByID(props.mproductDetail.id_nsx))
+      setImg(props.mproductDetail.img)
+      setId(props.mproductDetail._id)
     }
     // if (props.isaddAuthor === true) reset();
   }, [
@@ -99,40 +99,40 @@ export default function BookScreen(props) {
     props.isadd,
     props.isupdate,
     props.mproductDetail,
-    props.author,
+    props.author
     // props.isaddAuthor,
-  ]);
+  ])
 
-  const handleId = async (value) => {
-    await props.getProductDetail(value);
-  };
+  const handleId = async value => {
+    await props.getProductDetail(value)
+  }
   // console.log(curr);
 
   const handleAddAuthor = () => {
-    setShow(false);
-    props.addAuthor(nameAuthor);
-  };
+    setShow(false)
+    props.addAuthor(nameAuthor)
+  }
 
   const handleAddCategory = () => {
-    setShowCategory(false);
-    props.addCategory(nameCategory);
-  };
+    setShowCategory(false)
+    props.addCategory(nameCategory)
+  }
 
   const handleAddPublisher = () => {
-    setShowPublisher(false);
-    props.addPublisher(namePublisher);
-  };
+    setShowPublisher(false)
+    props.addPublisher(namePublisher)
+  }
 
-  const handleChangeExcel = (file) => {
+  const handleChangeExcel = file => {
     // console.log(img);
-    if (file === undefined) return;
-    setFileExcel(file);
-  };
+    if (file === undefined) return
+    setFileExcel(file)
+  }
 
   const handleUploadExcel = () => {
-    setShowImport(false);
-    props.uploadFile(fileExcel);
-  };
+    setShowImport(false)
+    props.uploadFile(fileExcel)
+  }
 
   const columns = React.useMemo(
     () => [
@@ -149,24 +149,24 @@ export default function BookScreen(props) {
           </span>
         ),
         // We can override the cell renderer with a SubCell to be used with an expanded row
-        SubCell: () => null, // No expander on an expanded row
+        SubCell: () => null // No expander on an expanded row
       },
       {
         Header: "Front Image",
         accessor: "img",
         Cell: ({ cell: { value } }) => (
           <img class="img-fluid img-rounded" width={200} src={value} alt="a" />
-        ),
+        )
       },
       {
         Header: "Name",
         accessor: "name", // accessor is the "key" in the data
         aggregate: "count",
-        Aggregated: ({ value }) => `${value} Names`,
+        Aggregated: ({ value }) => `${value} Names`
       },
       {
         Header: "Description",
-        accessor: "describe",
+        accessor: "describe"
       },
       {
         Header: "Category Name",
@@ -174,7 +174,7 @@ export default function BookScreen(props) {
         Filter: SelectColumnFilter,
         filter: "includes",
         aggregate: "count",
-        Aggregated: ({ value }) => `${value} Names`,
+        Aggregated: ({ value }) => `${value} Names`
       },
       {
         Header: "Published",
@@ -189,23 +189,23 @@ export default function BookScreen(props) {
                   className="transaction-status"
                   style={{ background: "green" }}
                 ></div>
-              );
+              )
             case "false":
               return (
                 <div
                   className="transaction-status"
                   style={{ background: "red" }}
                 ></div>
-              );
+              )
             default:
               return (
                 <div
                   className="transaction-status"
                   style={{ background: "yellow" }}
                 ></div>
-              );
+              )
           }
-        },
+        }
       },
       {
         Header: "Quantity",
@@ -214,14 +214,14 @@ export default function BookScreen(props) {
         filter: filterGreaterThan,
         aggregate: "average",
         Aggregated: ({ value }) => `${Math.round(value * 100) / 100} (avg)`,
-        Footer: (info) => {
+        Footer: info => {
           // Only calculate total visits if rows change
           const total = React.useMemo(
             () => info.rows.reduce((sum, row) => row.values.quantity + sum, 0),
             [info.rows]
-          );
-          return <>Total: {total}</>;
-        },
+          )
+          return <>Total: {total}</>
+        }
       },
       {
         Header: "Price",
@@ -229,23 +229,23 @@ export default function BookScreen(props) {
         Filter: NumberRangeColumnFilter,
         filter: "between",
         aggregate: "sum",
-        Aggregated: ({ value }) => `${value} (total)`,
+        Aggregated: ({ value }) => `${value} (total)`
       },
       {
-        Header: "Created",
+        Header: "Created At",
         accessor: "createdAt",
         Cell: ({ cell: { value } }) => {
-          let date = new Date(value).toDateString();
+          let date = new Date(value).toDateString()
           // console.log(date);
           // return new Date(value).toLocaleDateString();
-          let day = date.split(" ")["2"];
-          let month = date.split(" ")["1"];
+          let day = date.split(" ")["2"]
+          let month = date.split(" ")["1"]
           if (day.charAt(0) === "0") {
-            day = day.charAt(1);
+            day = day.charAt(1)
           }
-          return day + " " + month;
+          return day + " " + month
         },
-        filter: "dateFilter",
+        filter: "dateFilter"
         // Filter: DateRangeColumnFilter,
         // filter: "dateBetween" /* Custom Filter Type */,
       },
@@ -258,7 +258,7 @@ export default function BookScreen(props) {
               <div className="btn-group">
                 <button
                   onClick={async () => {
-                    await handleId(value);
+                    await handleId(value)
                     // setCurr("update");
                     // setName(props.mproductDetail.name);
                     // setCreatedAt(productDetail.createdAt.slice(0, 10));
@@ -311,13 +311,13 @@ export default function BookScreen(props) {
                 <i className="icon_close_alt2" />
               </button> */}
             </>
-          );
-        },
-      },
+          )
+        }
+      }
     ],
     []
-  );
-  const Holdon = (columns) => {
+  )
+  const Holdon = columns => {
     if (props.book) {
       return (
         <Table
@@ -331,47 +331,47 @@ export default function BookScreen(props) {
           // skipPageReset={skipPageReset}
           // renderRowSubComponent={renderRowSubComponent}
         />
-      );
+      )
     } else {
-      return <Loading />;
+      return <Loading />
     }
-  };
+  }
 
-  const handleChangeImg = (img) => {
-    if (img === undefined) return;
-    let reader = new FileReader();
+  const handleChangeImg = img => {
+    if (img === undefined) return
+    let reader = new FileReader()
     reader.onloadend = () => {
-      setFile(img);
-      setImg(reader.result);
-    };
-    reader.readAsDataURL(img);
-  };
+      setFile(img)
+      setImg(reader.result)
+    }
+    reader.readAsDataURL(img)
+  }
 
-  const invalidPrice = (t) => {
-    console.log(t);
+  const invalidPrice = t => {
+    console.log(t)
 
-    var str = t.toString();
-    let count = 0;
+    var str = t.toString()
+    let count = 0
 
     for (let i = 0; i < str.length; i++) {
-      if (str.charAt(i) == "+" || str.charAt(i) == "-") count++;
-      else break;
+      if (str.charAt(i) == "+" || str.charAt(i) == "-") count++
+      else break
     }
 
-    str = str.substring(count, str.length);
-    console.log(str);
-    count = 0;
+    str = str.substring(count, str.length)
+    console.log(str)
+    count = 0
 
     for (let i = 0; i < str.length; i++) {
       if (str.charAt(i) == ".") {
-        count++;
+        count++
       }
-      if (str.charAt(i) < "0" || str.charAt(i) > "9") return false;
+      if (str.charAt(i) < "0" || str.charAt(i) > "9") return false
     }
 
-    if (count > 1) return false;
-    return !isNaN(Number.parseFloat(str));
-  };
+    if (count > 1) return false
+    return !isNaN(Number.parseFloat(str))
+  }
 
   const submitAddBook = () => {
     // const {
@@ -387,52 +387,52 @@ export default function BookScreen(props) {
     //   file,
     // } = this.state;
     if (name.length <= 0) {
-      setNoti({ noti: "Name Invalid" });
-      return;
+      setNoti({ noti: "Name Invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (createdAt === null) {
-      setNoti({ noti: "Day invalid" });
-      return;
+      setNoti({ noti: "Day invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (!invalidPrice(price)) {
-      setNoti({ noti: "Price invalid" });
-      return;
+      setNoti({ noti: "Price invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (!invalidPrice(quantity)) {
-      setNoti({ noti: "Quantity invalid" });
-      return;
+      setNoti({ noti: "Quantity invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (id_category === "") {
-      setNoti({ noti: "Category invalid" });
-      return;
+      setNoti({ noti: "Category invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (id_author === "") {
-      setNoti({ noti: "Author invalid" });
-      return;
+      setNoti({ noti: "Author invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (id_nsx === "") {
-      setNoti({ noti: "Publisher invalid" });
-      return;
+      setNoti({ noti: "Publisher invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (file === null) {
-      setNoti({ noti: "File invalid" });
-      return;
+      setNoti({ noti: "File invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     props.addBook(
       id_category,
@@ -445,57 +445,57 @@ export default function BookScreen(props) {
       id_nsx,
       id_author,
       file
-    );
-  };
+    )
+  }
 
   const submitUpdateBook = () => {
     if (name.length <= 0) {
-      setNoti({ noti: "Name invalid" });
-      return;
+      setNoti({ noti: "Name invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (createdAt === null) {
-      setNoti({ noti: "Day invalid" });
-      return;
+      setNoti({ noti: "Day invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (!invalidPrice(price)) {
-      setNoti({ noti: "Price invalid" });
-      return;
+      setNoti({ noti: "Price invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (!invalidPrice(quantity)) {
-      setNoti({ noti: "Quantity invalid" });
-      return;
+      setNoti({ noti: "Quantity invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (id_category === "") {
-      setNoti({ noti: "Category invalid" });
-      return;
+      setNoti({ noti: "Category invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (id_author === "") {
-      setNoti({ noti: "Author invalid" });
-      return;
+      setNoti({ noti: "Author invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (id_nsx === "") {
-      setNoti({ noti: "Publisher invalid" });
-      return;
+      setNoti({ noti: "Publisher invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     if (file === null && img === "") {
-      setNoti({ noti: "File invalid" });
-      return;
+      setNoti({ noti: "File invalid" })
+      return
     } else {
-      setNoti({ noti: "" });
+      setNoti({ noti: "" })
     }
     props.updateBook(
       id,
@@ -509,38 +509,38 @@ export default function BookScreen(props) {
       id_nsx,
       id_author,
       file
-    );
-    reset();
-  };
+    )
+    reset()
+  }
 
   const reset = () => {
-    setNameAuthor("");
-    setShow(false);
-    setNameCategory("");
-    setShowCategory(false);
-    setNamePublisher("");
-    setShowPublisher(false);
-    setShowImport(false);
+    setNameAuthor("")
+    setShow(false)
+    setNameCategory("")
+    setShowCategory(false)
+    setNamePublisher("")
+    setShowPublisher(false)
+    setShowImport(false)
 
-    setNoti("");
-    setName("");
-    setFile(null);
-    setImagePreviewUrl(null);
-    setCurr("add");
-    setCategory("category");
-    setPublisher("publisher");
-    setAuthor("author");
-    setCreatedAt(null);
-    setPrice("");
-    setQuantity("");
-    setPublished(true);
-    setImg("");
-    setDescribe("");
-    setId_Nsx("");
-    setId_Author("");
-    setId_Category("");
-    setId(null);
-  };
+    setNoti("")
+    setName("")
+    setFile(null)
+    setImagePreviewUrl(null)
+    setCurr("add")
+    setCategory("category")
+    setPublisher("publisher")
+    setAuthor("author")
+    setCreatedAt(null)
+    setPrice("")
+    setQuantity("")
+    setPublished(true)
+    setImg("")
+    setDescribe("")
+    setId_Nsx("")
+    setId_Author("")
+    setId_Category("")
+    setId(null)
+  }
 
   const renderBtnSubmit = () => {
     if (curr === "add") {
@@ -562,7 +562,7 @@ export default function BookScreen(props) {
             </button>
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="form-group">
@@ -582,9 +582,9 @@ export default function BookScreen(props) {
             </button>
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
 
   const renderMenuCategory = () => {
     if (props.category) {
@@ -592,91 +592,91 @@ export default function BookScreen(props) {
         return (
           <li
             onClick={() => {
-              setCategory(element.name);
-              setId_Category(element._id);
+              setCategory(element.name)
+              setId_Category(element._id)
             }}
           >
             <a>{element.name}</a>
           </li>
-        );
-      });
+        )
+      })
     } else {
-      return null;
+      return null
     }
-  };
+  }
   const renderMenuAuthor = () => {
     if (props.author) {
       return props.author.map((element, index) => {
         return (
           <li
             onClick={() => {
-              setAuthor(element.name);
-              setId_Author(element._id);
+              setAuthor(element.name)
+              setId_Author(element._id)
             }}
           >
             <a>{element.name}</a>
           </li>
-        );
-      });
+        )
+      })
     } else {
-      return null;
+      return null
     }
-  };
+  }
   const renderMenuPublisher = () => {
     if (props.publisher) {
       return props.publisher.map((element, index) => {
         return (
           <li
             onClick={() => {
-              setPublisher(element.name);
-              setId_Nsx(element._id);
+              setPublisher(element.name)
+              setId_Nsx(element._id)
             }}
           >
             <a>{element.name}</a>
           </li>
-        );
-      });
+        )
+      })
     } else {
-      return null;
+      return null
     }
-  };
-  const getNameCategoryByID = (id) => {
+  }
+  const getNameCategoryByID = id => {
     for (let i = 0; i < props.category.length; i++) {
-      if (id === props.category[i]._id) return props.category[i].name;
+      if (id === props.category[i]._id) return props.category[i].name
     }
-  };
-  const getNameAuthorByID = (id) => {
+  }
+  const getNameAuthorByID = id => {
     for (let i = 0; i < props.author.length; i++) {
-      if (id === props.author[i]._id) return props.author[i].name;
+      if (id === props.author[i]._id) return props.author[i].name
     }
-  };
-  const getNamePublisherByID = (id) => {
+  }
+  const getNamePublisherByID = id => {
     for (let i = 0; i < props.publisher.length; i++) {
       // console.log(id + " === " + props.publisher[i]._id);
-      if (id === props.publisher[i]._id) return props.publisher[i].name;
+      if (id === props.publisher[i]._id) return props.publisher[i].name
     }
-  };
+  }
 
-  const handleCheckBox = (e) => {
-    setPublished(e.target.checked);
-  };
+  const handleCheckBox = e => {
+    setPublished(e.target.checked)
+  }
 
-  const confirmDelete = (id) => {
+  const confirmDelete = id => {
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
-        props.deleteBook(id);
+        props.deleteBook(id)
         swal("Poof! Your Book data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
-  };
+    })
+  }
 
   // console.log(published);
 
@@ -1023,8 +1023,8 @@ export default function BookScreen(props) {
                     </label>
                     <div className="col-lg-10">
                       <input
-                        onChange={(e) => {
-                          setName(e.target.value);
+                        onChange={e => {
+                          setName(e.target.value)
                         }}
                         value={name}
                         className="form-control"
@@ -1038,12 +1038,12 @@ export default function BookScreen(props) {
                   </div>
                   <div className="form-group ">
                     <label for="cemail" className="control-label col-lg-2">
-                      Date<span className="required">*</span>
+                      Released Date<span className="required">*</span>
                     </label>
                     <div className="col-lg-10">
                       <input
                         value={createdAt}
-                        onChange={(e) => setCreatedAt(e.target.value)}
+                        onChange={e => setCreatedAt(e.target.value)}
                         className="form-control "
                         id="cemail"
                         type="date"
@@ -1059,7 +1059,7 @@ export default function BookScreen(props) {
                     <div className="col-lg-10">
                       <input
                         value={price}
-                        onChange={(e) => setPrice(e.target.value)}
+                        onChange={e => setPrice(e.target.value)}
                         className="form-control "
                         id="curl"
                         type="text"
@@ -1074,7 +1074,7 @@ export default function BookScreen(props) {
                     <div className="col-lg-10">
                       <input
                         value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
+                        onChange={e => setQuantity(e.target.value)}
                         className="form-control "
                         id="curl"
                         type="text"
@@ -1100,7 +1100,7 @@ export default function BookScreen(props) {
                     <div className="col-lg-10">
                       <textarea
                         value={describe}
-                        onChange={(e) => setDescribe(e.target.value)}
+                        onChange={e => setDescribe(e.target.value)}
                         className="form-control"
                         id="subject"
                         name="subject"
@@ -1157,9 +1157,7 @@ export default function BookScreen(props) {
                             </label>
                             <div className="col-lg-10">
                               <input
-                                onChange={(e) =>
-                                  setNameCategory(e.target.value)
-                                }
+                                onChange={e => setNameCategory(e.target.value)}
                                 value={nameCategory}
                                 className="form-control"
                                 id="cname"
@@ -1239,7 +1237,7 @@ export default function BookScreen(props) {
                             </label>
                             <div className="col-lg-10">
                               <input
-                                onChange={(e) => setNameAuthor(e.target.value)}
+                                onChange={e => setNameAuthor(e.target.value)}
                                 value={nameAuthor}
                                 className="form-control"
                                 id="cname"
@@ -1316,9 +1314,7 @@ export default function BookScreen(props) {
                             </label>
                             <div className="col-lg-10">
                               <input
-                                onChange={(e) =>
-                                  setNamePublisher(e.target.value)
-                                }
+                                onChange={e => setNamePublisher(e.target.value)}
                                 value={namePublisher}
                                 className="form-control"
                                 id="cname"
@@ -1364,7 +1360,7 @@ export default function BookScreen(props) {
                         id="ccomment"
                         name="comment"
                         required
-                        onChange={(e) => handleChangeImg(e.target.files[0])}
+                        onChange={e => handleChangeImg(e.target.files[0])}
                       />
                     </div>
                   </div>
@@ -1411,9 +1407,7 @@ export default function BookScreen(props) {
                             id="ccomment"
                             name="comment"
                             required
-                            onChange={(e) =>
-                              handleChangeExcel(e.target.files[0])
-                            }
+                            onChange={e => handleChangeExcel(e.target.files[0])}
                           />
                         </div>
                         <button
@@ -1448,7 +1442,7 @@ export default function BookScreen(props) {
       </div>
       {/* <div className="card card-body">{Holdon(columns)}</div> */}
     </section>
-  );
+  )
 }
 
 /*

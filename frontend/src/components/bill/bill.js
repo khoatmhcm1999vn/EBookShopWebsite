@@ -1,29 +1,29 @@
-import React, { Component } from "react";
-import swal from "sweetalert";
+import React, { Component } from "react"
+import swal from "sweetalert"
 // import { Link } from "react-router-dom";
 
 class Bill extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       pagination: [],
-      status: true,
-    };
+      status: true
+    }
   }
   componentWillMount() {
-    let tmp = [];
+    let tmp = []
     for (let i = 1; i <= this.props.totalpage; i++) {
-      tmp.push(i);
+      tmp.push(i)
     }
-    this.setState({ pagination: tmp });
+    this.setState({ pagination: tmp })
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.totalpage !== this.props.totalpage) {
-      let tmp = [];
+      let tmp = []
       for (let i = 1; i <= nextProps.totalpage; i++) {
-        tmp.push(i);
+        tmp.push(i)
       }
-      this.setState({ pagination: tmp });
+      this.setState({ pagination: tmp })
     }
   }
 
@@ -33,20 +33,20 @@ class Bill extends Component {
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
-        this.props.deleteUser(id);
+        this.props.deleteUser(id)
         swal("Poof! Your Bill data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
+    })
   }
 
   renderPagination() {
     if (this.state.pagination.length === 0) {
-      return null;
+      return null
     } else {
       return (
         <ul className="pagination pagination-custom col-md-6 offset-md-3">
@@ -62,20 +62,20 @@ class Bill extends Component {
                 >
                   <a>{element}</a>
                 </li>
-              );
+              )
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
                   <a>{element}</a>
                 </li>
-              );
+              )
             }
           })}
           <li onClick={() => this.props.nextPage()}>
             <a>&raquo;</a>
           </li>
         </ul>
-      );
+      )
     }
   }
   render() {
@@ -110,7 +110,7 @@ class Bill extends Component {
                 <span style={{ marginLeft: "50px", marginRight: "30px" }}>
                   Select Day
                 </span>
-                <select onChange={(e) => this.props.getBill(e.target.value)}>
+                <select onChange={e => this.props.getBill(e.target.value)}>
                   <option
                     value=""
                     disabled
@@ -151,7 +151,7 @@ class Bill extends Component {
                                 ", " +
                                 e.address[0].city}
                             </td>
-                          );
+                          )
                         })}
 
                         {/* <td>
@@ -185,7 +185,7 @@ class Bill extends Component {
                                 <option>
                                   {item.name + " - " + item.count}
                                 </option>
-                              );
+                              )
                             })}
                           </select>
                         </td>
@@ -231,7 +231,7 @@ class Bill extends Component {
                           </div>
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -240,7 +240,7 @@ class Bill extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
-export default Bill;
+export default Bill

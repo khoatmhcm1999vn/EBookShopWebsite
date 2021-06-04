@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { Modal, Button } from "react-bootstrap";
-import swal from "sweetalert";
+import React, { Component } from "react"
+import { Modal, Button } from "react-bootstrap"
+import swal from "sweetalert"
 // import { Link } from "react-router-dom";
 // import { Button as MaterialButton } from "@material-ui/core/";
 // import ErrorMessage from "../message/errorMessage";
 // import SuccessMessage from "../message/successMessage";
-import Print from "../print/Print";
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import Print from "../print/Print"
+import pdfMake from "pdfmake/build/pdfmake"
+import pdfFonts from "pdfmake/build/vfs_fonts"
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 class Author extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       pagination: [],
       currname: null,
@@ -21,47 +21,47 @@ class Author extends Component {
       id: null,
       noti: null,
       file: null,
-      currType: "add",
-    };
+      currType: "add"
+    }
   }
   componentWillMount() {
-    let tmp = [];
+    let tmp = []
     for (let i = 1; i <= this.props.totalpage; i++) {
-      tmp.push(i);
+      tmp.push(i)
     }
-    this.setState({ pagination: tmp });
+    this.setState({ pagination: tmp })
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.totalpage !== this.props.totalpage) {
-      let tmp = [];
+      let tmp = []
       for (let i = 1; i <= nextProps.totalpage; i++) {
-        tmp.push(i);
+        tmp.push(i)
       }
-      this.setState({ pagination: tmp });
+      this.setState({ pagination: tmp })
     }
     if (nextProps.isadd === false) {
       this.setState({
-        noti: "Please Change name",
-      });
+        noti: "Please Change name"
+      })
     } else if (nextProps.isadd === true) {
       this.setState({
         noti: "",
         id: null,
         name: "",
-        currType: "add",
-      });
+        currType: "add"
+      })
     }
     if (nextProps.isupdate === false) {
       this.setState({
-        noti: "update fail",
-      });
+        noti: "update fail"
+      })
     } else if (nextProps.isupdate === true) {
       this.setState({
         noti: "",
         id: null,
         name: "",
-        currType: "add",
-      });
+        currType: "add"
+      })
     }
   }
 
@@ -71,37 +71,37 @@ class Author extends Component {
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
-        this.props.deleteAuthor(id);
+        this.props.deleteAuthor(id)
         swal("Poof! Your Author data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
+    })
   }
 
-  handleChangeImg = (img) => {
+  handleChangeImg = img => {
     // console.log(img);
-    if (img === undefined) return;
+    if (img === undefined) return
     this.setState({
-      file: img,
-    });
-  };
+      file: img
+    })
+  }
 
   handleClose = () => {
     this.setState({
-      show: false,
-    });
-  };
+      show: false
+    })
+  }
   handleShow = () => {
-    this.setState({ show: true });
-  };
+    this.setState({ show: true })
+  }
 
   renderPagination() {
     if (this.state.pagination.length === 0) {
-      return null;
+      return null
     } else {
       return (
         <ul className="pagination pagination-custom col-md-6 offset-md-3">
@@ -117,25 +117,25 @@ class Author extends Component {
                 >
                   <a>{element}</a>
                 </li>
-              );
+              )
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
                   <a>{element}</a>
                 </li>
-              );
+              )
             }
           })}
           <li onClick={() => this.props.nextPage()}>
             <a>&raquo;</a>
           </li>
         </ul>
-      );
+      )
     }
   }
 
-  printAs = (e) => {
-    const downloadAs = e.target.value;
+  printAs = e => {
+    const downloadAs = e.target.value
 
     switch (downloadAs) {
       case "pdf":
@@ -152,7 +152,7 @@ class Author extends Component {
                       text: "BOOK SHOP WEB",
                       style: "mainheader",
                       bold: true,
-                      marginTop: 10,
+                      marginTop: 10
                     },
 
                     {
@@ -162,28 +162,28 @@ class Author extends Component {
                       stack: [
                         {
                           style: "h2",
-                          text: `Name: ${this.props.currentUser.user.firstName}`,
+                          text: `Name: ${this.props.currentUser.user.firstName}`
                         },
                         {
                           style: "h2",
-                          text: `Email: ${this.props.currentUser.user.email}`,
-                        },
-                      ],
-                    },
-                  ],
-                ],
+                          text: `Email: ${this.props.currentUser.user.email}`
+                        }
+                      ]
+                    }
+                  ]
+                ]
               },
               layout: {
                 hLineWidth: function (line) {
-                  return line === 1;
+                  return line === 1
                 },
                 vLineWidth: function () {
-                  return 0;
+                  return 0
                 },
                 paddingBottom: function () {
-                  return 5;
-                },
-              },
+                  return 5
+                }
+              }
             },
 
             //Vitals Details
@@ -195,25 +195,25 @@ class Author extends Component {
                   [
                     {
                       border: ["#5bc0de", false, false, false],
-                      text: "Author List",
-                    },
-                  ],
-                ],
-              },
+                      text: "Author List"
+                    }
+                  ]
+                ]
+              }
             },
 
             this.props.author.length > 0
               ? {
                   layout: {
                     hLineWidth: function () {
-                      return 0;
+                      return 0
                     },
                     vLineWidth: function () {
-                      return 0;
+                      return 0
                     },
                     paddingBottom: function () {
-                      return 5;
-                    },
+                      return 5
+                    }
                   },
                   table: {
                     headerRows: 1,
@@ -223,19 +223,19 @@ class Author extends Component {
                           text: "S.No",
                           bold: true,
                           fillColor: "#2B2B52",
-                          color: "white",
+                          color: "white"
                         },
                         {
                           text: "ID",
                           bold: true,
                           fillColor: "#2B2B52",
-                          color: "white",
+                          color: "white"
                         },
                         {
                           text: "NAME",
                           bold: true,
                           fillColor: "#2B2B52",
-                          color: "white",
+                          color: "white"
                         },
                         // {
                         //   text: "EMAIL",
@@ -253,14 +253,14 @@ class Author extends Component {
                           text: "STATUS",
                           bold: true,
                           fillColor: "#2B2B52",
-                          color: "white",
+                          color: "white"
                         },
                         {
                           text: "DATE",
                           bold: true,
                           fillColor: "#2B2B52",
-                          color: "white",
-                        },
+                          color: "white"
+                        }
                       ],
 
                       ...this.props.author.map((u, i) => [
@@ -270,47 +270,47 @@ class Author extends Component {
                         //  u.status,
                         u.status ? "Verified" : "Not paid",
                         // u.role,
-                        u.createdAt.substring(0, 10),
-                      ]),
-                    ],
+                        u.createdAt.substring(0, 10)
+                      ])
+                    ]
                   },
 
                   fontSize: 8,
-                  alignment: "center",
+                  alignment: "center"
                 }
-              : null,
+              : null
           ],
           styles: {
             header: {
               fontSize: 12,
               marginBottom: 20,
               marginTop: 20,
-              bold: true,
+              bold: true
             },
             mainheader: {
-              fontSize: 15,
+              fontSize: 15
             },
 
             usersOrders: {
-              marginLeft: 315,
+              marginLeft: 315
             },
 
             h2: {
               marginTop: 5,
-              fontSize: 7,
-            },
-          },
-        };
-        pdfMake.createPdf(docDefinition).download("usersList.pdf");
+              fontSize: 7
+            }
+          }
+        }
+        pdfMake.createPdf(docDefinition).download("usersList.pdf")
 
-        break;
+        break
       case "excel":
-        break;
+        break
 
       default:
-        break;
+        break
     }
-  };
+  }
 
   renderBtn = () => {
     if (this.state.currType === "add") {
@@ -337,7 +337,7 @@ class Author extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="form-group">
@@ -362,9 +362,9 @@ class Author extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
 
   reset = () => {
     this.setState({
@@ -372,9 +372,9 @@ class Author extends Component {
       id: null,
       show: false,
       name: "",
-      currType: "add",
-    });
-  };
+      currType: "add"
+    })
+  }
 
   render() {
     // console.log(this.state.pagination);
@@ -442,7 +442,7 @@ class Author extends Component {
                                   currname: element.name,
                                   name: element.name,
                                   id: element._id,
-                                  currType: "update",
+                                  currType: "update"
                                 })
                               }
                               className="btn btn-success"
@@ -467,7 +467,7 @@ class Author extends Component {
                           </div>
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -488,10 +488,10 @@ class Author extends Component {
                       </label>
                       <div className="col-lg-10">
                         <input
-                          onChange={(e) => {
+                          onChange={e => {
                             this.setState({
-                              name: e.target.value,
-                            });
+                              name: e.target.value
+                            })
                           }}
                           value={this.state.name}
                           className="form-control"
@@ -564,7 +564,7 @@ class Author extends Component {
                               id="ccomment"
                               name="comment"
                               required
-                              onChange={(e) =>
+                              onChange={e =>
                                 this.handleChangeImg(e.target.files[0])
                               }
                             />
@@ -615,8 +615,8 @@ class Author extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
 
-export default Author;
+export default Author

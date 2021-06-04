@@ -1,12 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from "react"
+// import { Link } from "react-router-dom";
 
 const NotFound = () => (
   <div className="container text-center">
     <div className="logo-404">
-      <Link to="/">
+      <a href="/">
         <img src="/img/home/logo.png" alt="" />
-      </Link>
+      </a>
     </div>
     <div className="content-404">
       <img src="/img/404/404.png" className="img-responsive" alt="" />
@@ -18,10 +18,10 @@ const NotFound = () => (
         has up and Vanished.
       </p>
       <h2>
-        <Link to="/">Bring me back Home</Link>
+        <a href="/">Bring me back Home</a>
       </h2>
     </div>
   </div>
-);
+)
 
-export default NotFound;
+export default NotFound

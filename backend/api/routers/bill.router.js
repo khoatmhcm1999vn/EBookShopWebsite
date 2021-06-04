@@ -48,7 +48,16 @@ import Book from "../models/book.model.js";
 import Cart from "../models/cart.model.js";
 import UserAddress from "../models/address.model.js";
 
+import weekly from "../helpers/line_chart_data.js";
+import todayReport from "../helpers/excel_report_today.js";
+
 const billRouter = express.Router();
+billRouter.get("/line-chart", (req, res) => {
+  weekly(req, res);
+});
+billRouter.get("/today-report", (req, res) => {
+  todayReport(req, res);
+});
 billRouter.get(
   "/api/bill",
   expressAsyncHandler(async (req, res) => {

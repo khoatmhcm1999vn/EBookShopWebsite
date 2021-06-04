@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Toast } from "react-bootstrap";
-import "animate.css";
+import React, { useState } from "react"
+import { useDispatch } from "react-redux"
+import { Toast } from "react-bootstrap"
+import "animate.css"
 
 const ErrorMessage = ({ header, message, reset }) => {
-  const [show, setShow] = useState(true);
-  const dispatch = useDispatch();
+  const [show, setShow] = useState(true)
+  const dispatch = useDispatch()
 
   const action = () => {
     if (reset) {
-      dispatch({ type: reset });
+      dispatch({ type: reset })
     }
-    setShow(false);
-  };
+    setShow(false)
+  }
 
   return (
     <>
@@ -33,7 +33,7 @@ const ErrorMessage = ({ header, message, reset }) => {
         </Toast>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ErrorMessage;
+export default ErrorMessage

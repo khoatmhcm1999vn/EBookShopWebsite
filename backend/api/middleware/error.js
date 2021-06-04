@@ -1,8 +1,11 @@
-const unknownEndpoints = () => {
-  const error = new Error("Unknown Endpoints");
-  error.status = 404;
-  throw error;
-};
+import HttpError from "http-errors";
+
+// const unknownEndpoints = () => {
+//   const error = new HttpError("Unknown Endpoints", 404);
+//   // error.status = 404;
+//   // console.log(error.message);
+//   throw error;
+// };
 
 const errorHandler = (err, req, res, next) => {
   //Mongoose Bad ObjectId
@@ -28,11 +31,16 @@ const errorHandler = (err, req, res, next) => {
       .send({ status: "Error", error: "Dublicate value entered" });
   }
 
-  res.status(err.status || 500).send({ status: "Error", error: err.message });
+  // console.log("Error status: ", err.status);
+  // console.log("Message: ", err.message);
+  // res.status(err.status || 500);
+  res
+    .status(err.status || 500)
+    .json({ status: err.status || 500, error: err.message, stack: err.stack });
 };
 
 const error = {
-  unknownEndpoints,
+  // unknownEndpoints,
   errorHandler,
 };
 export default error;

@@ -1,35 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 // import Carousel from "react-bootstrap/Carousel";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../actions/user.action";
-import { getListProductRankTopAll } from "../../actions/home.action";
+import { Link, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../../actions/user.action"
+import { getListProductRankTopAll } from "../../actions/home.action"
 
-import HeaderTop from "../../components/header/header.top";
-import HeaderMiddle from "../../components/header/header.middle";
-import HeaderBottom from "../../components/header/header.bottom";
-import FooterTop from "../../components/footer/footer.top";
-import FooterMiddle from "../../components/footer/footer.middle";
-import FooterBottom from "../../components/footer/footer.bottom";
+import HeaderTop from "../../components/header/header.top"
+import HeaderMiddle from "../../components/header/header.middle"
+import HeaderBottom from "../../components/header/header.bottom"
+import FooterTop from "../../components/footer/footer.top"
+import FooterMiddle from "../../components/footer/footer.middle"
+import FooterBottom from "../../components/footer/footer.bottom"
 // import Rating from "../../components/rating/Rating";
 // import { prices, ratings } from "../../utils/utils";
 
 export default function RankingScreen(props) {
-  const cart = useSelector((state) => state.cart);
-  const islogin = useSelector((state) => state.userReducers.user.islogin);
-  const products = useSelector(
-    (state) => state.homeReducers.book.dataTopAllRank
-  );
+  const cart = useSelector(state => state.cart)
+  const islogin = useSelector(state => state.userReducers.user.islogin)
+  const products = useSelector(state => state.homeReducers.book.dataTopAllRank)
   const productCategoryList = useSelector(
-    (state) => state.homeReducers.book.dataProductCategoryIds
-  );
-  const [id_category, setIdCategory] = useState("");
+    state => state.homeReducers.book.dataProductCategoryIds
+  )
+  const [id_category, setIdCategory] = useState("")
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getListProductRankTopAll(id_category));
-  }, [dispatch, id_category]);
+    dispatch(getListProductRankTopAll(id_category))
+  }, [dispatch, id_category])
 
   //   console.log(productCategoryList);
   //   console.log(id_category);
@@ -73,7 +71,7 @@ export default function RankingScreen(props) {
             className="header-vote"
             style={{
               backgroundImage:
-                "url(https://cdn0.fahasa.com/media/wysiwyg/Thang-6-2020/banner_vote_06_2020.png)",
+                "url(https://cdn0.fahasa.com/media/wysiwyg/Thang-6-2020/banner_vote_06_2020.png)"
             }}
           >
             <div className="title-vote">BẢNG XẾP HẠNG BOOK SHOP MIA</div>
@@ -145,7 +143,8 @@ export default function RankingScreen(props) {
                             ></i> */}
                           </div>
                           <img
-                            src={p.img}
+                            src={`http://localhost:8090/${p.img}`}
+                            // src={p.img}
                             alt={p.name}
                             className="small-image2"
                           />
@@ -174,5 +173,5 @@ export default function RankingScreen(props) {
         <FooterBottom />
       </footer>
     </div>
-  );
+  )
 }

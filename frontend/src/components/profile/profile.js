@@ -1,80 +1,81 @@
-import { Link } from "react-router-dom";
-import React, { Component } from "react";
-import HeaderTop from "../header/header.top";
-import HeaderMiddle from "../header/header.middle";
+import { Link } from "react-router-dom"
+import React, { Component } from "react"
+import HeaderTop from "../header/header.top"
+import HeaderMiddle from "../header/header.middle"
 // import HeaderBottom from "../header/header.bottom";
-import FooterTop from "../footer/footer.top";
-import FooterMiddle from "../footer/footer.middle";
-import FooterBottom from "../footer/footer.bottom";
+import FooterTop from "../footer/footer.top"
+import FooterMiddle from "../footer/footer.middle"
+import FooterBottom from "../footer/footer.bottom"
 
 class Profile extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       notiUpdateInfor: "",
       oldPassword: "",
       newPassword: "",
       confirm: "",
-      notiUpdatePassword: "",
-    };
+      notiUpdatePassword: ""
+    }
   }
   componentWillMount() {
     if (this.props.isupdate) {
-      this.setState({ notiUpdateInfor: "UPDATE SUCCESS" });
+      this.setState({ notiUpdateInfor: "UPDATE SUCCESS" })
     } else if (this.props.isupdate === false) {
-      this.setState({ notiUpdateInfor: "UPDATE FAIL" });
+      this.setState({ notiUpdateInfor: "UPDATE FAIL" })
     } else {
-      this.setState({ notiUpdateInfor: "" });
+      this.setState({ notiUpdateInfor: "" })
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.isupdate === true) {
-      this.setState({ notiUpdateInfor: "UPDATE SUCCESS" });
+      this.setState({ notiUpdateInfor: "UPDATE SUCCESS" })
     } else if (nextProps.isupdate === false) {
-      this.setState({ notiUpdateInfor: "UPDATE FAIL" });
+      this.setState({ notiUpdateInfor: "UPDATE FAIL" })
     } else {
-      this.setState({ notiUpdateInfor: "" });
+      this.setState({ notiUpdateInfor: "" })
     }
     if (
       nextProps.notiupdatePassword !== this.props.notiupdatePassword &&
       nextProps.notiupdatePassword === true
     ) {
-      this.setState({
-        notiUpdatePassword: "Update password success",
-      });
+      // this.setState({
+      //   notiUpdatePassword: "Update password success",
+      // });
       this.setState({
         oldPassword: "",
         newPassword: "",
-        confirm: "",
-      });
-      this.props.resetUpdatePassword();
+        confirm: ""
+      })
+      this.props.resetUpdatePassword()
     }
     if (
       nextProps.notiupdatePassword !== this.props.notiupdatePassword &&
       nextProps.notiupdatePassword === false
     ) {
-      this.setState({
-        notiUpdatePassword: "Update password fail",
-      });
-      this.props.resetUpdatePassword();
+      // this.setState({
+      //   notiUpdatePassword: "Update password fail",
+      // });
+      this.props.resetUpdatePassword()
     }
   }
   handleUpdatePassword() {
     if (this.state.newPassword.length < 6) {
-      this.setState({ notiUpdatePassword: "New Password invalid" });
-      return;
+      this.setState({ notiUpdatePassword: "New Password invalid" })
+      return
     } else {
-      this.setState({ notiUpdatePassword: "" });
+      this.setState({ notiUpdatePassword: "" })
     }
     if (this.state.confirm.length < 6) {
-      this.setState({ notiUpdatePassword: "Confirm Password invalid" });
-      return;
+      this.setState({ notiUpdatePassword: "Confirm Password invalid" })
+      return
     } else {
-      this.setState({ notiUpdatePassword: "" });
+      this.setState({ notiUpdatePassword: "" })
     }
-    this.props.updatePassword(this.state.oldPassword, this.state.newPassword);
+    this.props.updatePassword(this.state.oldPassword, this.state.newPassword)
   }
   render() {
+    console.log(this.props.notiUpdatePasswordInfo)
     return (
       <div>
         <header id="header">
@@ -116,14 +117,14 @@ class Profile extends Component {
                       type="text"
                       placeholder="First name"
                       value={this.props.firstName}
-                      onChange={(e) => this.props.setFirstName(e.target.value)}
+                      onChange={e => this.props.setFirstName(e.target.value)}
                     />
                     <label htmlFor="">Last name:</label>
                     <input
                       type="text"
                       placeholder="Last name"
                       value={this.props.lastName}
-                      onChange={(e) => this.props.setLastName(e.target.value)}
+                      onChange={e => this.props.setLastName(e.target.value)}
                     />
                     {/* <input
                       type="text"
@@ -136,9 +137,7 @@ class Profile extends Component {
                       type="tell"
                       placeholder="Phone number"
                       value={this.props.phone_number}
-                      onChange={(e) =>
-                        this.props.setPhoneNumber(e.target.value)
-                      }
+                      onChange={e => this.props.setPhoneNumber(e.target.value)}
                     />
                     <button
                       onClick={() => this.props.updateInfor()}
@@ -152,10 +151,11 @@ class Profile extends Component {
                   <div className="shopper-info">
                     <p>UPDATE PASSWORD</p>
                     <p className="error">{this.state.notiUpdatePassword}</p>
+                    <h3>{this.props.notiUpdatePasswordInfo}</h3>
                     <label htmlFor="">Old password:</label>
                     <input
                       value={this.state.oldPassword}
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({ oldPassword: e.target.value })
                       }
                       type="password"
@@ -164,7 +164,7 @@ class Profile extends Component {
                     <label htmlFor="">New password:</label>
                     <input
                       value={this.state.newPassword}
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({ newPassword: e.target.value })
                       }
                       type="password"
@@ -173,9 +173,7 @@ class Profile extends Component {
                     <label htmlFor="">Confirm:</label>
                     <input
                       value={this.state.confirm}
-                      onChange={(e) =>
-                        this.setState({ confirm: e.target.value })
-                      }
+                      onChange={e => this.setState({ confirm: e.target.value })}
                       type="password"
                       placeholder="Confirm"
                     />
@@ -197,7 +195,7 @@ class Profile extends Component {
           <FooterBottom />
         </footer>
       </div>
-    );
+    )
   }
 }
-export default Profile;
+export default Profile

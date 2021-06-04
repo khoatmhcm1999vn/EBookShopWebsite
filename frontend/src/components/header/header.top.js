@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from "react"
+import { Link } from "react-router-dom"
 
 const HeaderTop = () => (
   <div className="header_top">
@@ -76,6 +76,6 @@ const HeaderTop = () => (
       </div>
     </div>
   </div>
-);
+)
 
-export default HeaderTop;
+export default HeaderTop

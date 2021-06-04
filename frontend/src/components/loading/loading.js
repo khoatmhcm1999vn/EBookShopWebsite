@@ -1,6 +1,6 @@
-import React from "react";
-import Spinner from "../spinner/Spinner";
-import "./loading.css";
+import React from "react"
+import Spinner from "../spinner/Spinner"
+import "./loading.css"
 
 const Loading = () => {
   return (
@@ -9,9 +9,9 @@ const Loading = () => {
         <Spinner />
       </div>
     </div>
-  );
-};
-export default Loading;
+  )
+}
+export default Loading
 
 // import { Spinner } from "react-bootstrap";
 // const Loading = () => {

@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
 
 const ForgotPassword = ({ setEmail, submit, notification }) => (
   <div className="container text-center">
@@ -17,7 +17,7 @@ const ForgotPassword = ({ setEmail, submit, notification }) => (
       <input
         type="email"
         placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={e => setEmail(e.target.value)}
       />
       <br />
       <button className="btn btn-default" onClick={() => submit()}>
@@ -28,5 +28,5 @@ const ForgotPassword = ({ setEmail, submit, notification }) => (
       </h2>
     </div>
   </div>
-);
-export default ForgotPassword;
+)
+export default ForgotPassword

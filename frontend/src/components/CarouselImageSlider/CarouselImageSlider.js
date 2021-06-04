@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import Carousel from "react-bootstrap/Carousel";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getListProductFavorTop2 } from "../../actions/home.action";
+import React, { useEffect } from "react"
+import Carousel from "react-bootstrap/Carousel"
+import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { getListProductFavorTop2 } from "../../actions/home.action"
 
 // const sliderItems = [
 //   {
@@ -18,10 +18,10 @@ import { getListProductFavorTop2 } from "../../actions/home.action";
 // ];
 
 const CarouselImageSlider = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const products = useSelector(
-    (state) => state.homeReducers.book.dataProductFavorTop2
-  );
+    state => state.homeReducers.book.dataProductFavorTop2
+  )
   // const productCategoryList = useSelector(
   //   (state) => state.homeReducers.book.dataProductCategoryIds
   // );
@@ -36,19 +36,19 @@ const CarouselImageSlider = () => {
   // ];
 
   useEffect(() => {
-    dispatch(getListProductFavorTop2());
+    dispatch(getListProductFavorTop2())
 
     // return function cleanup() {
     //   setCurrProduct(null);
     // };
-  }, [dispatch]);
+  }, [dispatch])
 
   const settings = {
     indicators: false,
     fade: true,
     infinite: true,
-    interval: 3000,
-  };
+    interval: 3000
+  }
 
   return (
     <div>
@@ -60,11 +60,11 @@ const CarouselImageSlider = () => {
                 <img className="carousel__img" src={item.img} alt={item.name} />
               </Link>
             </Carousel.Item>
-          );
+          )
         })}
       </Carousel>
     </div>
-  );
-};
+  )
+}
 
-export default CarouselImageSlider;
+export default CarouselImageSlider

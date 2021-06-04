@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import HeaderTop from "../header/header.top";
-import HeaderMiddle from "../header/header.middle";
-import FooterTop from "../footer/footer.top";
-import FooterMiddle from "../footer/footer.middle";
-import FooterBottom from "../footer/footer.bottom";
-import ContentCart from "./content.cart";
+import React, { Component } from "react"
+import HeaderTop from "../header/header.top"
+import HeaderMiddle from "../header/header.middle"
+import FooterTop from "../footer/footer.top"
+import FooterMiddle from "../footer/footer.middle"
+import FooterBottom from "../footer/footer.bottom"
+import ContentCart from "./content.cart"
+import HeaderBottom from "../header/header.bottom"
 
 class Cart extends Component {
   constructor() {
-    super();
+    super()
   }
   render() {
     return (
@@ -21,18 +22,23 @@ class Cart extends Component {
             history={this.props.history}
             cart={this.props.cart}
           />
+          <HeaderBottom
+            isDisabled={true}
+            history={this.props.history}
+            // isActivatedContactPage={true}
+          />
         </header>
         <ContentCart
           islogin={this.props.islogin}
           cart={this.props.cart}
-          updateProductInCart={(product) =>
+          updateProductInCart={product =>
             this.props.updateProductInCart(product)
           }
-          deteleProductInCart={(id_product) =>
+          deteleProductInCart={id_product =>
             this.props.deteleProductInCart(id_product)
           }
           city={this.props.city}
-          getDistrict={(code) => this.props.getDistrict(code)}
+          getDistrict={code => this.props.getDistrict(code)}
           district={this.props.district}
           getWard={(codecity, codedistrict) =>
             this.props.getWard(codecity, codedistrict)
@@ -70,7 +76,7 @@ class Cart extends Component {
           <FooterBottom />
         </footer>
       </div>
-    );
+    )
   }
 }
-export default Cart;
+export default Cart

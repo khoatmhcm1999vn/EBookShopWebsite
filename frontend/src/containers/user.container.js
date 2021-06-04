@@ -1,32 +1,32 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 // import { ToastContainer } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
-import * as userActions from "../actions/user.action";
-import User from "../components/user/user";
-import NavbarContainer from "./navbar.container";
-import Slider from "./slider.container";
+import * as userActions from "../actions/user.action"
+import User from "../components/user/user"
+import NavbarContainer from "./navbar.container"
+import Slider from "./slider.container"
 
 class UserContainer extends Component {
   constructor() {
-    super();
+    super()
   }
   async componentWillMount() {
-    this.props.userActions.getUser();
-    let res = await this.props.userActions.loadUser();
+    this.props.userActions.getUser()
+    let res = await this.props.userActions.loadUser()
     if (!res.is_admin || this.props.currentUser === null)
-      this.props.history.push("/login_register");
+      this.props.history.push("/login_register")
   }
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.islogin !== this.props.islogin &&
       nextProps.islogin === false
     ) {
-      this.props.history.push("/login_register");
+      this.props.history.push("/login_register")
     }
     if (nextProps.page !== this.props.page) {
-      this.props.userActions.getUser();
+      this.props.userActions.getUser()
     }
   }
   render() {
@@ -42,7 +42,7 @@ class UserContainer extends Component {
           totalpage={this.props.totalpage}
           backPage={() => this.props.userActions.backPage()}
           nextPage={() => this.props.userActions.nextPage()}
-          setPage={(page) => this.props.userActions.setPage(page)}
+          setPage={page => this.props.userActions.setPage(page)}
           updateUser={(
             email,
             firstName,
@@ -60,10 +60,8 @@ class UserContainer extends Component {
               is_admin
             )
           }
-          deleteUser={(email) => this.props.userActions.deleteUser(email)}
-          deactivateUser={(email) =>
-            this.props.userActions.deactivateUser(email)
-          }
+          deleteUser={email => this.props.userActions.deleteUser(email)}
+          deactivateUser={email => this.props.userActions.deactivateUser(email)}
           addUser={(
             email,
             password,
@@ -86,21 +84,21 @@ class UserContainer extends Component {
         />
         {/* <ToastContainer autoClose={2000} /> */}
       </section>
-    );
+    )
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.userReducers.user.data,
   isadd: state.userReducers.user.isadd,
   isupdate: state.userReducers.user.isupdate,
   totalpage: state.userReducers.user.totalpage,
   page: state.userReducers.user.page,
-  islogin: state.userReducers.user.islogin,
-});
+  islogin: state.userReducers.user.islogin
+})
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    userActions: bindActionCreators(userActions, dispatch),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(UserContainer);
+    userActions: bindActionCreators(userActions, dispatch)
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(UserContainer)

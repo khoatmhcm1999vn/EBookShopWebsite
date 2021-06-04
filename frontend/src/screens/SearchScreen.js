@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link, useParams } from "react-router-dom"
 import {
   getListProductByCategory,
-  getListProductCategoryIds,
-} from "../actions/home.action";
-import LoadingBox from "../components/loading/loading";
-import MessageBox from "../components/message/Message";
-import Product from "../components/Product/Product";
-import Rating from "../components/rating/Rating";
-import { prices, ratings } from "../utils/utils";
+  getListProductCategoryIds
+} from "../actions/home.action"
+import LoadingBox from "../components/loading/loading"
+import MessageBox from "../components/message/Message"
+import Product from "../components/Product/Product"
+import Rating from "../components/rating/Rating"
+import { prices, ratings } from "../utils/utils"
 
 export default function SearchScreen(props) {
   const {
@@ -18,18 +18,16 @@ export default function SearchScreen(props) {
     min = 0,
     max = 0,
     stars = 0,
-    order = "newest",
+    order = "newest"
     // pageNumber = 1,
-  } = useParams();
-  const dispatch = useDispatch();
-  const products = useSelector(
-    (state) => state.homeReducers.book.dataByCategory
-  );
+  } = useParams()
+  const dispatch = useDispatch()
+  const products = useSelector(state => state.homeReducers.book.dataByCategory)
   //const { loading, error, products, page, pages } = productList;
 
   const productCategoryList = useSelector(
-    (state) => state.homeReducers.book.dataProductCategoryIds
-  );
+    state => state.homeReducers.book.dataProductCategoryIds
+  )
   //   const {
   //     loading: loadingCategories,
   //     error: errorCategories,
@@ -44,21 +42,21 @@ export default function SearchScreen(props) {
         min,
         max,
         stars,
-        order,
+        order
       })
-    );
-  }, [dispatch, max, min, order, stars]);
+    )
+  }, [dispatch, max, min, order, stars])
 
-  const getFilterUrl = (filter) => {
+  const getFilterUrl = filter => {
     // const filterPage = filter.page || pageNumber;
     // const filterCategory = filter.category || category;
     // const filterName = filter.name || name;
-    const filterRating = filter.stars || stars;
-    const sortOrder = filter.order || order;
-    const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min;
-    const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max;
-    return `/search/category}/min/${filterMin}/max/${filterMax}/rating/${filterRating}/order/${sortOrder}`;
-  };
+    const filterRating = filter.stars || stars
+    const sortOrder = filter.order || order
+    const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min
+    const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max
+    return `/search/category}/min/${filterMin}/max/${filterMax}/rating/${filterRating}/order/${sortOrder}`
+  }
   return (
     <div>
       <div className="row">
@@ -73,8 +71,8 @@ export default function SearchScreen(props) {
           Sort by
           <select
             value={order}
-            onChange={(e) => {
-              props.history.push(getFilterUrl({ order: e.target.value }));
+            onChange={e => {
+              props.history.push(getFilterUrl({ order: e.target.value }))
             }}
           >
             <option value="newest">Newest Arrivals</option>
@@ -118,7 +116,7 @@ export default function SearchScreen(props) {
           <div>
             <h3>Price</h3>
             <ul>
-              {prices.map((p) => (
+              {prices.map(p => (
                 <li key={p.name}>
                   <Link
                     to={getFilterUrl({ min: p.min, max: p.max })}
@@ -135,7 +133,7 @@ export default function SearchScreen(props) {
           <div>
             <h3>Avg. Customer Review</h3>
             <ul>
-              {ratings.map((r) => (
+              {ratings.map(r => (
                 <li key={r.name}>
                   <Link
                     to={getFilterUrl({ rating: r.rating })}
@@ -179,5 +177,5 @@ export default function SearchScreen(props) {
         </div> */}
       </div>
     </div>
-  );
+  )
 }

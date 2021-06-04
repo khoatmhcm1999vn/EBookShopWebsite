@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import storeConfig from "../../config/store.config";
-import Favorite from "../../components/Favorite";
-import Rating from "../../components/rating/Rating";
-import PointRating from "../../components/PointRating";
-import ReactStars from "react-rating-stars-component";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
+import storeConfig from "../../config/store.config"
+import Favorite from "../../components/Favorite"
+import Rating from "../../components/rating/Rating"
+import PointRating from "../../components/PointRating"
+import ReactStars from "react-rating-stars-component"
 
 class ContentProductDetail extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       name: "",
       email: "",
@@ -17,45 +17,45 @@ class ContentProductDetail extends Component {
       ratingValue: "",
       quantity: 1,
       noti: "",
-      pagination: [],
-    };
+      pagination: []
+    }
   }
   componentWillMount() {
-    let tmp = [];
+    let tmp = []
     for (let i = 1; i <= this.props.totalpage; i++) {
-      tmp.push(i);
+      tmp.push(i)
     }
-    this.setState({ pagination: tmp });
+    this.setState({ pagination: tmp })
     if (storeConfig.getUser() !== null) {
       this.setState({
         name: storeConfig.getUser().firstName,
-        email: storeConfig.getUser().email,
-      });
+        email: storeConfig.getUser().email
+      })
     } else {
       this.setState({
         name: "",
-        email: "",
-      });
+        email: ""
+      })
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.totalpage !== this.props.totalpage) {
-      let tmp = [];
+      let tmp = []
       for (let i = 1; i <= nextProps.totalpage; i++) {
-        tmp.push(i);
+        tmp.push(i)
       }
-      this.setState({ pagination: tmp });
+      this.setState({ pagination: tmp })
     }
     if (nextProps.islogin === false) {
       this.setState({
         name: "",
-        email: "",
-      });
+        email: ""
+      })
     }
   }
   renderPagination() {
     if (this.state.pagination.length === 0) {
-      return null;
+      return null
     } else {
       return (
         <ul className="pagination pagination-custom">
@@ -71,54 +71,54 @@ class ContentProductDetail extends Component {
                 >
                   <a>{element}</a>
                 </li>
-              );
+              )
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
                   <a>{element}</a>
                 </li>
-              );
+              )
             }
           })}
           <li onClick={() => this.props.nextPage()}>
             <a>&raquo;</a>
           </li>
         </ul>
-      );
+      )
     }
   }
-  handlename = (name) => {
+  handlename = name => {
     if (this.state.name === "") {
-      this.setState({ name: name });
+      this.setState({ name: name })
     }
-  };
-  handleQuantity = (e) => {
-    const { value } = e.target;
+  }
+  handleQuantity = e => {
+    const { value } = e.target
     // console.log(value);
     if (value < 1) {
       // alert("Quantity must be greater than or equal to 1");
-      return;
+      return
     }
-    this.setState({ quantity: e.target.value });
-  };
+    this.setState({ quantity: e.target.value })
+  }
   submitComment = () => {
     if (this.state.name === "") {
-      this.setState({ notificationComment: "Name must not be blank " });
-      return;
+      this.setState({ notificationComment: "Name must not be blank " })
+      return
     } else {
-      this.setState({ notificationComment: "" });
+      this.setState({ notificationComment: "" })
     }
     if (this.state.comment === "") {
-      this.setState({ notificationComment: "Comment must not be blank " });
-      return;
+      this.setState({ notificationComment: "Comment must not be blank " })
+      return
     } else {
-      this.setState({ notificationComment: "" });
+      this.setState({ notificationComment: "" })
     }
     if (this.state.ratingValue === "") {
-      this.setState({ notificationComment: "Rating must not be blank " });
-      return;
+      this.setState({ notificationComment: "Rating must not be blank " })
+      return
     } else {
-      this.setState({ notificationComment: "" });
+      this.setState({ notificationComment: "" })
     }
     this.props.submitComment(
       this.state.name,
@@ -126,51 +126,77 @@ class ContentProductDetail extends Component {
       this.state.comment,
       this.state.ratingValue,
       this.props.id_book
-    );
-    this.setState({ comment: "" });
-  };
+    )
+    this.setState({ comment: "" })
+  }
   submitOrder = () => {
     if (this.state.quantity < 0) {
-      this.setState({ noti: "Quantity invalid" });
-      return;
+      this.setState({ noti: "Quantity invalid" })
+      return
     } else {
-      this.setState({ noti: "" });
+      this.setState({ noti: "" })
     }
-    let product = this.props.mproductDetail;
-    product.count = this.state.quantity;
-    this.props.addToCart(product);
-  };
-
-  percentage(partialValue, totalValue) {
-    return (100 * partialValue) / totalValue;
+    let product = this.props.mproductDetail
+    product.count = this.state.quantity
+    this.props.addToCart(product)
   }
 
-  calculateTotalCommentStar = (value) => {
-    let total = 0;
-    value.map((c, i) => {
-      total += c.ratingValue;
-    });
-    // console.log(total);
-    return total;
-  };
+  percentage(partialValue, totalValue) {
+    return (100 * partialValue) / totalValue
+  }
 
-  getRatingPercentage = (value) => {
+  calculateTotalCommentStar = value => {
+    let total = 0
+    value.map((c, i) => {
+      total += c.ratingValue
+    })
+    // console.log(total);
+    return total
+  }
+
+  getRatingPercentage = value => {
     return parseFloat(
       this.percentage(
         value,
         this.calculateTotalCommentStar(this.props.comment)
       ).toFixed(2)
-    );
-  };
+    )
+  }
 
   // averageRating =
   // totalRatings > 0 && Math.round(totalRatings / totalReviews);
 
   render() {
-    console.log(this.state.ratingValue);
+    console.log(this.state.ratingValue)
 
     return (
       <section>
+        <div>
+          <div
+            className="container"
+            style={{ backgroundColor: "transparent!important" }}
+          >
+            <div className="mb-breadcrumbs">
+              <div id="ves-breadcrumbs" className="breadcrumbs hidden-xs">
+                <div className="container-inner breadcrumbs">
+                  <ol className="breadcrumb">
+                    <li className="home">
+                      <Link to="/" title="Tới trang chủ">
+                        Trang chủ
+                      </Link>
+                      <span>/</span>
+                    </li>
+                    <li className="active">
+                      <Link to="/shop-page" title="Tới trang shop">
+                        Shop Page
+                      </Link>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="container">
           <div className="row">
             <div className="col-sm-3">
@@ -186,7 +212,7 @@ class ContentProductDetail extends Component {
                           </h4>
                         </div>
                       </div>
-                    );
+                    )
                   })}
                 </div>
                 <div className="brands_products">
@@ -201,7 +227,7 @@ class ContentProductDetail extends Component {
                               {element.name}
                             </a>
                           </li>
-                        );
+                        )
                       })}
                     </ul>
                   </div>
@@ -212,7 +238,10 @@ class ContentProductDetail extends Component {
               <div className="product-details">
                 <div className="col-sm-5">
                   <div className="view-product">
-                    <img src={this.props.mproductDetail.img} alt="" />
+                    <img
+                      src={`http://localhost:8090/${this.props.mproductDetail.img}`}
+                      alt=""
+                    />
                   </div>
                   <div
                     id="similar-product"
@@ -319,10 +348,7 @@ class ContentProductDetail extends Component {
                       <hr style={{ border: "3px solid #f1f1f1" }} />
                       {this.props.comment.length > 0 ? (
                         this.props.comment.map((c, i) => (
-                          <div
-                            key={c}
-                            className="d-flex align-items-center mb-2"
-                          >
+                          <div key={c} className="align-items-center mb-2">
                             <div className="left">
                               <span>{parseInt(c.ratingValue)} star</span>
                             </div>
@@ -333,7 +359,7 @@ class ContentProductDetail extends Component {
                                   style={{
                                     width: `${this.getRatingPercentage(
                                       parseInt(c.ratingValue)
-                                    )}%`,
+                                    )}%`
                                   }}
                                 ></div>
                               </div>
@@ -372,7 +398,7 @@ class ContentProductDetail extends Component {
                       <input
                         type="number"
                         min="0"
-                        onChange={(e) => this.handleQuantity(e)}
+                        onChange={e => this.handleQuantity(e)}
                         value={this.state.quantity}
                       />
                       <button
@@ -394,7 +420,7 @@ class ContentProductDetail extends Component {
                     <p>
                       <b>Release date: </b>
                       {new Date(
-                        this.props.mproductDetail.createdAt
+                        this.props.mproductDetail.release_date
                       ).toLocaleDateString()}
                     </p>
                     <p>
@@ -403,6 +429,15 @@ class ContentProductDetail extends Component {
                     <p>
                       <b>Author:</b> {this.props.nameAuthor}
                     </p>
+                    {!this.props.islogin && (
+                      <div
+                        style={{ display: "flex", justifyContent: "flex-end" }}
+                      >
+                        <button type="button" className="btn btn-fefault cart">
+                          👍 {this.props.mproductDetail.view_counts} điểm
+                        </button>
+                      </div>
+                    )}
                     <div
                       style={{ display: "flex", justifyContent: "flex-end" }}
                     >
@@ -434,6 +469,7 @@ class ContentProductDetail extends Component {
                         <PointRating
                           id_book={this.props.mproductDetail._id}
                           id_user={storeConfig.getUser().id}
+                          view_counts={this.props.mproductDetail.view_counts}
                         />
                       ) : (
                         <div key={1} className="panel panel-default">
@@ -491,13 +527,10 @@ class ContentProductDetail extends Component {
                                   filledIcon={<i className="fa fa-star" />}
                                   value={element.ratingValue}
                                 /> */}
-                                <span>
-                                  Name
-                                  {element.name}:
-                                </span>
+                                <span>Name {element.name}:</span>
                                 {element.comment}
                               </p>
-                            );
+                            )
                           })}
                           {this.renderPagination()}
                         </div>
@@ -515,7 +548,7 @@ class ContentProductDetail extends Component {
                               type="text"
                               placeholder="Your Name"
                               value={this.state.name}
-                              onChange={(e) =>
+                              onChange={e =>
                                 this.setState({ name: e.target.value })
                               }
                             />
@@ -527,7 +560,7 @@ class ContentProductDetail extends Component {
                           </span>
                           <textarea
                             value={this.state.comment}
-                            onChange={(e) =>
+                            onChange={e =>
                               this.setState({ comment: e.target.value })
                             }
                           />
@@ -544,8 +577,8 @@ class ContentProductDetail extends Component {
                             halfIcon={<i className="fa fa-star-half-alt" />}
                             filledIcon={<i className="fa fa-star" />}
                             value={this.state.ratingValue}
-                            onChange={(value) => {
-                              this.setState({ ratingValue: value });
+                            onChange={value => {
+                              this.setState({ ratingValue: value })
                             }}
                           />
 
@@ -603,15 +636,22 @@ class ContentProductDetail extends Component {
                               <div className="product-image-wrapper">
                                 <div className="single-products">
                                   <div className="productinfo text-center">
-                                    <Link to={"/product/" + element._id}>
-                                      <img src={element.img} alt="" />
+                                    <Link
+                                      to={"/product/" + element._id}
+                                      title={element.name}
+                                    >
+                                      <img
+                                        src={element.img}
+                                        title={element.name}
+                                        alt=""
+                                      />
                                       <h2>${element.price}</h2>
                                       <p>{element.name}</p>
                                     </Link>
                                     <button
                                       onClick={() => {
-                                        element.count = 1;
-                                        this.props.addToCart(element);
+                                        element.count = 1
+                                        this.props.addToCart(element)
                                       }}
                                       type="button"
                                       className="btn btn-default add-to-cart"
@@ -623,7 +663,7 @@ class ContentProductDetail extends Component {
                                 </div>
                               </div>
                             </div>
-                          );
+                          )
                         })}
                       </div>
                     </div>
@@ -662,15 +702,22 @@ class ContentProductDetail extends Component {
                                 <div className="product-image-wrapper">
                                   <div className="single-products">
                                     <div className="productinfo text-center">
-                                      <Link to={"/product/" + element._id}>
-                                        <img src={element.img} alt="" />
+                                      <Link
+                                        to={"/product/" + element._id}
+                                        title={element.name}
+                                      >
+                                        <img
+                                          src={element.img}
+                                          title={element.name}
+                                          alt=""
+                                        />
                                         <h2>${element.price}</h2>
                                         <p>{element.name}</p>
                                       </Link>
                                       <button
                                         onClick={() => {
-                                          element.count = 1;
-                                          this.props.addToCart(element);
+                                          element.count = 1
+                                          this.props.addToCart(element)
                                         }}
                                         type="button"
                                         className="btn btn-default add-to-cart"
@@ -682,7 +729,7 @@ class ContentProductDetail extends Component {
                                   </div>
                                 </div>
                               </div>
-                            );
+                            )
                           }
                         )}
                       </div>
@@ -708,8 +755,7 @@ class ContentProductDetail extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
-
-export default ContentProductDetail;
+export default ContentProductDetail

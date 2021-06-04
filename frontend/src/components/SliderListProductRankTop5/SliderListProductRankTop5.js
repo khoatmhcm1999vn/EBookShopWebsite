@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 // import Carousel from "react-bootstrap/Carousel";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getListProductRankTop5 } from "../../actions/home.action";
+import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { getListProductRankTop5 } from "../../actions/home.action"
 
 export default function SliderListProductRankTop5() {
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.homeReducers.book.dataTop5Rank);
+  const dispatch = useDispatch()
+  const products = useSelector(state => state.homeReducers.book.dataTop5Rank)
   const productCategoryList = useSelector(
-    (state) => state.homeReducers.book.dataProductCategoryIds
-  );
-  const [id_category, setIdCategory] = useState("");
-  const [currProduct, setCurrProduct] = useState(null);
+    state => state.homeReducers.book.dataProductCategoryIds
+  )
+  const [id_category, setIdCategory] = useState("")
+  const [currProduct, setCurrProduct] = useState(null)
   // const productsId = [
   //   "607ec7bc05b8f56dc8aa3613",
   //   "607ec7bc05b8f56dc8aa3650",
@@ -21,12 +21,12 @@ export default function SliderListProductRankTop5() {
   // ];
 
   useEffect(() => {
-    dispatch(getListProductRankTop5(id_category));
+    dispatch(getListProductRankTop5(id_category))
 
     return function cleanup() {
-      setCurrProduct(null);
-    };
-  }, [dispatch, id_category]);
+      setCurrProduct(null)
+    }
+  }, [dispatch, id_category])
 
   // console.log(products);
 
@@ -36,7 +36,7 @@ export default function SliderListProductRankTop5() {
         className="header-vote"
         style={{
           backgroundImage:
-            "url(https://cdn0.fahasa.com/media/wysiwyg/Thang-6-2020/banner_vote_06_2020.png)",
+            "url(https://cdn0.fahasa.com/media/wysiwyg/Thang-6-2020/banner_vote_06_2020.png)"
         }}
       >
         <div className="title-vote">BẢNG XẾP HẠNG BOOK SHOP MIA</div>
@@ -48,7 +48,7 @@ export default function SliderListProductRankTop5() {
               className="top-voted-header swiper-wrapper"
               style={{
                 marginTop: "8px",
-                transform: "translate3d(0px, 0px, 0px",
+                transform: "translate3d(0px, 0px, 0px"
               }}
             >
               <button
@@ -182,5 +182,5 @@ export default function SliderListProductRankTop5() {
         </div>
       </div>
     </div>
-  );
+  )
 }

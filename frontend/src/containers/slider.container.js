@@ -1,9 +1,15 @@
-import React, { Component } from "react";
-import Slider from "../components/slider/slider";
+import React, { Component } from "react"
+import Slider from "../components/slider/slider"
 
 class SliderContainer extends Component {
   render() {
-    return <Slider />;
+    return (
+      <Slider
+        activateHome={this.props.activateHome}
+        activateSupport={this.props.activateSupport}
+        activateStatistical={this.props.activateStatistical}
+      />
+    )
   }
 }
-export default SliderContainer;
+export default SliderContainer

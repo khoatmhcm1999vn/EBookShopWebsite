@@ -1,419 +1,419 @@
-import axios from "axios";
-import axiosClient from "../config/axiosClient";
-import { toast } from "react-toastify";
-import swal from "sweetalert";
-import { bookTypes, productTypes } from "../constants/action.types";
+import axios from "axios"
+import axiosClient from "../config/axiosClient"
+import { toast } from "react-toastify"
+import swal from "sweetalert"
+import { bookTypes, productTypes } from "../constants/action.types"
 
 export const getBook = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axios.post(`${process.env.REACT_APP_API_URL}/api/getAllBook`, {
       // page: getState().bookReducers.book.page,
       // range: null,
-    });
+    })
   } catch (err) {
-    console.log(err);
-    return;
+    console.log(err)
+    return
   }
-  dispatch(setBook(res.data.data));
+  dispatch(setBook(res.data.data))
   // dispatch(setTotalPage(res.data.totalPage));
-};
-export const bulk_delete = (id) => {
-  console.log(id);
-  return async (dispatch) => {
-    console.log("remove");
-    const response = await axiosClient.delete(`/book/bulk_delete/${id}`);
+}
+export const bulk_delete = id => {
+  console.log(id)
+  return async dispatch => {
+    console.log("remove")
+    const response = await axiosClient.delete(`/book/bulk_delete/${id}`)
     if (response.result === "success") {
-      dispatch(getBook());
+      dispatch(getBook())
     } else if (response.result === "error") {
-      swal("Error!", response.message, "error");
+      swal("Error!", response.message, "error")
     }
-  };
-};
-export const setBook = (data) => ({
+  }
+}
+export const setBook = data => ({
   type: bookTypes.SET_BOOK,
-  data,
-});
-export const setPage = (page) => ({
+  data
+})
+export const setPage = page => ({
   type: bookTypes.SET_PAGE,
-  page,
-});
-export const setTotalPage = (totalpage) => ({
+  page
+})
+export const setTotalPage = totalpage => ({
   type: bookTypes.SET_TOTAL_PAGE,
-  totalpage,
-});
-export const authorSetPage = (page) => ({
+  totalpage
+})
+export const authorSetPage = page => ({
   type: bookTypes.AUTHOR_SET_PAGE,
-  page,
-});
-export const authorSetTotalPage = (totalpage) => ({
+  page
+})
+export const authorSetTotalPage = totalpage => ({
   type: bookTypes.AUTHOR_SET_TOTAL_PAGE,
-  totalpage,
-});
-export const categorySetPage = (page) => ({
+  totalpage
+})
+export const categorySetPage = page => ({
   type: bookTypes.CATEGORY_SET_PAGE,
-  page,
-});
-export const categorySetTotalPage = (totalpage) => ({
+  page
+})
+export const categorySetTotalPage = totalpage => ({
   type: bookTypes.CATEGORY_SET_TOTAL_PAGE,
-  totalpage,
-});
-export const publisherSetPage = (page) => ({
+  totalpage
+})
+export const publisherSetPage = page => ({
   type: bookTypes.PUBLISHER_SET_PAGE,
-  page,
-});
-export const publisherSetTotalPage = (totalpage) => ({
+  page
+})
+export const publisherSetTotalPage = totalpage => ({
   type: bookTypes.PUBLISHER_SET_TOTAL_PAGE,
-  totalpage,
-});
-export const deleteBook = (id) => async (dispatch, getState) => {
-  let res;
+  totalpage
+})
+export const deleteBook = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.get("/admin/deletebook/" + id);
+    res = await axiosClient.get("/admin/deletebook/" + id)
     if (res.result === "success") {
-      swal("Success!", res.message, "success");
+      swal("Success!", res.message, "success")
     } else if (res.result === "error") {
-      swal("Error!", res.message, "error");
+      swal("Error!", res.message, "error")
     }
   } catch (err) {
-    swal("Error!", res.message, "error");
-    console.log(err);
-    return;
+    swal("Error!", res.message, "error")
+    console.log(err)
+    return
   }
   // console.log(res);
-  dispatch(getBook());
-};
+  dispatch(getBook())
+}
 
-export const deactivateBook = (id) => async (dispatch, getState) => {
-  let res;
+export const deactivateBook = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.get("/admin/deactivatebook/" + id);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    res = await axiosClient.get("/admin/deactivatebook/" + id)
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    console.log(err);
-    return;
+    toast.error(res.message)
+    console.log(err)
+    return
   }
-  dispatch(getBook());
-};
+  dispatch(getBook())
+}
 
 export const getCategory = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axios.get(
       `${process.env.REACT_APP_API_URL}/category/all/${
         getState().bookReducers.category.page
       }`
-    );
+    )
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setCategory(res.data.data));
-  dispatch(categorySetTotalPage(res.data.totalPage));
-};
+  dispatch(setCategory(res.data.data))
+  dispatch(categorySetTotalPage(res.data.totalPage))
+}
 
 export const getPublisher = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axios.get(
       `${process.env.REACT_APP_API_URL}/publisher/all/${
         getState().bookReducers.publisher.page
       }`
-    );
+    )
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setPublisher(res.data.data));
-  dispatch(publisherSetTotalPage(res.data.totalPage));
-};
+  dispatch(setPublisher(res.data.data))
+  dispatch(publisherSetTotalPage(res.data.totalPage))
+}
 
 export const getAuthor = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axios.get(
       `${process.env.REACT_APP_API_URL}/author/all/${
         getState().bookReducers.author.page
       }`
-    );
+    )
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setAuthor(res.data.data));
-  dispatch(authorSetTotalPage(res.data.totalPage));
-};
+  dispatch(setAuthor(res.data.data))
+  dispatch(authorSetTotalPage(res.data.totalPage))
+}
 
-export const setCategory = (data) => ({
+export const setCategory = data => ({
   type: bookTypes.SET_CATEGORY_BOOK,
-  data,
-});
+  data
+})
 
-export const setPublisher = (data) => ({
+export const setPublisher = data => ({
   type: bookTypes.SET_PUBLISHSER,
-  data,
-});
+  data
+})
 
-export const setAuthor = (data) => ({
+export const setAuthor = data => ({
   type: bookTypes.SET_AUTHOR,
-  data,
-});
+  data
+})
 export const addCategorySuccess = () => ({
-  type: bookTypes.ADD_CATEGORY_SUCCESS,
-});
+  type: bookTypes.ADD_CATEGORY_SUCCESS
+})
 export const addCategotyFail = () => ({
-  type: bookTypes.ADD_CATEGORY_FAIL,
-});
+  type: bookTypes.ADD_CATEGORY_FAIL
+})
 export const updateCategorySuccess = () => ({
-  type: bookTypes.UPDATE_CATEGORY_SUCCESS,
-});
+  type: bookTypes.UPDATE_CATEGORY_SUCCESS
+})
 export const updateCategoryFail = () => ({
-  type: bookTypes.UPDATE_CATEGORY_FAIL,
-});
+  type: bookTypes.UPDATE_CATEGORY_FAIL
+})
 export const resetCategory = () => ({
-  type: bookTypes.RESET_CATEGORY,
-});
+  type: bookTypes.RESET_CATEGORY
+})
 
 export const getCategoryAll = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
-    res = await axios.get(`${process.env.REACT_APP_API_URL}/category`);
+    res = await axios.get(`${process.env.REACT_APP_API_URL}/category`)
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setCategory(res.data.data));
-};
+  dispatch(setCategory(res.data.data))
+}
 
-export const addCategoryBook = (name) => async (dispatch, getState) => {
-  let res;
-  try {
-    res = await axiosClient.post("/admin/addcategory", {
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    toast.error(res.message);
-    dispatch(addCategotyFail());
-    return;
-  }
-
-  dispatch(addCategorySuccess());
-  dispatch(resetCategory());
-  dispatch(getCategoryAll());
-};
-
-export const addCategory = (name) => async (dispatch, getState) => {
-  dispatch(resetCategory());
-  let res;
+export const addCategoryBook = name => async (dispatch, getState) => {
+  let res
   try {
     res = await axiosClient.post("/admin/addcategory", {
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    dispatch(addCategotyFail());
-    return;
+    toast.error(res.message)
+    dispatch(addCategotyFail())
+    return
   }
-  dispatch(addCategorySuccess());
-  dispatch(getCategory());
-};
+
+  dispatch(addCategorySuccess())
+  dispatch(resetCategory())
+  dispatch(getCategoryAll())
+}
+
+export const addCategory = name => async (dispatch, getState) => {
+  dispatch(resetCategory())
+  let res
+  try {
+    res = await axiosClient.post("/admin/addcategory", {
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
+  } catch (err) {
+    toast.error(res.message)
+    dispatch(addCategotyFail())
+    return
+  }
+  dispatch(addCategorySuccess())
+  dispatch(getCategory())
+}
 
 export const updateCategory = (id, name) => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axiosClient.post("/admin/updatecategory", {
       id: id,
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    dispatch(updateCategoryFail());
-    return;
+    toast.error(res.message)
+    dispatch(updateCategoryFail())
+    return
   }
-  dispatch(updateCategorySuccess());
-  dispatch(getCategory());
-};
+  dispatch(updateCategorySuccess())
+  dispatch(getCategory())
+}
 
-export const deactivateCategory = (id) => async (dispatch, getState) => {
-  let res;
+export const deactivateCategory = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.post("/admin/deactivatecategory/" + id);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    res = await axiosClient.post("/admin/deactivatecategory/" + id)
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    console.log(err);
-    return;
+    toast.error(res.message)
+    console.log(err)
+    return
   }
-  dispatch(getCategory());
-};
-export const deleteCategory = (id) => async (dispatch, getState) => {
-  let res;
+  dispatch(getCategory())
+}
+export const deleteCategory = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.post("/admin/deletecategory/" + id);
+    res = await axiosClient.post("/admin/deletecategory/" + id)
     if (res.result === "success") {
-      swal("Success!", res.message, "success");
+      swal("Success!", res.message, "success")
     } else if (res.result === "error") {
-      swal("Error!", res.message, "error");
+      swal("Error!", res.message, "error")
     }
   } catch (err) {
-    swal("Error!", res.message, "error");
-    return;
+    swal("Error!", res.message, "error")
+    return
   }
-  dispatch(getCategory());
-};
+  dispatch(getCategory())
+}
 
 export const addAuthorSuccess = () => ({
-  type: bookTypes.ADD_AUTHOR_SUCCESS,
-});
+  type: bookTypes.ADD_AUTHOR_SUCCESS
+})
 export const addAuthorFail = () => ({
-  type: bookTypes.ADD_AUTHOR_FAIL,
-});
+  type: bookTypes.ADD_AUTHOR_FAIL
+})
 export const updateAuthorSuccess = () => ({
-  type: bookTypes.UPDATE_AUTHOR_SUCCESS,
-});
+  type: bookTypes.UPDATE_AUTHOR_SUCCESS
+})
 export const updateAuthorFail = () => ({
-  type: bookTypes.UPDATE_AUTHOR_FAIL,
-});
+  type: bookTypes.UPDATE_AUTHOR_FAIL
+})
 export const resetAuthor = () => ({
-  type: bookTypes.RESET_AUTHOR,
-});
+  type: bookTypes.RESET_AUTHOR
+})
 
 export const getAuthorAll = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
-    res = await axios.get(`${process.env.REACT_APP_API_URL}/author`);
+    res = await axios.get(`${process.env.REACT_APP_API_URL}/author`)
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setAuthor(res.data.data));
-};
-export const addAuthorBook = (name) => async (dispatch, getState) => {
-  let res;
-  try {
-    res = await axiosClient.post("/admin/addauthor", {
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    toast.error(res.message);
-    dispatch(addAuthorFail());
-    return;
-  }
-
-  dispatch(addAuthorSuccess());
-  dispatch(resetAuthor());
-  dispatch(getAuthorAll());
-};
-
-export const addAuthor = (name) => async (dispatch, getState) => {
-  dispatch(resetAuthor());
-  let res;
+  dispatch(setAuthor(res.data.data))
+}
+export const addAuthorBook = name => async (dispatch, getState) => {
+  let res
   try {
     res = await axiosClient.post("/admin/addauthor", {
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    dispatch(addAuthorFail());
-    return;
+    toast.error(res.message)
+    dispatch(addAuthorFail())
+    return
   }
-  dispatch(addAuthorSuccess());
-  dispatch(getAuthor());
-};
+
+  dispatch(addAuthorSuccess())
+  dispatch(resetAuthor())
+  dispatch(getAuthorAll())
+}
+
+export const addAuthor = name => async (dispatch, getState) => {
+  dispatch(resetAuthor())
+  let res
+  try {
+    res = await axiosClient.post("/admin/addauthor", {
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
+  } catch (err) {
+    toast.error(res.message)
+    dispatch(addAuthorFail())
+    return
+  }
+  dispatch(addAuthorSuccess())
+  dispatch(getAuthor())
+}
 
 export const updateAuthor = (id, name) => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axiosClient.post("/admin/updateauthor", {
       id: id,
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    dispatch(updateAuthorFail());
-    return;
+    toast.error(res.message)
+    dispatch(updateAuthorFail())
+    return
   }
-  dispatch(updateAuthorSuccess());
-  dispatch(getAuthor());
-};
+  dispatch(updateAuthorSuccess())
+  dispatch(getAuthor())
+}
 
-export const deactivateAuthor = (id) => async (dispatch, getState) => {
-  let res;
+export const deactivateAuthor = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.get("/admin/deactivateauthor/" + id);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    res = await axiosClient.get("/admin/deactivateauthor/" + id)
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    console.log(err);
-    return;
+    toast.error(res.message)
+    console.log(err)
+    return
   }
-  dispatch(getAuthor());
-};
-export const deleteAuthor = (id) => async (dispatch, getState) => {
-  let res;
+  dispatch(getAuthor())
+}
+export const deleteAuthor = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.post("/admin/deleteauthor/" + id);
+    res = await axiosClient.post("/admin/deleteauthor/" + id)
 
     if (res.result === "success") {
-      swal("Success!", res.message, "success");
+      swal("Success!", res.message, "success")
     } else if (res.result === "error") {
-      swal("Error!", res.message, "error");
+      swal("Error!", res.message, "error")
     }
   } catch (err) {
-    swal("Error!", res.message, "error");
-    return;
+    swal("Error!", res.message, "error")
+    return
   }
-  dispatch(getAuthor());
-};
+  dispatch(getAuthor())
+}
 
-export const uploadFile = (file) => async (dispatch, getState) => {
-  console.log(file);
-  let data = new FormData();
-  data.append("file", file);
-  let res;
+export const uploadFile = file => async (dispatch, getState) => {
+  console.log(file)
+  let data = new FormData()
+  data.append("file", file)
+  let res
   try {
-    res = await axiosClient.post("/admin/upload", data);
-    console.log(res);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    res = await axiosClient.post("/admin/upload", data)
+    console.log(res)
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    console.log(res);
-    toast.error(res.message);
+    console.log(res)
+    toast.error(res.message)
     // dispatch(updateBookFail());
     // dispatch(resetBook());
-    return;
+    return
   }
   // dispatch(updateBookSuccess());
   // dispatch(resetBook());
-  dispatch(getAuthor());
-};
+  dispatch(getAuthor())
+}
 export const downloadFile = () => async (dispatch, getState) => {
   // axiosClient.get("/admin/download");
   fetch("http://localhost:8090/admin/download", {
-    method: "GET",
+    method: "GET"
   })
-    .then((response) => response.blob())
-    .then((blob) => {
-      var url = window.URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = "author.xlsx";
-      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-      a.click();
-      a.remove(); //afterwards we remove the element again
-    });
-};
+    .then(response => response.blob())
+    .then(blob => {
+      var url = window.URL.createObjectURL(blob)
+      var a = document.createElement("a")
+      a.href = url
+      a.download = "author.xlsx"
+      document.body.appendChild(a) // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click()
+      a.remove() //afterwards we remove the element again
+    })
+}
 // let res;
 // try {
 //   res = await axiosClient.get("/admin/download");
@@ -432,201 +432,201 @@ export const downloadFile = () => async (dispatch, getState) => {
 // dispatch(getAuthor());
 
 export const addPublisherSuccess = () => ({
-  type: bookTypes.ADD_PUBLISHER_SUCCESS,
-});
+  type: bookTypes.ADD_PUBLISHER_SUCCESS
+})
 export const addPublisherFail = () => ({
-  type: bookTypes.ADD_PUBLISHER_FAIL,
-});
+  type: bookTypes.ADD_PUBLISHER_FAIL
+})
 export const updatePublisherSuccess = () => ({
-  type: bookTypes.UPDATE_PUBLISHER_SUCCESS,
-});
+  type: bookTypes.UPDATE_PUBLISHER_SUCCESS
+})
 export const updatePublisherFail = () => ({
-  type: bookTypes.UPDATE_PUBLISHER_FAIL,
-});
+  type: bookTypes.UPDATE_PUBLISHER_FAIL
+})
 export const resetPublisher = () => ({
-  type: bookTypes.RESET_PUBLISHER,
-});
+  type: bookTypes.RESET_PUBLISHER
+})
 
 export const getPublisherAll = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
-    res = await axios.get(`${process.env.REACT_APP_API_URL}/publisher`);
+    res = await axios.get(`${process.env.REACT_APP_API_URL}/publisher`)
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setPublisher(res.data.data));
-};
+  dispatch(setPublisher(res.data.data))
+}
 
-export const addPublisherBook = (name) => async (dispatch, getState) => {
-  let res;
-  try {
-    res = await axiosClient.post("/admin/addpublisher", {
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
-  } catch (err) {
-    toast.error(res.message);
-    dispatch(addPublisherFail());
-    return;
-  }
-
-  dispatch(addPublisherSuccess());
-  dispatch(resetPublisher());
-  dispatch(getPublisherAll());
-};
-
-export const addPublisher = (name) => async (dispatch, getState) => {
-  dispatch(resetPublisher());
-  let res;
+export const addPublisherBook = name => async (dispatch, getState) => {
+  let res
   try {
     res = await axiosClient.post("/admin/addpublisher", {
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    dispatch(addPublisherFail());
-    return;
+    toast.error(res.message)
+    dispatch(addPublisherFail())
+    return
   }
-  dispatch(addPublisherSuccess());
-  dispatch(getPublisher());
-};
+
+  dispatch(addPublisherSuccess())
+  dispatch(resetPublisher())
+  dispatch(getPublisherAll())
+}
+
+export const addPublisher = name => async (dispatch, getState) => {
+  dispatch(resetPublisher())
+  let res
+  try {
+    res = await axiosClient.post("/admin/addpublisher", {
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
+  } catch (err) {
+    toast.error(res.message)
+    dispatch(addPublisherFail())
+    return
+  }
+  dispatch(addPublisherSuccess())
+  dispatch(getPublisher())
+}
 
 export const updatePublisher = (id, name) => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axiosClient.post("/admin/updatepublisher", {
       id: id,
-      name: name,
-    });
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+      name: name
+    })
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    dispatch(updatePublisherFail());
-    return;
+    toast.error(res.message)
+    dispatch(updatePublisherFail())
+    return
   }
-  dispatch(updatePublisherSuccess());
-  dispatch(getPublisher());
-};
+  dispatch(updatePublisherSuccess())
+  dispatch(getPublisher())
+}
 
-export const deactivatePublisher = (id) => async (dispatch, getState) => {
-  let res;
+export const deactivatePublisher = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.post("/admin/deactivatepublisher/" + id);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    res = await axiosClient.post("/admin/deactivatepublisher/" + id)
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    console.log(err);
-    return;
+    toast.error(res.message)
+    console.log(err)
+    return
   }
-  dispatch(getPublisher());
-};
-export const deletePublisher = (id) => async (dispatch, getState) => {
-  let res;
+  dispatch(getPublisher())
+}
+export const deletePublisher = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.post("/admin/deletepublisher/" + id);
+    res = await axiosClient.post("/admin/deletepublisher/" + id)
     if (res.result === "success") {
-      swal("Success!", res.message, "success");
+      swal("Success!", res.message, "success")
     } else if (res.result === "error") {
-      swal("Error!", res.message, "error");
+      swal("Error!", res.message, "error")
     }
   } catch (err) {
-    swal("Error!", res.message, "error");
-    return;
+    swal("Error!", res.message, "error")
+    return
   }
-  dispatch(getPublisher());
-};
+  dispatch(getPublisher())
+}
 
 export const backPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.book.page;
+  let page = getState().bookReducers.book.page
   if (page > 1) {
-    dispatch(setPage(parseInt(page) - 1));
+    dispatch(setPage(parseInt(page) - 1))
   }
-};
+}
 
 export const nextPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.author.page;
-  let totalpage = getState().bookReducers.author.totalpage;
+  let page = getState().bookReducers.author.page
+  let totalpage = getState().bookReducers.author.totalpage
   if (page < totalpage) {
-    dispatch(setPage(parseInt(page) + 1));
+    dispatch(setPage(parseInt(page) + 1))
   }
-};
+}
 export const authorBackPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.book.page;
+  let page = getState().bookReducers.book.page
   if (page > 1) {
-    dispatch(authorSetPage(parseInt(page) - 1));
+    dispatch(authorSetPage(parseInt(page) - 1))
   }
-};
+}
 
 export const authorNextPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.author.page;
-  let totalpage = getState().bookReducers.author.totalpage;
+  let page = getState().bookReducers.author.page
+  let totalpage = getState().bookReducers.author.totalpage
   if (page < totalpage) {
-    dispatch(authorSetPage(parseInt(page) + 1));
+    dispatch(authorSetPage(parseInt(page) + 1))
   }
-};
+}
 export const categoryBackPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.category.page;
+  let page = getState().bookReducers.category.page
   if (page > 1) {
-    dispatch(categorySetPage(parseInt(page) - 1));
+    dispatch(categorySetPage(parseInt(page) - 1))
   }
-};
+}
 
 export const categoryNextPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.category.page;
-  let totalpage = getState().bookReducers.category.totalpage;
+  let page = getState().bookReducers.category.page
+  let totalpage = getState().bookReducers.category.totalpage
   if (page < totalpage) {
-    dispatch(categorySetPage(parseInt(page) + 1));
+    dispatch(categorySetPage(parseInt(page) + 1))
   }
-};
+}
 export const publisherBackPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.publisher.page;
+  let page = getState().bookReducers.publisher.page
   if (page > 1) {
-    dispatch(publisherSetPage(parseInt(page) - 1));
+    dispatch(publisherSetPage(parseInt(page) - 1))
   }
-};
+}
 
 export const publisherNextPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.publisher.page;
-  let totalpage = getState().bookReducers.publisher.totalpage;
+  let page = getState().bookReducers.publisher.page
+  let totalpage = getState().bookReducers.publisher.totalpage
   if (page < totalpage) {
-    dispatch(publisherSetPage(parseInt(page) + 1));
+    dispatch(publisherSetPage(parseInt(page) + 1))
   }
-};
+}
 export const billBackPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.bill.page;
+  let page = getState().bookReducers.bill.page
   if (page > 1) {
-    dispatch(billSetPage(parseInt(page) - 1));
+    dispatch(billSetPage(parseInt(page) - 1))
   }
-};
+}
 
 export const billNextPage = () => (dispatch, getState) => {
-  let page = getState().bookReducers.bill.page;
-  let totalpage = getState().bookReducers.bill.totalpage;
+  let page = getState().bookReducers.bill.page
+  let totalpage = getState().bookReducers.bill.totalpage
   if (page < totalpage) {
-    dispatch(billSetPage(parseInt(page) + 1));
+    dispatch(billSetPage(parseInt(page) + 1))
   }
-};
+}
 export const addBookSuccess = () => ({
-  type: bookTypes.ADD_BOOK_SUCCESS,
-});
+  type: bookTypes.ADD_BOOK_SUCCESS
+})
 export const addBookFail = () => ({
-  type: bookTypes.ADD_BOOK_FAIL,
-});
+  type: bookTypes.ADD_BOOK_FAIL
+})
 export const updateBookSuccess = () => ({
-  type: bookTypes.UPDATE_BOOK_SUCCESS,
-});
+  type: bookTypes.UPDATE_BOOK_SUCCESS
+})
 export const updateBookFail = () => ({
-  type: bookTypes.UPDATE_BOOK_FAIL,
-});
+  type: bookTypes.UPDATE_BOOK_FAIL
+})
 
 export const resetBook = () => ({
-  type: productTypes.RESET_BOOK_DETAIL,
-});
+  type: productTypes.RESET_BOOK_DETAIL
+})
 
 export const addBook =
   (
@@ -642,32 +642,32 @@ export const addBook =
     file
   ) =>
   async (dispatch, getState) => {
-    let data = new FormData();
-    data.append("file", file);
-    data.append("id_category", id_category);
-    data.append("name", name);
-    data.append("price", price);
-    data.append("quantity", quantity);
-    data.append("published", published);
-    data.append("createdAt", createdAt);
-    data.append("describe", describe);
-    data.append("id_nsx", id_nsx);
-    data.append("id_author", id_author);
-    let res;
+    let data = new FormData()
+    data.append("file", file)
+    data.append("id_category", id_category)
+    data.append("name", name)
+    data.append("price", price)
+    data.append("quantity", quantity)
+    data.append("published", published)
+    data.append("release_date", createdAt)
+    data.append("describe", describe)
+    data.append("id_nsx", id_nsx)
+    data.append("id_author", id_author)
+    let res
     try {
-      res = await axiosClient.post("/admin/addbook", data);
-      if (res.success) toast.success(res.message);
-      else toast.error(res.message);
+      res = await axiosClient.post("/admin/addbook", data)
+      if (res.success) toast.success(res.message)
+      else toast.error(res.message)
     } catch (err) {
-      toast.error(res.message);
-      dispatch(addBookFail());
-      dispatch(resetBook());
-      return;
+      toast.error(res.message)
+      dispatch(addBookFail())
+      dispatch(resetBook())
+      return
     }
-    dispatch(addBookSuccess());
-    dispatch(resetBook());
-    dispatch(getBook());
-  };
+    dispatch(addBookSuccess())
+    dispatch(resetBook())
+    dispatch(getBook())
+  }
 export const updateBook =
   (
     id,
@@ -683,143 +683,143 @@ export const updateBook =
     file
   ) =>
   async (dispatch, getState) => {
-    let data = new FormData();
-    data.append("file", file);
-    data.append("id", id);
-    data.append("id_category", id_category);
-    data.append("name", name);
-    data.append("price", price);
-    data.append("quantity", quantity);
-    data.append("published", published);
-    data.append("createdAt", createdAt);
-    data.append("describe", describe);
-    data.append("id_nsx", id_nsx);
-    data.append("id_author", id_author);
-    let res;
+    let data = new FormData()
+    data.append("file", file)
+    data.append("id", id)
+    data.append("id_category", id_category)
+    data.append("name", name)
+    data.append("price", price)
+    data.append("quantity", quantity)
+    data.append("published", published)
+    data.append("release_date", createdAt)
+    data.append("describe", describe)
+    data.append("id_nsx", id_nsx)
+    data.append("id_author", id_author)
+    let res
     try {
-      res = await axiosClient.post("/admin/updatebook", data);
-      if (res.success) toast.success(res.message);
-      else toast.error(res.message);
+      res = await axiosClient.post("/admin/updatebook", data)
+      if (res.success) toast.success(res.message)
+      else toast.error(res.message)
     } catch (err) {
-      toast.error(res.message);
-      dispatch(updateBookFail());
-      dispatch(resetBook());
-      return;
+      toast.error(res.message)
+      dispatch(updateBookFail())
+      dispatch(resetBook())
+      return
     }
-    dispatch(updateBookSuccess());
-    dispatch(resetBook());
-    dispatch(getBook());
-  };
+    dispatch(updateBookSuccess())
+    dispatch(resetBook())
+    dispatch(getBook())
+  }
 
-export const uploadBookFile = (file) => async (dispatch, getState) => {
+export const uploadBookFile = file => async (dispatch, getState) => {
   // console.log(file);
 
-  let data = new FormData();
-  data.append("file", file);
-  let res;
+  let data = new FormData()
+  data.append("file", file)
+  let res
 
   try {
-    res = await axiosClient.post("/admin/uploadBook", data);
+    res = await axiosClient.post("/admin/uploadBook", data)
     // console.log(res);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
     // console.log(res);
-    toast.error(res.message);
+    toast.error(res.message)
     // dispatch(updateBookFail());
     // dispatch(resetBook());
-    return;
+    return
   }
 
   // dispatch(updateBookSuccess());
   // dispatch(resetBook());
-  dispatch(getBook());
-};
+  dispatch(getBook())
+}
 
 export const downloadBookFile = () => async (dispatch, getState) => {
   // axiosClient.get("/admin/download");
 
   fetch("http://localhost:8090/admin/downloadBook", {
-    method: "GET",
+    method: "GET"
   })
-    .then((response) => response.blob())
-    .then((blob) => {
-      var url = window.URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = "book.xlsx";
-      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-      a.click();
-      a.remove(); //afterwards we remove the element again
-    });
-};
+    .then(response => response.blob())
+    .then(blob => {
+      var url = window.URL.createObjectURL(blob)
+      var a = document.createElement("a")
+      a.href = url
+      a.download = "book.xlsx"
+      document.body.appendChild(a) // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click()
+      a.remove() //afterwards we remove the element again
+    })
+}
 
-export const setBill = (data) => ({
+export const setBill = data => ({
   type: bookTypes.BILL_SET_DATA,
-  data,
-});
-export const billSetPage = (page) => ({
+  data
+})
+export const billSetPage = page => ({
   type: bookTypes.BILL_SET_PAGE,
-  page,
-});
-export const billSetTotalPage = (totalpage) => ({
+  page
+})
+export const billSetTotalPage = totalpage => ({
   type: bookTypes.BILL_SET_TOTAL_PAGE,
-  totalpage,
-});
-export const getBill = (status) => async (dispatch, getState) => {
-  let link = "/bill/status/true";
+  totalpage
+})
+export const getBill = status => async (dispatch, getState) => {
+  let link = "/bill/status/true"
   if (status === "false") {
-    link = "/bill/status/false";
+    link = "/bill/status/false"
   }
-  let res = null;
+  let res = null
   try {
-    res = await axiosClient.get(link);
+    res = await axiosClient.get(link)
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setBill(res.data));
-  dispatch(billSetTotalPage(res.totalPage));
-};
+  dispatch(setBill(res.data))
+  dispatch(billSetTotalPage(res.totalPage))
+}
 
-export const deleteBill = (id) => async (dispatch, getState) => {
-  let res;
+export const deleteBill = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.get("/bill/delete/" + id);
+    res = await axiosClient.get("/bill/delete/" + id)
     if (res.result === "success") {
-      swal("Success!", res.message, "success");
+      swal("Success!", res.message, "success")
     } else if (res.result === "error") {
-      swal("Error!", res.message, "error");
+      swal("Error!", res.message, "error")
     }
   } catch (err) {
-    swal("Error!", res.message, "error");
-    console.log(err);
-    return;
+    swal("Error!", res.message, "error")
+    console.log(err)
+    return
   }
-  dispatch(getBill());
-};
-export const deactivateBill = (id) => async (dispatch, getState) => {
-  let res;
+  dispatch(getBill())
+}
+export const deactivateBill = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.get("/bill/deactivate/" + id);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    res = await axiosClient.get("/bill/deactivate/" + id)
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    console.log(err);
-    return;
+    toast.error(res.message)
+    console.log(err)
+    return
   }
-  dispatch(getBill());
-};
-export const deliverBill = (id) => async (dispatch, getState) => {
-  let res;
+  dispatch(getBill())
+}
+export const deliverBill = id => async (dispatch, getState) => {
+  let res
   try {
-    res = await axiosClient.put("/bill/deliver/" + id);
-    if (res.success) toast.success(res.message);
-    else toast.error(res.message);
+    res = await axiosClient.put("/bill/deliver/" + id)
+    if (res.success) toast.success(res.message)
+    else toast.error(res.message)
   } catch (err) {
-    toast.error(res.message);
-    console.log(err);
-    return;
+    toast.error(res.message)
+    console.log(err)
+    return
   }
-  dispatch(getBill());
-};
+  dispatch(getBill())
+}

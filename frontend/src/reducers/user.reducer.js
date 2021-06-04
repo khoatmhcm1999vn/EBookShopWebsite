@@ -1,8 +1,12 @@
-import { userTypes } from "../constants/action.types";
-import { userConstants } from "../constants/userConstants";
-import { USER_SIGNOUT } from "../constants/userConstants";
-import { combineReducers } from "redux";
-import { getToken } from "../config/store.config";
+import { userTypes } from "../constants/action.types"
+import { userConstants } from "../constants/userConstants"
+import { USER_SIGNOUT } from "../constants/userConstants"
+import { combineReducers } from "redux"
+import {
+  getToken,
+  getExpiryDate,
+  getRefreshToken
+} from "../config/store.config"
 
 const initial = {
   email: null,
@@ -15,8 +19,8 @@ const initial = {
   address: [],
   error: null,
   loading: false,
-  success: true,
-};
+  success: true
+}
 
 const user = (
   // state = {
@@ -31,46 +35,46 @@ const user = (
     case userTypes.SET_USER: {
       return {
         ...state,
-        data: action.data,
-      };
+        data: action.data
+      }
     }
     case userTypes.ADD_USER_SUCCESS: {
       return {
         ...state,
-        isadd: true,
-      };
+        isadd: true
+      }
     }
     case userTypes.ADD_USER_FAIL: {
       return {
         ...state,
-        isadd: false,
-      };
+        isadd: false
+      }
     }
     case userTypes.UPDATE_USER_SUCCESS: {
       return {
         ...state,
-        isupdate: true,
-      };
+        isupdate: true
+      }
     }
     case userTypes.RESET_USER: {
       return {
         ...state,
         isadd: null,
-        isupdate: null,
-      };
+        isupdate: null
+      }
     }
     case "SET_CURRENT_USER": {
       return {
         ...state,
         loading_user: false,
-        currentUser: action.payload,
-      };
+        currentUser: action.payload
+      }
     }
     case "LOADING_USER": {
       return {
         ...state,
-        loading_user: true,
-      };
+        loading_user: true
+      }
     }
     case "LOADED_USER": {
       return {
@@ -79,15 +83,15 @@ const user = (
         currentUser: {
           ...state.currentUser,
           token: getToken("token"),
-          user: action.payload,
-        },
-      };
+          user: action.payload
+        }
+      }
     }
     case userTypes.SET_EMAIL_LOGIN: {
       return {
         ...state,
-        email: action.email,
-      };
+        email: action.email
+      }
     }
     case userTypes.LOGIN_SUCCESS: {
       return {
@@ -96,151 +100,182 @@ const user = (
         // loading_user: false,
         currentUser: {
           ...state.currentUser,
-          token: getToken("token"),
-          user: action.payload,
-        },
-      };
+          token: getToken("access_token"),
+          refresh_token: getRefreshToken("refresh_token"),
+          expiryDate: getExpiryDate("expiryDate"),
+          user: action.payload
+        }
+      }
     }
     case userTypes.LOGIN_FAIL: {
       return {
         ...state,
         islogin: false,
-        currentUser: null,
-      };
+        currentUser: null
+      }
     }
     case USER_SIGNOUT:
-      return {};
+      return {}
     case userTypes.RESET_IS_LOGIN:
       return {
         ...state,
-        islogin: null,
-      };
+        islogin: null
+      }
     case userTypes.SET_PAGE: {
       return {
         ...state,
-        page: action.page,
-      };
+        page: action.page
+      }
     }
     case userTypes.SET_TOTAL_PAGE: {
       return {
         ...state,
-        totalpage: action.totalpage,
-      };
+        totalpage: action.totalpage
+      }
     }
 
     case userConstants.GET_USER_ADDRESS_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case userConstants.GET_USER_ADDRESS_SUCCESS:
       return {
         ...state,
         address: action.payload,
-        loading: false,
-      };
+        loading: false
+      }
     case userConstants.GET_USER_ADDRESS_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload.error,
-      };
+        error: action.payload.error
+      }
     case userConstants.ADD_USER_ADDRESS_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case userConstants.ADD_USER_ADDRESS_SUCCESS:
       return {
         ...state,
         address: action.payload.address,
-        loading: false,
-      };
+        loading: false
+      }
     case userConstants.ADD_USER_ADDRESS_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload.error,
-      };
+        error: action.payload.error
+      }
     case userConstants.ADDRESS_DELETE_REQUEST:
       return {
         ...state,
-        loading: true,
-      };
+        loading: true
+      }
     case userConstants.ADDRESS_DELETE_SUCCESS:
       return {
         ...state,
         loading: false,
-        success: true,
-      };
+        success: true
+      }
     case userConstants.ADDRESS_DELETE_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     case userConstants.ADDRESS_DELETE_RESET:
-      return {};
+      return {}
     default: {
-      return state;
+      return state
     }
   }
-};
+}
+
+const resendToken = (state = {}, action) => {
+  switch (action.type) {
+    case userTypes.RESEND_TOKEN_SUCCESS: {
+      return {
+        ...state,
+        isSendToken: true
+      }
+    }
+    case userTypes.RESEND_TOKEN_FAIL: {
+      return {
+        ...state,
+        isSendToken: false
+      }
+    }
+    // case userTypes.SET_EMAIL_RESEND_TOKEN: {
+    //   return {
+    //     ...state,
+    //     email: action.email,
+    //   };
+    // }
+    case userTypes.RESET_RESEND_TOKEN: {
+      return {}
+    }
+    default:
+      return state
+  }
+}
 
 const forgotPassword = (state = {}, action) => {
   switch (action.type) {
     case userTypes.FORGOT_EMAIL_SUCCESS: {
       return {
         ...state,
-        isForgot: true,
-      };
+        isForgot: true
+      }
     }
     case userTypes.FORGOT_EMAIL_FAIL: {
       return {
         ...state,
-        isForgot: false,
-      };
+        isForgot: false
+      }
     }
     case userTypes.SET_EMAIL_FORGOTPASSWORD: {
       return {
         ...state,
-        email: action.email,
-      };
+        email: action.email
+      }
     }
     case userTypes.VERIFY_OTP_SUCCESS: {
       return {
         ...state,
         verify_otp: true,
-        otp: action.otp,
-      };
+        otp: action.otp
+      }
     }
     case userTypes.VERIFY_OTP_FAIL: {
       return {
         ...state,
-        verify_otp: false,
-      };
+        verify_otp: false
+      }
     }
     case userTypes.FORGOT_PASSWORD_SUCCESS: {
       return {
         ...state,
-        forgotpassword: true,
-      };
+        forgotpassword: true
+      }
     }
     case userTypes.FORGOT_PASSWORD_FAIL: {
       return {
         ...state,
-        forgotpassword: false,
-      };
+        forgotpassword: false
+      }
     }
     case userTypes.RESET_FORGOT_PASSWORD: {
-      return {};
+      return {}
     }
     default:
-      return state;
+      return state
   }
-};
+}
 
 export default combineReducers({
   user,
-  forgotPassword,
-});
+  resendToken,
+  forgotPassword
+})

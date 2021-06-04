@@ -190,7 +190,8 @@ table tr th { color: #688a7e;}
 
 .login-form {
 
-    max-width: 350px;
+    /* max-width: 350px; */
+    min-width: 250px;
 
     margin: 200px auto 0;
 

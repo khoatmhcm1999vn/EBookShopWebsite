@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 // import Carousel from "react-bootstrap/Carousel";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getListProductSoldTop10ByWeek } from "../../actions/home.action";
-import Rating from "../../components/rating/Rating";
+import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { getListProductSoldTop10ByWeek } from "../../actions/home.action"
+import Rating from "../../components/rating/Rating"
 
 export default function SliderListProductSoldTop10ByWeek() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const products = useSelector(
-    (state) => state.homeReducers.book.dataProductSoldTopAllByWeek
-  );
-  const productsPage = useSelector((state) => state.homeReducers.book);
+    state => state.homeReducers.book.dataProductSoldTopAllByWeek
+  )
+  const productsPage = useSelector(state => state.homeReducers.book)
   const productCategoryList = useSelector(
-    (state) => state.homeReducers.book.dataProductCategoryIds
-  );
-  const [id_category, setIdCategory] = useState("");
-  const [sales, setSales] = useState("1");
-  const [updatedAtByDay, setUpdatedAtByDay] = useState("week");
-  const [pageNumber, setPageNumber] = useState(1);
+    state => state.homeReducers.book.dataProductCategoryIds
+  )
+  const [id_category, setIdCategory] = useState("")
+  const [sales, setSales] = useState("1")
+  const [updatedAtByDay, setUpdatedAtByDay] = useState("week")
+  const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
-    dispatch(getListProductSoldTop10ByWeek(id_category, pageNumber));
-  }, [dispatch, id_category, pageNumber]);
+    dispatch(getListProductSoldTop10ByWeek(id_category, pageNumber))
+  }, [dispatch, id_category, pageNumber])
 
   // console.log(productsPage);
 
@@ -233,5 +233,5 @@ export default function SliderListProductSoldTop10ByWeek() {
         </div>
       </div>
     </div>
-  );
+  )
 }

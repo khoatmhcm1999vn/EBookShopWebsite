@@ -1,9 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import RatingNormal from "../RatingNormal";
+import React from "react"
+import { Link } from "react-router-dom"
+import RatingNormal from "../RatingNormal"
 
 export default function Product(props) {
-  const { product } = props;
+  const { product } = props
   // console.log(product)
 
   return (
@@ -36,5 +36,5 @@ export default function Product(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

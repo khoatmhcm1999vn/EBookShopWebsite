@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
 
 const OTP = ({ setOTP, submitOTP, notificationOTP }) => (
   <div className="container text-center">
@@ -16,16 +16,16 @@ const OTP = ({ setOTP, submitOTP, notificationOTP }) => (
       <input
         type="number"
         placeholder="Otp code"
-        onChange={(e) => setOTP(e.target.value)}
+        onChange={e => setOTP(e.target.value)}
       />
       <br />
       <button className="btn btn-default" onClick={() => submitOTP()}>
         Submit
       </button>
       <h2>
-        <Link to="/">Bring me back Home</Link>
+        <Link to="/login_register">Bring me back Login Page</Link>
       </h2>
     </div>
   </div>
-);
-export default OTP;
+)
+export default OTP

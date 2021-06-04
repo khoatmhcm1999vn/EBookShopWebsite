@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import HeaderTop from "../header/header.top";
-import HeaderMiddle from "../header/header.middle";
-import HeaderBottom from "../header/header.bottom";
-import FooterTop from "../footer/footer.top";
-import FooterMiddle from "../footer/footer.middle";
-import FooterBottom from "../footer/footer.bottom";
-import ContentProductDetail from "./cotent.product.detail";
+import React, { Component } from "react"
+import HeaderTop from "../header/header.top"
+import HeaderMiddle from "../header/header.middle"
+import HeaderBottom from "../header/header.bottom"
+import FooterTop from "../footer/footer.top"
+import FooterMiddle from "../footer/footer.middle"
+import FooterBottom from "../footer/footer.bottom"
+import ContentProductDetail from "./cotent.product.detail"
 
 class ProductDetail extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
     return (
@@ -24,8 +24,8 @@ class ProductDetail extends Component {
           />
           <HeaderBottom
             sortType={this.props.sortType}
-            setSortType={(value) => this.props.setSortType(value)}
-            setSearchText={(value) => this.props.setSearchText(value)}
+            setSortType={value => this.props.setSortType(value)}
+            setSearchText={value => this.props.setSearchText(value)}
             searchTextSubmit={() => this.props.searchTextSubmit()}
             history={this.props.history}
             isDisabled={true}
@@ -46,12 +46,12 @@ class ProductDetail extends Component {
           }
           comment={this.props.comment}
           nameAuthor={this.props.nameAuthor}
-          addToCart={(product) => this.props.addToCart(product)}
+          addToCart={product => this.props.addToCart(product)}
           totalpage={this.props.totalpage}
           page={this.props.page}
           backPage={() => this.props.backPage()}
           nextPage={() => this.props.nextPage()}
-          setPage={(page) => this.props.setPage(page)}
+          setPage={page => this.props.setPage(page)}
         />
         <footer id="footer">
           <FooterTop />
@@ -59,7 +59,7 @@ class ProductDetail extends Component {
           <FooterBottom />
         </footer>
       </div>
-    );
+    )
   }
 }
-export default ProductDetail;
+export default ProductDetail

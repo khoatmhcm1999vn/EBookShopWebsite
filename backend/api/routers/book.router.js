@@ -17,6 +17,7 @@ import Bill from "../models/bill.model.js";
 
 import Vector from "vector-object";
 import natural from "natural";
+import async from "async";
 const TfIdf = natural.TfIdf;
 
 import mongoose from "mongoose";
@@ -28,6 +29,8 @@ import startOfWeek from "date-fns/startOfWeek/index.js";
 import endOfWeek from "date-fns/endOfWeek/index.js";
 import startOfMonth from "date-fns/startOfMonth/index.js";
 import endOfMonth from "date-fns/endOfMonth/index.js";
+
+import Report from "../models/report.model.js";
 
 const bookRouter = express.Router();
 
@@ -412,7 +415,7 @@ bookRouter.post(
   expressAsyncHandler(async (req, res) => {
     const pipeline = [
       {
-        $match: { published: true },
+        $match: { published: true, stars: { $gte: 1 } },
       },
       {
         $sort: { stars: -1 },
@@ -1781,6 +1784,296 @@ bookRouter.post(
       totalPage,
       pageSizeOnePage: products.length,
     });
+  })
+);
+
+bookRouter.post(
+  "/api/get-best-seller-flash-sales-product-top-5/flash-sales/by-time",
+  expressAsyncHandler(async (req, res) => {
+    // let today = new Date().toISOString().slice(0, 10).split("-");
+    // const day = today[2];
+    // const month = today[1];
+    // const year = today[0];
+    // console.log(today);
+    // console.log(month);
+    // console.log(new Date(year, month - 1, parseInt(day) + 1));
+    // console.log(new Date(year, month - 1, parseInt(day) + 2));
+    // console.log(new Date(year, month - 1, day));
+    // console.log(startOfDay(new Date()));
+    // console.log(endOfDay(new Date()));
+
+    // let { startFrom, endFrom } = req.body;
+    // console.log(req.body);
+    // console.log(new Date(startFrom));
+    // console.log(new Date(endFrom));
+    console.log(startOfWeek(new Date()));
+    console.log(endOfWeek(new Date()));
+
+    const pipeline = [
+      {
+        $match: {
+          sales: { $gte: 1 },
+          published: true,
+          // updatedAt: {
+          //   $gte: startOf(new Date()),
+          //   $lte: endOfDay(new Date()),
+          // },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          describe: 1,
+          img: 1,
+          episode: 1,
+          currencyUnit: 1,
+          price: 1,
+          sellPrice: 1,
+          quantity: 1,
+          sales: 1,
+          stars: 1,
+          reviewCount: 1,
+          published: 1,
+          id_flashSales: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "flashsales",
+          localField: "id_flashSales",
+          foreignField: "_id",
+          as: "sale",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          describe: 1,
+          img: 1,
+          episode: 1,
+          currencyUnit: 1,
+          price: 1,
+          sellPrice: 1,
+          quantity: 1,
+          sales: 1,
+          stars: 1,
+          reviewCount: 1,
+          published: 1,
+          id_flashSales: 1,
+          sale_name: "$sale.name",
+          sale_percentage: "$sale.salesPercentage",
+          sale_status: "$sale.isEnabled",
+          sale_start_date: "$sale.updatedAt",
+          sale_end_date: "$sale.end_date",
+        },
+      },
+      {
+        $unwind: "$sale_name",
+      },
+      {
+        $unwind: "$sale_percentage",
+      },
+      {
+        $unwind: "$sale_status",
+      },
+      {
+        $unwind: "$sale_start_date",
+      },
+      {
+        $unwind: "$sale_end_date",
+      },
+      {
+        $match: {
+          // sales: { $gte: 1 },
+          // sale_status: true,
+          $and: [
+            {
+              sale_start_date: {
+                $gte: startOfMonth(new Date()),
+                // $lte: new Date(endFrom),
+              },
+            },
+            {
+              sale_end_date: {
+                // $gte: new Date(startFrom),
+                $lte: endOfMonth(new Date()),
+              },
+            },
+          ],
+          // sale_start_date: {
+          //   // $gt: new Date(startFrom),
+          //   $lt: new Date(year, month - 1, parseInt(day) + 1),
+          // },
+          // sale_end_date: {
+          //   // $gte: new Date(startFrom),
+          //   $lte: new Date(endFrom),
+          // },
+        },
+      },
+      {
+        $sort: { sales: -1 },
+      },
+      {
+        $limit: 10,
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          describe: 1,
+          img: 1,
+          episode: 1,
+          currencyUnit: 1,
+          price: 1,
+          sellPrice: 1,
+          quantity: 1,
+          sales: 1,
+          stars: 1,
+          reviewCount: 1,
+          published: 1,
+          id_flashSales: 1,
+          sale_name: 1,
+          sale_percentage: 1,
+          sale_status: 1,
+          sale_start_date: 1,
+          sale_end_date: 1,
+        },
+      },
+    ];
+    const products = await Book.aggregate(pipeline);
+    return res.status(200).json({ success: true, code: 200, data: products });
+  })
+);
+
+bookRouter.get("/product/list-data", (req, res) => {
+  async.parallel(
+    [
+      (callback) => {
+        if (req.query.pages != null) {
+          Book.find()
+            .sort({ createdAt: -1 })
+            .limit(6)
+            .skip((req.query.pages - 1) * 6)
+            .exec((err, listProducts) => {
+              callback(null, listProducts);
+            });
+        } else {
+          Book.find()
+            .sort({ createdAt: -1 })
+            .limit(6)
+            .exec((err, listProducts) => {
+              callback(null, listProducts);
+            });
+        }
+      },
+      (callback) => {
+        Book.find()
+          .count()
+          .exec((err, total_records) => {
+            callback(null, total_records);
+          });
+      },
+    ],
+    (err, results) => {
+      res.json({
+        products: results[0],
+        pages: Math.ceil(results[1] / 6),
+        currentPages: req.query.pages ? req.query.pages : 1,
+      });
+    }
+  );
+});
+
+bookRouter.post("/product/search/list-data-search", (req, res) => {
+  async.parallel(
+    [
+      (callback) => {
+        Book.find({ published: true }, { name: 1 })
+          .sort({ name: 1 })
+          .limit(50)
+          .exec((err, listProducts) => {
+            callback(null, listProducts);
+          });
+      },
+    ],
+    (err, results) => {
+      res.json({
+        products: results[0],
+      });
+    }
+  );
+});
+bookRouter.post(
+  "/product/name/getIdByNameSearch/:nameProductSearch",
+  expressAsyncHandler(async (req, res) => {
+    if (req.params.nameProductSearch === "undefined") {
+      res.status(422).json({ msg: "Invalid data" });
+      return;
+    }
+
+    let matchCriteria = {};
+    const { nameProductSearch } = req.params;
+    if (nameProductSearch) {
+      matchCriteria["name"] = {
+        $regex: req.params.nameProductSearch,
+        $options: "i",
+      };
+    }
+    matchCriteria["published"] = true;
+    // console.log(matchCriteria);
+
+    const pipeline = [
+      {
+        $addFields: {
+          convertedAuthorId: { $toObjectId: "$id_author" },
+        },
+      },
+      {
+        $match: matchCriteria,
+      },
+      {
+        $sort: { name: 1 },
+      },
+      {
+        $limit: 30,
+      },
+      {
+        $project: {
+          name: 1,
+          img: 1,
+          convertedAuthorId: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "authors",
+          localField: "convertedAuthorId",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          img: 1,
+          author_name: "$author.name",
+        },
+      },
+      {
+        $unwind: "$author_name",
+      },
+    ];
+    let products = null;
+    try {
+      products = await Book.aggregate(pipeline);
+    } catch (err) {
+      return res
+        .status(404)
+        .json({ success: false, code: 404, message: "fail" });
+    }
+    return res.status(200).json({ success: true, code: 200, data: products });
   })
 );
 

@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 // import Carousel from "react-bootstrap/Carousel";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getListProductSoldTop10ByDay } from "../../actions/home.action";
-import Rating from "../../components/rating/Rating";
+import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { getListProductSoldTop10ByDay } from "../../actions/home.action"
+import Rating from "../../components/rating/Rating"
 
 export default function SliderListProductSoldTop10ByDay() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const products = useSelector(
-    (state) => state.homeReducers.book.dataProductSoldTop10ByDay
-  );
+    state => state.homeReducers.book.dataProductSoldTop10ByDay
+  )
   //   const productCategoryList = useSelector(
   //     (state) => state.homeReducers.book.dataProductCategoryIds
   //   );
   // const [id_category, setIdCategory] = useState("");
 
-  const [totalProducts, setTotalProducts] = useState(10);
-  const [sales, setSales] = useState("1");
-  const [updatedAtByDay, setUpdatedAtByDay] = useState("day");
+  const [totalProducts, setTotalProducts] = useState(10)
+  const [sales, setSales] = useState("1")
+  const [updatedAtByDay, setUpdatedAtByDay] = useState("day")
 
   useEffect(() => {
-    dispatch(getListProductSoldTop10ByDay());
-  }, [dispatch]);
+    dispatch(getListProductSoldTop10ByDay())
+  }, [dispatch])
 
   // console.log(products);
 
   function tinh(count) {
-    return (count / totalProducts) * 100 + "%";
+    return (count / totalProducts) * 100 + "%"
   }
 
   return (
@@ -155,5 +155,5 @@ export default function SliderListProductSoldTop10ByDay() {
         </div>
       </div>
     </div>
-  );
+  )
 }

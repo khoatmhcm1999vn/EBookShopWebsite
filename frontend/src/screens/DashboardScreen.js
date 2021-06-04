@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Chart from "react-google-charts";
-import { summaryOrder } from "../actions/orderActions";
-import LoadingBox from "../components/loading/loading";
-import MessageBox from "../components/message/Message";
+import React, { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import Chart from "react-google-charts"
+import { summaryOrder } from "../actions/orderActions"
+import LoadingBox from "../components/loading/loading"
+import MessageBox from "../components/message/Message"
 
 export default function DashboardScreen() {
-  const orderSummary = useSelector((state) => state.orderSummary);
-  const { loading, summary, error } = orderSummary;
-  const dispatch = useDispatch();
+  const orderSummary = useSelector(state => state.orderSummary)
+  const { loading, summary, error } = orderSummary
+  const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(summaryOrder());
-  }, [dispatch]);
+    dispatch(summaryOrder())
+  }, [dispatch])
 
   // console.log(orderSummary);
 
@@ -33,7 +33,9 @@ export default function DashboardScreen() {
                   <i className="fa fa-users" /> Users
                 </span>
               </div>
-              <div className="summary-body">{summary.users[0].numUsers}</div>
+              {summary && summary.users.length > 0 ? (
+                <div className="summary-body">{summary.users[0].numUsers}</div>
+              ) : null}
             </li>
             <li>
               <div className="summary-title color2">
@@ -72,7 +74,7 @@ export default function DashboardScreen() {
                   loader={<div>Loading Chart</div>}
                   data={[
                     ["Date", "Sales"],
-                    ...summary.dailyOrders.map((x) => [x._id, x.sales]),
+                    ...summary.dailyOrders.map(x => [x._id, x.sales])
                   ]}
                 ></Chart>
               )}
@@ -90,7 +92,7 @@ export default function DashboardScreen() {
                 loader={<div>Loading Chart</div>}
                 data={[
                   ["Category", "Products"],
-                  ...summary.productCategories.map((x) => [x._id, x.count]),
+                  ...summary.productCategories.map(x => [x._id, x.count])
                 ]}
               />
             )}
@@ -98,5 +100,5 @@ export default function DashboardScreen() {
         </>
       )}
     </div>
-  );
+  )
 }

@@ -1,61 +1,61 @@
-import React, { Component } from "react";
-import swal from "sweetalert";
+import React, { Component } from "react"
+import swal from "sweetalert"
 // import { Link } from "react-router-dom";
 
 class Category extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       pagination: [],
       currname: null,
       name: null,
       id: null,
       noti: null,
-      currType: "add",
-    };
+      currType: "add"
+    }
   }
   componentWillMount() {
-    let tmp = [];
+    let tmp = []
     for (let i = 1; i <= this.props.totalpage; i++) {
-      tmp.push(i);
+      tmp.push(i)
     }
-    this.setState({ pagination: tmp });
+    this.setState({ pagination: tmp })
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.totalpage !== this.props.totalpage) {
-      let tmp = [];
+      let tmp = []
       for (let i = 1; i <= nextProps.totalpage; i++) {
-        tmp.push(i);
+        tmp.push(i)
       }
-      this.setState({ pagination: tmp });
+      this.setState({ pagination: tmp })
     }
     if (nextProps.isadd === false) {
       this.setState({
-        noti: "Please Change name",
-      });
+        noti: "Please Change name"
+      })
     } else if (nextProps.isadd === true) {
       this.setState({
         noti: "",
         name: "",
-        currType: "add",
-      });
+        currType: "add"
+      })
     }
     if (nextProps.isupdate === false) {
       this.setState({
-        noti: "update fail",
-      });
+        noti: "update fail"
+      })
     } else if (nextProps.isupdate === true) {
       this.setState({
         noti: "",
         id: null,
         name: "",
-        currType: "add",
-      });
+        currType: "add"
+      })
     }
   }
   add = () => {
-    this.props.addCategory(this.state.name);
-  };
+    this.props.addCategory(this.state.name)
+  }
 
   confirmDelete(id) {
     swal({
@@ -63,20 +63,20 @@ class Category extends Component {
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
-        this.props.deleteCategory(id);
+        this.props.deleteCategory(id)
         swal("Poof! Your Category data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
+    })
   }
 
   renderPagination() {
     if (this.state.pagination.length === 0) {
-      return null;
+      return null
     } else {
       return (
         <ul className="pagination pagination-custom col-md-6 offset-md-3">
@@ -92,20 +92,20 @@ class Category extends Component {
                 >
                   <a>{element}</a>
                 </li>
-              );
+              )
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
                   <a>{element}</a>
                 </li>
-              );
+              )
             }
           })}
           <li onClick={() => this.props.nextPage()}>
             <a>&raquo;</a>
           </li>
         </ul>
-      );
+      )
     }
   }
   renderBtn = () => {
@@ -134,7 +134,7 @@ class Category extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="form-group">
@@ -155,17 +155,17 @@ class Category extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
   reset = () => {
     this.setState({
       noti: "",
       id: null,
       name: "",
-      currType: "add",
-    });
-  };
+      currType: "add"
+    })
+  }
 
   render() {
     return (
@@ -221,7 +221,7 @@ class Category extends Component {
                                   currname: element.name,
                                   name: element.name,
                                   id: element._id,
-                                  currType: "update",
+                                  currType: "update"
                                 })
                               }
                               className="btn btn-success"
@@ -246,7 +246,7 @@ class Category extends Component {
                           </div>
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -267,10 +267,10 @@ class Category extends Component {
                       </label>
                       <div className="col-lg-10">
                         <input
-                          onChange={(e) => {
+                          onChange={e => {
                             this.setState({
-                              name: e.target.value,
-                            });
+                              name: e.target.value
+                            })
                           }}
                           value={this.state.name}
                           className="form-control"
@@ -295,7 +295,7 @@ class Category extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
-export default Category;
+export default Category

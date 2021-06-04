@@ -1,11 +1,9 @@
-import React from "react";
-import Chatbox from "../ChatBox";
-import { useSelector } from "react-redux";
+import React from "react"
+import Chatbox from "../ChatBox"
+import { useSelector } from "react-redux"
 
 const FooterTop = () => {
-  const currentUser = useSelector(
-    (state) => state.userReducers.user.currentUser
-  );
+  const currentUser = useSelector(state => state.userReducers.user.currentUser)
   // const { user } = currentUser;
   // if (currentUser) console.log(currentUser);
 
@@ -98,7 +96,7 @@ const FooterTop = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FooterTop;
+export default FooterTop

@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import swal from "sweetalert";
+import React, { Component } from "react"
+import swal from "sweetalert"
 // import { Link } from "react-router-dom";
 
 class User extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       name: null,
       id: null,
@@ -18,37 +18,37 @@ class User extends Component {
       phone_number: "",
       currType: "add",
       is_admin: false,
-      pagination: [],
-    };
+      pagination: []
+    }
   }
   componentWillMount() {
-    let tmp = [];
+    let tmp = []
     for (let i = 1; i <= this.props.totalpage; i++) {
-      tmp.push(i);
+      tmp.push(i)
     }
-    this.setState({ pagination: tmp });
+    this.setState({ pagination: tmp })
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.totalpage !== this.props.totalpage) {
-      let tmp = [];
+      let tmp = []
       for (let i = 1; i <= nextProps.totalpage; i++) {
-        tmp.push(i);
+        tmp.push(i)
       }
-      this.setState({ pagination: tmp });
+      this.setState({ pagination: tmp })
     }
     if (nextProps.isadd === false) {
       this.setState({
-        noti: "Email already exist ",
-      });
+        noti: "Email already exist "
+      })
     } else if (nextProps.isadd === true) {
-      this.reset();
+      this.reset()
     }
     if (nextProps.isupdate === false) {
       this.setState({
-        noti: "Update fail",
-      });
+        noti: "Update fail"
+      })
     } else if (nextProps.isupdate === true) {
-      this.reset();
+      this.reset()
     }
   }
 
@@ -58,20 +58,20 @@ class User extends Component {
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
-        this.props.deleteUser(email);
+        this.props.deleteUser(email)
         swal("Poof! Your User data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
+    })
   }
 
   renderPagination() {
     if (this.state.pagination.length === 0) {
-      return null;
+      return null
     } else {
       return (
         <ul className="pagination pagination-custom col-md-6 offset-md-3">
@@ -87,38 +87,38 @@ class User extends Component {
                 >
                   <a>{element}</a>
                 </li>
-              );
+              )
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
                   <a>{element}</a>
                 </li>
-              );
+              )
             }
           })}
           <li onClick={() => this.props.nextPage()}>
             <a>&raquo;</a>
           </li>
         </ul>
-      );
+      )
     }
   }
-  isvalidEmail = (email) => {
+  isvalidEmail = email => {
     if (
       email.length < 6 ||
       email.indexOf(".") === -1 ||
       email.indexOf("@") === -1
     )
-      return false;
-    return true;
-  };
-  isvalidPhone = (phone) => {
-    if (phone.length < 10) return false;
+      return false
+    return true
+  }
+  isvalidPhone = phone => {
+    if (phone.length < 10) return false
     for (let i = 0; i < phone.length; i++) {
-      if (phone.charAt(i) < "0" || phone.charAt(i) > "9") return false;
+      if (phone.charAt(i) < "0" || phone.charAt(i) > "9") return false
     }
-    return true;
-  };
+    return true
+  }
 
   addUser = () => {
     const {
@@ -128,47 +128,47 @@ class User extends Component {
       lastName,
       // address,
       phone_number,
-      is_admin,
-    } = this.state;
+      is_admin
+    } = this.state
     if (!this.isvalidEmail(email)) {
       this.setState({
-        noti: "Email invalid",
-      });
-      return;
+        noti: "Email invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (password.length < 6) {
       this.setState({
-        noti: "Password invalid",
-      });
-      return;
+        noti: "Password invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (firstName.length < 3) {
       this.setState({
-        noti: "First name invalid",
-      });
-      return;
+        noti: "First name invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (lastName.length < 3) {
       this.setState({
-        noti: "Last name invalid",
-      });
-      return;
+        noti: "Last name invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     // if (address.length < 3) {
     //   this.setState({
@@ -182,13 +182,13 @@ class User extends Component {
     // }
     if (!this.isvalidPhone(this.state.phone_number)) {
       this.setState({
-        noti: "Phone invalid",
-      });
-      return;
+        noti: "Phone invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     this.props.addUser(
       email,
@@ -198,8 +198,8 @@ class User extends Component {
       // address,
       phone_number,
       is_admin
-    );
-  };
+    )
+  }
   updateUser = () => {
     const {
       email,
@@ -208,47 +208,47 @@ class User extends Component {
       lastName,
       // address,
       phone_number,
-      is_admin,
-    } = this.state;
+      is_admin
+    } = this.state
     if (!this.isvalidEmail(email)) {
       this.setState({
-        noti: "Email invalid",
-      });
-      return;
+        noti: "Email invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (password.length < 6) {
       this.setState({
-        noti: "Password invalid",
-      });
-      return;
+        noti: "Password invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (firstName.length < 3) {
       this.setState({
-        noti: "First name invalid",
-      });
-      return;
+        noti: "First name invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (lastName.length < 3) {
       this.setState({
-        noti: "Last name invalid",
-      });
-      return;
+        noti: "Last name invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     // if (address.length < 3) {
     //   this.setState({
@@ -262,13 +262,13 @@ class User extends Component {
     // }
     if (!this.isvalidPhone(this.state.phone_number)) {
       this.setState({
-        noti: "Phone invalid",
-      });
-      return;
+        noti: "Phone invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     this.props.updateUser(
       email,
@@ -277,8 +277,8 @@ class User extends Component {
       // address,
       phone_number,
       is_admin
-    );
-  };
+    )
+  }
   renderBtn = () => {
     const {
       email,
@@ -286,8 +286,8 @@ class User extends Component {
       lastName,
       // address,
       phone_number,
-      is_admin,
-    } = this.state;
+      is_admin
+    } = this.state
     if (this.state.currType === "add") {
       return (
         <div className="form-group">
@@ -303,7 +303,7 @@ class User extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="form-group">
@@ -323,9 +323,9 @@ class User extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
   reset = () => {
     this.setState({
       name: null,
@@ -338,9 +338,9 @@ class User extends Component {
       // address: "",
       phone_number: "",
       currType: "add",
-      is_admin: false,
-    });
-  };
+      is_admin: false
+    })
+  }
   renderPassword = () => {
     if (this.state.currType === "add") {
       return (
@@ -351,10 +351,10 @@ class User extends Component {
           <div className="col-lg-10">
             <input
               value={this.state.password}
-              onChange={(e) => {
+              onChange={e => {
                 this.setState({
-                  password: e.target.value,
-                });
+                  password: e.target.value
+                })
               }}
               className="form-control"
               id="cname"
@@ -365,7 +365,7 @@ class User extends Component {
             />
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="form-group ">
@@ -376,10 +376,10 @@ class User extends Component {
             <input
               disabled
               value={this.state.password}
-              onChange={(e) => {
+              onChange={e => {
                 this.setState({
-                  password: e.target.value,
-                });
+                  password: e.target.value
+                })
               }}
               className="form-control"
               id="cname"
@@ -390,9 +390,9 @@ class User extends Component {
             />
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
   renderEmail = () => {
     if (this.state.currType === "add") {
       return (
@@ -403,10 +403,10 @@ class User extends Component {
           <div className="col-lg-10">
             <input
               value={this.state.email}
-              onChange={(e) => {
+              onChange={e => {
                 this.setState({
-                  email: e.target.value,
-                });
+                  email: e.target.value
+                })
               }}
               className="form-control"
               id="cname"
@@ -417,7 +417,7 @@ class User extends Component {
             />
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="form-group ">
@@ -428,10 +428,10 @@ class User extends Component {
             <input
               disabled
               value={this.state.email}
-              onChange={(e) => {
+              onChange={e => {
                 this.setState({
-                  email: e.target.value,
-                });
+                  email: e.target.value
+                })
               }}
               className="form-control"
               id="cname"
@@ -442,9 +442,9 @@ class User extends Component {
             />
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
   render() {
     return (
       <section id="main-content">
@@ -526,7 +526,7 @@ class User extends Component {
                                   phone_number: element.user.phone_number,
                                   password: element.user.phone_number,
                                   is_admin: element.user.is_admin,
-                                  currType: "update",
+                                  currType: "update"
                                 })
                               }
                               className="btn btn-success"
@@ -552,7 +552,7 @@ class User extends Component {
                           </div>
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -575,10 +575,10 @@ class User extends Component {
                       </label>
                       <div className="col-lg-10">
                         <input
-                          onChange={(e) => {
+                          onChange={e => {
                             this.setState({
-                              firstName: e.target.value,
-                            });
+                              firstName: e.target.value
+                            })
                           }}
                           value={this.state.firstName}
                           className="form-control"
@@ -597,10 +597,10 @@ class User extends Component {
                       </label>
                       <div className="col-lg-10">
                         <input
-                          onChange={(e) => {
+                          onChange={e => {
                             this.setState({
-                              lastName: e.target.value,
-                            });
+                              lastName: e.target.value
+                            })
                           }}
                           value={this.state.lastName}
                           className="form-control"
@@ -641,10 +641,10 @@ class User extends Component {
                       </label>
                       <div className="col-lg-10">
                         <input
-                          onChange={(e) => {
+                          onChange={e => {
                             this.setState({
-                              phone_number: e.target.value,
-                            });
+                              phone_number: e.target.value
+                            })
                           }}
                           value={this.state.phone_number}
                           className="form-control"
@@ -693,7 +693,7 @@ class User extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
-export default User;
+export default User

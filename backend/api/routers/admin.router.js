@@ -27,9 +27,11 @@ import {
 } from "../controllers/admin.controller.js";
 import { requireSignin, adminMiddleware } from "../middleware/index.js";
 import Book from "../models/book.model.js";
+import Supplier from "../models/supplier.model.js";
 
 import multer from "multer";
 import expressAsyncHandler from "express-async-handler";
+import HttpError from "http-errors";
 
 const excelFilter = (req, file, cb) => {
   if (
@@ -300,6 +302,129 @@ adminRouter.post(
   requireSignin,
   adminMiddleware,
   deactivatePublisher
+);
+
+adminRouter.post(
+  "/admin/addsupplier",
+  requireSignin,
+  adminMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const { name } = req.body;
+    let supplierFind;
+    supplierFind = await Supplier.find({ name: name });
+    if (supplierFind.length > 0) {
+      throw new HttpError(500, `👎 Supplier with ${name} đã tồn tại!`);
+    }
+
+    // if (supplierFind.length > 0) {
+    //   return res
+    //     .status(409)
+    //     .json({ success: false, message: "👎 Supplier đã tồn tại!" });
+    // }
+
+    const newSupplier = new Supplier({ name });
+    try {
+      await newSupplier.save();
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
+      });
+    }
+    return res
+      .status(201)
+      .json({ success: true, message: "👍 Thêm mới thành công!" });
+  })
+);
+adminRouter.post(
+  "/admin/updatesupplier",
+  requireSignin,
+  adminMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    const { id, name } = req.body;
+    let supplierFind;
+    try {
+      supplierFind = await Supplier.findById(id);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "👎 Supplier không tồn tại!" });
+    }
+    if (supplierFind === null) {
+      return res
+        .status(422)
+        .json({ success: false, message: "👎 Supplier không tồn tại!" });
+    }
+    supplierFind.name = name;
+    try {
+      await supplierFind.save();
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
+      });
+    }
+    return res.status(201).json({
+      success: true,
+      message: "👍 Cập nhật thành công!",
+      supplier: { name },
+    });
+  })
+);
+
+adminRouter.post(
+  "/admin/deletesupplier/:id",
+  requireSignin,
+  adminMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    await Book.updateMany(
+      { id_supplier: { $in: req.params.id } },
+      { published: false },
+      { $set: { published: true } }
+    );
+    let supplierFind;
+    try {
+      supplierFind = await Supplier.findById(req.params.id);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        result: "error",
+        message: "👎 Không tìm thấy dữ liệu Supplier!",
+      });
+    }
+    supplierFind.isEnabled = false;
+    await supplierFind.save();
+    return res
+      .status(200)
+      .json({ result: "success", message: "👍 Xóa thành công!" });
+  })
+);
+adminRouter.get(
+  "/admin/deactivatesupplier/:id",
+  requireSignin,
+  adminMiddleware,
+  expressAsyncHandler(async (req, res) => {
+    let supplierFind;
+    try {
+      supplierFind = await Supplier.findById(req.params.id);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "👎 Không tìm thấy dữ liệu Supplier!",
+      });
+    }
+    if (!supplierFind.isEnabled) supplierFind.isEnabled = true;
+    else supplierFind.isEnabled = false;
+    await supplierFind.save();
+    return res.status(200).json({
+      success: true,
+      message: "👍 Thành công!",
+      data: supplierFind,
+    });
+  })
 );
 
 adminRouter.post("/admin/login", login);

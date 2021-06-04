@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../actions/user.action";
-import { savePaymentMethod } from "../actions/cart.action";
-import CheckoutSteps from "../components/checkoutsteps/CheckoutSteps";
-import HeaderTop from "../components/header/header.top";
-import HeaderMiddle from "../components/header/header.middle";
-import FooterTop from "../components/footer/footer.top";
-import FooterMiddle from "../components/footer/footer.middle";
-import FooterBottom from "../components/footer/footer.bottom";
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../actions/user.action"
+import { savePaymentMethod } from "../actions/cart.action"
+import CheckoutSteps from "../components/checkoutsteps/CheckoutSteps"
+import HeaderTop from "../components/header/header.top"
+import HeaderMiddle from "../components/header/header.middle"
+import FooterTop from "../components/footer/footer.top"
+import FooterMiddle from "../components/footer/footer.middle"
+import FooterBottom from "../components/footer/footer.bottom"
 
 export default function PaymentScreen({ history }) {
-  const cart = useSelector((state) => state.cart);
-  const islogin = useSelector((state) => state.userReducers.user.islogin);
-  const { shippingAddress } = cart;
+  const cart = useSelector(state => state.cart)
+  const islogin = useSelector(state => state.userReducers.user.islogin)
+  const { shippingAddress } = cart
   if (!shippingAddress || Object.keys(shippingAddress).length === 0) {
-    history.push("/shipping");
+    history.push("/shipping")
   }
   // console.log(cart);
-  const [paymentMethod, setPaymentMethod] = useState("PayPal");
-  const dispatch = useDispatch();
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(savePaymentMethod(paymentMethod));
-    history.push("/placeorder");
-  };
+  const [paymentMethod, setPaymentMethod] = useState("PayPal")
+  const dispatch = useDispatch()
+  const submitHandler = e => {
+    e.preventDefault()
+    dispatch(savePaymentMethod(paymentMethod))
+    history.push("/placeorder")
+  }
   return (
     <div>
       <header id="header">
@@ -58,7 +58,7 @@ export default function PaymentScreen({ history }) {
               name="paymentMethod"
               required
               checked
-              onChange={(e) => setPaymentMethod(e.target.value)}
+              onChange={e => setPaymentMethod(e.target.value)}
             ></input>
             <label htmlFor="paypal">PayPal</label>
           </div>
@@ -71,7 +71,7 @@ export default function PaymentScreen({ history }) {
               value="Braintree"
               name="paymentMethod"
               required
-              onChange={(e) => setPaymentMethod(e.target.value)}
+              onChange={e => setPaymentMethod(e.target.value)}
             ></input>
             <label htmlFor="braintree">Braintree</label>
           </div>
@@ -89,5 +89,5 @@ export default function PaymentScreen({ history }) {
         <FooterBottom />
       </footer>
     </div>
-  );
+  )
 }

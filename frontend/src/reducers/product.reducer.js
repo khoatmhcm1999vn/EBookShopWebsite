@@ -1,6 +1,6 @@
-import { userTypes } from "../constants/action.types";
-import { combineReducers } from "redux";
-import { productTypes } from "../constants/action.types";
+import { userTypes } from "../constants/action.types"
+import { combineReducers } from "redux"
+import { productTypes } from "../constants/action.types"
 const product = (
   state = {
     productDetail: null,
@@ -8,7 +8,7 @@ const product = (
     bookRelatedByRating: [],
     comment: [],
     page: 1,
-    totalpage: null,
+    totalpage: null
   },
   action
 ) => {
@@ -16,67 +16,67 @@ const product = (
     case productTypes.SET_PRODUCT_DETAIL: {
       return {
         ...state,
-        productDetail: action.productDetail,
-      };
+        productDetail: action.productDetail
+      }
     }
     case productTypes.RESET_BOOK_DETAIL: {
       return {
         ...state,
-        productDetail: null,
-      };
+        productDetail: null
+      }
     }
     case productTypes.SET_NAME_CATEGORY: {
       return {
         ...state,
-        nameCategory: action.name,
-      };
+        nameCategory: action.name
+      }
     }
     case productTypes.SET_NAME_PUBLICSHER: {
       return {
         ...state,
-        namePublicsher: action.name,
-      };
+        namePublicsher: action.name
+      }
     }
     case productTypes.SET_NAME_AUTHOR: {
       return {
         ...state,
-        nameAuthor: action.name,
-      };
+        nameAuthor: action.name
+      }
     }
     case productTypes.SET_BOOK_RELATED: {
       return {
         ...state,
-        bookrelated: action.bookrelated,
-      };
+        bookrelated: action.bookrelated
+      }
     }
     case productTypes.SET_BOOK_RELATED_BY_RATING: {
       return {
         ...state,
-        bookRelatedByRating: action.payload.similarProductGet,
-      };
+        bookRelatedByRating: action.payload.similarProductGet
+      }
     }
     case productTypes.SET_COMMENT: {
       return {
         ...state,
-        comment: action.data,
-      };
+        comment: action.data
+      }
     }
     case productTypes.SET_COMMENT_PAGE: {
       return {
         ...state,
-        page: action.page,
-      };
+        page: action.page
+      }
     }
     case productTypes.SET_COMMENT_TOTAL_PAGE: {
       return {
         ...state,
-        totalpage: action.totalpage,
-      };
+        totalpage: action.totalpage
+      }
     }
     default:
-      return state;
+      return state
   }
-};
+}
 export default combineReducers({
-  product,
-});
+  product
+})

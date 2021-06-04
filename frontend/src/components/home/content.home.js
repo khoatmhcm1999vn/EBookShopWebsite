@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import ProductItem from "./product.item";
-import { Link } from "react-router-dom";
+import React, { Component } from "react"
+import ProductItem from "./product.item"
+import { Link } from "react-router-dom"
 
 class ContentHome extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       pagination: [],
       check_1: true,
@@ -12,28 +12,28 @@ class ContentHome extends Component {
       check_3: false,
       check_4: false,
       check_5: false,
-      listPageSize: [10, 30, 50],
-    };
+      listPageSize: [10, 30, 50]
+    }
   }
   componentWillMount() {
-    let tmp = [];
+    let tmp = []
     for (let i = 1; i <= this.props.totalpage; i++) {
-      tmp.push(i);
+      tmp.push(i)
     }
-    this.setState({ pagination: tmp });
+    this.setState({ pagination: tmp })
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.totalpage !== this.props.totalpage) {
-      let tmp = [];
+      let tmp = []
       for (let i = 1; i <= nextProps.totalpage; i++) {
-        tmp.push(i);
+        tmp.push(i)
       }
-      this.setState({ pagination: tmp });
+      this.setState({ pagination: tmp })
     }
   }
   renderPagination() {
     if (this.state.pagination.length === 0) {
-      return null;
+      return null
     } else {
       return (
         <ul className="pagination pagination-custom">
@@ -49,20 +49,20 @@ class ContentHome extends Component {
                 >
                   <Link to="/shop">{element}</Link>
                 </li>
-              );
+              )
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
                   <Link to="/shop">{element}</Link>
                 </li>
-              );
+              )
             }
           })}
           <li onClick={() => this.props.nextPage()}>
             <Link to="/shop">&raquo;</Link>
           </li>
         </ul>
-      );
+      )
     }
   }
   resetCheck = () => {
@@ -71,9 +71,9 @@ class ContentHome extends Component {
       check_2: false,
       check_3: false,
       check_4: false,
-      check_5: false,
-    });
-  };
+      check_5: false
+    })
+  }
 
   render() {
     // console.log(this.props.pageSize);
@@ -81,6 +81,30 @@ class ContentHome extends Component {
 
     return (
       <section>
+        <div>
+          <div
+            className="container"
+            style={{ backgroundColor: "transparent!important" }}
+          >
+            <div className="mb-breadcrumbs">
+              <div id="ves-breadcrumbs" className="breadcrumbs hidden-xs">
+                <div className="container-inner breadcrumbs">
+                  <ol className="breadcrumb">
+                    <li className="home">
+                      <Link to="/" title="Tới trang chủ">
+                        Trang chủ
+                      </Link>
+                      <span>/</span>
+                    </li>
+                    <li className="category6719">
+                      <strong>Shop Page</strong>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="container">
           <div className="row">
             <div className="col-sm-3">
@@ -90,13 +114,14 @@ class ContentHome extends Component {
                   <div
                     key={1}
                     onClick={() => {
-                      this.resetCheck();
-                      this.props.setTitle("ALL BOOK");
-                      this.props.setBranch("");
-                      this.props.setSearchText("");
-                      this.props.setIDBranch(null);
-                      this.props.setRangeType(null);
+                      this.resetCheck()
+                      this.props.setTitle("ALL BOOK")
+                      this.props.setBranch("")
+                      this.props.setSearchText("")
+                      this.props.setIDBranch(null)
+                      this.props.setRangeType(null)
                       // this.props.searchTextSubmit();
+                      // this.props.setPageSize(10);
                     }}
                     className="panel panel-default"
                   >
@@ -114,11 +139,12 @@ class ContentHome extends Component {
                       <div
                         key={index}
                         onClick={() => {
-                          this.resetCheck();
-                          this.props.setTitle(element.name);
-                          this.props.setBranch("category");
-                          this.props.setIDBranch(element._id);
-                          this.props.branchClick("category", element._id);
+                          // this.resetCheck();
+                          this.props.setTitle(element.name)
+                          this.props.setBranch("category")
+                          this.props.setIDBranch(element._id)
+                          this.props.branchClick("category", element._id)
+                          // this.props.setPageSize(10);
                         }}
                         className="panel panel-default"
                       >
@@ -128,7 +154,7 @@ class ContentHome extends Component {
                           </h4>
                         </div>
                       </div>
-                    );
+                    )
                   })}
                 </div>
                 <div className="brands_products">
@@ -139,11 +165,11 @@ class ContentHome extends Component {
                         return (
                           <li
                             onClick={() => {
-                              this.resetCheck();
-                              this.props.setTitle(element.name);
-                              this.props.setBranch("publisher");
-                              this.props.setIDBranch(element._id);
-                              this.props.branchClick("publisher", element._id);
+                              // this.resetCheck();
+                              this.props.setTitle(element.name)
+                              this.props.setBranch("publisher")
+                              this.props.setIDBranch(element._id)
+                              this.props.branchClick("publisher", element._id)
                             }}
                             className="item-custom"
                             item-custom
@@ -153,7 +179,7 @@ class ContentHome extends Component {
                               {element.name}
                             </a>
                           </li>
-                        );
+                        )
                       })}
                     </ul>
                   </div>
@@ -167,11 +193,11 @@ class ContentHome extends Component {
                         return (
                           <li
                             onClick={() => {
-                              this.resetCheck();
-                              this.props.setTitle(element.name);
-                              this.props.setBranch("author");
-                              this.props.setIDBranch(element._id);
-                              this.props.branchClick("author", element._id);
+                              // this.resetCheck();
+                              this.props.setTitle(element.name)
+                              this.props.setBranch("author")
+                              this.props.setIDBranch(element._id)
+                              this.props.branchClick("author", element._id)
                             }}
                             className="item-custom"
                             item-custom
@@ -181,7 +207,7 @@ class ContentHome extends Component {
                               {element.name}
                             </a>
                           </li>
-                        );
+                        )
                       })}
                     </ul>
                   </div>
@@ -192,9 +218,9 @@ class ContentHome extends Component {
                     <div className="radio">
                       <label
                         onClick={() => {
-                          this.props.setRangeType(null);
-                          this.resetCheck();
-                          this.setState({ check_1: true });
+                          this.props.setRangeType(null)
+                          this.resetCheck()
+                          this.setState({ check_1: true })
                         }}
                       >
                         <input
@@ -208,9 +234,9 @@ class ContentHome extends Component {
                     <div className="radio">
                       <label
                         onClick={() => {
-                          this.props.setRangeType({ low: 0, high: 2000 });
-                          this.resetCheck();
-                          this.setState({ check_2: true });
+                          this.props.setRangeType({ low: 0, high: 2000 })
+                          this.resetCheck()
+                          this.setState({ check_2: true })
                         }}
                       >
                         <input
@@ -224,9 +250,9 @@ class ContentHome extends Component {
                     <div className="radio ">
                       <label
                         onClick={() => {
-                          this.props.setRangeType({ low: 2000, high: 5000 });
-                          this.resetCheck();
-                          this.setState({ check_3: true });
+                          this.props.setRangeType({ low: 2000, high: 5000 })
+                          this.resetCheck()
+                          this.setState({ check_3: true })
                         }}
                       >
                         <input
@@ -240,9 +266,9 @@ class ContentHome extends Component {
                     <div className="radio ">
                       <label
                         onClick={() => {
-                          this.resetCheck();
-                          this.setState({ check_4: true });
-                          this.props.setRangeType({ low: 5000, high: 10000 });
+                          this.resetCheck()
+                          this.setState({ check_4: true })
+                          this.props.setRangeType({ low: 5000, high: 10000 })
                         }}
                       >
                         <input
@@ -256,9 +282,9 @@ class ContentHome extends Component {
                     <div className="radio ">
                       <label
                         onClick={() => {
-                          this.props.setRangeType({ low: 10000, high: 100000 });
-                          this.resetCheck();
-                          this.setState({ check_5: true });
+                          this.props.setRangeType({ low: 10000, high: 100000 })
+                          this.resetCheck()
+                          this.setState({ check_5: true })
                         }}
                       >
                         <input
@@ -295,7 +321,7 @@ class ContentHome extends Component {
                         >
                           <a>{this.state.listPageSize[key]}</a>
                         </li>
-                      );
+                      )
                     })}
                   </ul>
                 </div>
@@ -315,9 +341,9 @@ class ContentHome extends Component {
                       price={element.price}
                       describe={element.describe}
                       id={element._id}
-                      addToCart={(product) => this.props.addToCart(product)}
+                      addToCart={product => this.props.addToCart(product)}
                     />
-                  );
+                  )
                 })}
               </div>
               <div>{this.renderPagination()}</div>
@@ -325,7 +351,7 @@ class ContentHome extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
-export default ContentHome;
+export default ContentHome

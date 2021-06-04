@@ -1,33 +1,33 @@
-import Axios from "axios";
+import Axios from "axios"
 // import { PayPalButton } from "react-paypal-button-v2";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { logout } from "../actions/user.action";
-import { detailsOrder, payOrder } from "../actions/orderActions";
-import LoadingBox from "../components/loading/loading";
-import MessageBox from "../components/message/Message";
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { logout } from "../actions/user.action"
+import { detailsOrder, payOrder } from "../actions/orderActions"
+import LoadingBox from "../components/loading/loading"
+import MessageBox from "../components/message/Message"
 import {
   ORDER_DELIVER_RESET,
-  ORDER_PAY_RESET,
-} from "../constants/orderConstants";
+  ORDER_PAY_RESET
+} from "../constants/orderConstants"
 
-import HeaderTop from "../components/header/header.top";
-import HeaderMiddle from "../components/header/header.middle";
-import FooterTop from "../components/footer/footer.top";
-import FooterMiddle from "../components/footer/footer.middle";
-import FooterBottom from "../components/footer/footer.bottom";
+import HeaderTop from "../components/header/header.top"
+import HeaderMiddle from "../components/header/header.middle"
+import FooterTop from "../components/footer/footer.top"
+import FooterMiddle from "../components/footer/footer.middle"
+import FooterBottom from "../components/footer/footer.bottom"
 
-import { getBraintreeClientToken, processPayment } from "../utils/api";
-import DropIn from "braintree-web-drop-in-react";
+import { getBraintreeClientToken, processPayment } from "../utils/api"
+import DropIn from "braintree-web-drop-in-react"
 
 export default function OrderScreen({
   history,
   match: {
-    params: { id },
-  },
+    params: { id }
+  }
 }) {
-  const orderId = id;
+  const orderId = id
   // const [sdkReady, setSdkReady] = useState(false);
   const [data, setData] = useState({
     loading: false,
@@ -35,80 +35,76 @@ export default function OrderScreen({
     clientToken: null,
     error: "",
     instance: {},
-    address: "",
-  });
+    address: ""
+  })
 
-  const orderDetails = useSelector((state) => state.orderDetails);
-  const cart = useSelector((state) => state.cart.data);
-  const islogin = useSelector((state) => state.userReducers.user.islogin);
-  const { order, loading, error } = orderDetails;
+  const orderDetails = useSelector(state => state.orderDetails)
+  const cart = useSelector(state => state.cart.data)
+  const islogin = useSelector(state => state.userReducers.user.islogin)
+  const { order, loading, error } = orderDetails
 
   //  const userSignin = useSelector((state) => state.userSignin);
   // const { userInfo } = userSignin;
 
-  console.log(orderDetails);
+  console.log(orderDetails)
   // console.log(order._id);
 
-  const orderPay = useSelector((state) => state.orderPay);
-  const {
-    loading: loadingPay,
-    error: errorPay,
-    success: successPay,
-  } = orderPay;
+  const orderPay = useSelector(state => state.orderPay)
+  const { loading: loadingPay, error: errorPay, success: successPay } = orderPay
 
-  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const orderDeliver = useSelector(state => state.orderDeliver)
   const {
     loading: loadingDeliver,
     error: errorDeliver,
-    success: successDeliver,
-  } = orderDeliver;
-  console.log(orderPay);
+    success: successDeliver
+  } = orderDeliver
+  console.log(orderPay)
   // console.log(sdkReady);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const getToken = () => {
-    getBraintreeClientToken().then((res) => {
+    getBraintreeClientToken().then(res => {
       if (!res) {
-        setData({ ...data, error: "fail" });
+        setData({ ...data, error: "fail" })
       } else {
-        setData({ ...data, clientToken: res.clientToken });
+        setData({ ...data, clientToken: res.clientToken })
       }
-    });
-  };
+    })
+  }
 
   const onConfirmOrderPaypal = () => {
-    setData({ ...data, loading: true });
+    setData({ ...data, loading: true })
 
-    let nonce;
-    data.instance.requestPaymentMethod().then((res) => {
-      nonce = res.nonce;
+    let nonce
+    data.instance.requestPaymentMethod().then(res => {
+      nonce = res.nonce
 
       const paymentData = {
         paymentMethodNonce: nonce,
-        amount: order[0].totalPrice,
-      };
+        amount: order[0].totalPrice
+      }
 
       processPayment(paymentData)
-        .then((response) => {
+        .then(response => {
           // console.log(response);
-          setData({ ...data, success: response.success });
+          setData({ ...data, success: response.success })
 
           const payload = {
             id: response.transaction.id,
             status: "COMPLETED",
             update_time: response.transaction.updatedAt,
-            email_address: response.transaction.paypal.payerEmail,
-          };
-          dispatch(payOrder(order, payload));
+            email_address: response.transaction.paypal.payerEmail
+          }
+          dispatch(payOrder(order, payload))
         })
 
-        .catch((error) => {
-          console.log("DropIn error: ", error);
-          setData({ ...data, error: error.message });
-        });
-    });
-  };
+        .catch(error => {
+          console.log("DropIn error: ", error)
+          setData({ ...data, error: error.message })
+        })
+    })
+  }
 
   useEffect(() => {
     // const addPayPalScript = async () => {
@@ -130,10 +126,10 @@ export default function OrderScreen({
       successDeliver ||
       (order && order._id !== orderId)
     ) {
-      dispatch({ type: ORDER_PAY_RESET });
-      dispatch({ type: ORDER_DELIVER_RESET });
-      dispatch(detailsOrder(orderId));
-      getToken();
+      dispatch({ type: ORDER_PAY_RESET })
+      dispatch({ type: ORDER_DELIVER_RESET })
+      dispatch(detailsOrder(orderId))
+      getToken()
     }
     //  else {
     //   if (!order.isPaid) {
@@ -144,7 +140,7 @@ export default function OrderScreen({
     //     }
     //   }
     // }
-  }, [dispatch, orderId, successPay, successDeliver]);
+  }, [dispatch, orderId, successPay, successDeliver])
 
   // const successPaymentHandler = (paymentResult) => {
   //   dispatch(payOrder(order, paymentResult));
@@ -154,7 +150,7 @@ export default function OrderScreen({
   //   dispatch(deliverOrder(order._id));
   // };
 
-  console.log(data);
+  console.log(data)
 
   return loading ? (
     <LoadingBox></LoadingBox>
@@ -232,7 +228,7 @@ export default function OrderScreen({
                 <h2>Order Items</h2>
                 <ul>
                   {order ? (
-                    order[0].products.map((item) => (
+                    order[0].products.map(item => (
                       <li key={item._id}>
                         <div className="row">
                           <div>
@@ -307,10 +303,10 @@ export default function OrderScreen({
                         options={{
                           authorization: data.clientToken,
                           paypal: {
-                            flow: "vault",
-                          },
+                            flow: "vault"
+                          }
                         }}
-                        onInstance={(instance) => (data.instance = instance)}
+                        onInstance={instance => (data.instance = instance)}
                       />
                       <button
                         onClick={onConfirmOrderPaypal}
@@ -365,5 +361,5 @@ export default function OrderScreen({
         <FooterBottom />
       </footer>
     </div>
-  );
+  )
 }

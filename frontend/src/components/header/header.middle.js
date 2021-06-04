@@ -1,30 +1,30 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import storeConfig from "../../config/store.config";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
+import storeConfig from "../../config/store.config"
 
 class HeaderMiddle extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      email: "Account",
-    };
+      email: "Account"
+    }
   }
   componentWillMount() {
     if (storeConfig.getUser() !== null) {
       this.setState({
-        email: storeConfig.getUser().email,
-      });
+        email: storeConfig.getUser().email
+      })
     }
   }
   componentWillReceiveProps(nextProps) {
     if (!nextProps.islogin) {
       this.setState({
-        email: "Account",
-      });
+        email: "Account"
+      })
     } else {
       this.setState({
-        email: storeConfig.getUser().email,
-      });
+        email: storeConfig.getUser().email
+      })
     }
   }
   handlelogin = () => {
@@ -33,9 +33,9 @@ class HeaderMiddle extends Component {
         <li
           className="btn-custom"
           onClick={() => {
-            window.location.reload();
-            this.props.logout();
-            this.props.history.push("/");
+            window.location.reload()
+            this.props.logout()
+            this.props.history.push("/")
           }}
         >
           <a>
@@ -43,7 +43,7 @@ class HeaderMiddle extends Component {
             Logout
           </a>
         </li>
-      );
+      )
     } else {
       return (
         <li>
@@ -52,16 +52,16 @@ class HeaderMiddle extends Component {
             Login
           </Link>
         </li>
-      );
+      )
     }
-  };
+  }
   handleProfile = () => {
     if (this.state.email === "Account") {
-      return;
+      return
     } else {
-      this.props.history.push("/profile/" + this.state.email);
+      this.props.history.push("/profile/" + this.state.email)
     }
-  };
+  }
   render() {
     // console.log(this.props.cart.length);
     return (
@@ -164,8 +164,8 @@ class HeaderMiddle extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default HeaderMiddle;
+export default HeaderMiddle

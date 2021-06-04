@@ -1,35 +1,56 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
 
 class Slider extends Component {
   render() {
     return (
       <div id="sidebar" className="nav-collapse ">
         <ul className="sidebar-menu">
-          <li className="active">
-            <Link className="" to="/dashboard">
-              <i className="icon_house_alt"></i>
-              <span>Dashboard</span>
-            </Link>
-          </li>
-          <li>
-            <Link className="" to="/support">
-              <i className="icon_genius"></i>
-              <span>Support</span>
-            </Link>
-          </li>
-          <li>
-            <Link className="" to="/bill">
-              <i className="icon_genius"></i>
-              <span>Bill</span>
-            </Link>
-          </li>
-          <li>
-            <Link className="" to="/statistical">
-              <i className="icon_genius"></i>
-              <span>Statistical</span>
-            </Link>
-          </li>
+          {this.props.activateHome ? (
+            <li className="active">
+              <Link className="" to="/dashboard">
+                <i className="icon_house_alt"></i>
+                <span>Dashboard</span>
+              </Link>
+            </li>
+          ) : (
+            <li className="">
+              <Link className="" to="/dashboard">
+                <i className="icon_house_alt"></i>
+                <span>Dashboard</span>
+              </Link>
+            </li>
+          )}
+          {this.props.activateSupport ? (
+            <li>
+              <Link className="active" to="/support">
+                <i className="icon_genius"></i>
+                <span>Support</span>
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <Link className="" to="/support">
+                <i className="icon_genius"></i>
+                <span>Support</span>
+              </Link>
+            </li>
+          )}
+          {this.props.activateStatistical ? (
+            <li>
+              <Link className="active" to="/statistical">
+                <i className="icon_genius"></i>
+                <span>Statistical</span>
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <Link className="" to="/statistical">
+                <i className="icon_genius"></i>
+                <span>Statistical</span>
+              </Link>
+            </li>
+          )}
           <li className="dropdown">
             <a data-toggle="dropdown" className="" href="#">
               {/* <span className="profile-ava">
@@ -92,10 +113,10 @@ class Slider extends Component {
           </li>
         </ul>
       </div>
-    );
+    )
   }
 }
-export default Slider;
+export default Slider
 
 // <li className="sub-menu">
 //   <a href="javascript:" className="">

@@ -1,254 +1,256 @@
-import axiosClient from "../config/axiosClient";
-import axios from "axios";
-import { homeTypes, sortTypes } from "../constants/action.types";
+import axiosClient from "../config/axiosClient"
+import axios from "axios"
+import { homeTypes, sortTypes } from "../constants/action.types"
 
-export const setTopProduct = (data) => ({
+export const setTopProduct = data => ({
   type: homeTypes.SET_TOP_PRODUCT,
-  data,
-});
+  data
+})
 export const getTopProduct = () => async (dispatch, getState) => {
-  let res = null;
+  let res = null
   try {
-    res = await axiosClient.post("/bill/top/");
+    res = await axiosClient.post("/bill/top/")
   } catch (err) {
-    console.log(err);
-    return;
+    console.log(err)
+    return
   }
-  dispatch(setTopProduct(res.data));
-};
+  dispatch(setTopProduct(res.data))
+}
 
-export const setCountProductBill = (data) => ({
+export const setCountProductBill = data => ({
   type: homeTypes.SET_COUNT_PRODUCT_BILL,
-  data,
-});
+  data
+})
 export const getCountProductBill = () => async (dispatch, getState) => {
-  let res = null;
+  let res = null
   try {
-    res = await axiosClient.post("/bill/count-all-product-bill");
+    res = await axiosClient.post("/bill/count-all-product-bill")
   } catch (err) {
-    console.log(err);
-    return;
+    console.log(err)
+    return
   }
-  dispatch(setCountProductBill(res.data));
-};
+  dispatch(setCountProductBill(res.data))
+}
 
-export const setCountProductStock = (data) => ({
+export const setCountProductStock = data => ({
   type: homeTypes.SET_COUNT_PRODUCT_STOCK,
-  data,
-});
+  data
+})
 export const getCountProductStock = () => async (dispatch, getState) => {
-  let res = null;
+  let res = null
   try {
-    res = await axiosClient.post("/bill/count-all-product");
+    res = await axiosClient.post("/bill/count-all-product")
   } catch (err) {
-    console.log(err);
-    return;
+    console.log(err)
+    return
   }
-  dispatch(setCountProductStock(res.data));
-};
+  dispatch(setCountProductStock(res.data))
+}
 
-export const setCountBill = (data) => ({
+export const setCountBill = data => ({
   type: homeTypes.SET_COUNT_BILL,
-  data,
-});
+  data
+})
 export const getCountBill = () => async (dispatch, getState) => {
-  let res = null;
+  let res = null
   try {
-    res = await axiosClient.post("/bill/count-all-bill");
+    res = await axiosClient.post("/bill/count-all-bill")
   } catch (err) {
-    console.log(err);
-    return;
+    console.log(err)
+    return
   }
-  dispatch(setCountBill(res.data));
-};
+  dispatch(setCountBill(res.data))
+}
 
 export const getCategory = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
-    res = await axios.get("http://localhost:8090/user/category");
+    res = await axios.get("http://localhost:8090/user/category")
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setCategory(res.data.data));
-};
+  dispatch(setCategory(res.data.data))
+}
 
 export const getPublisher = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
-    res = await axios.get("http://localhost:8090/user/publisher");
+    res = await axios.get("http://localhost:8090/user/publisher")
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setPublisher(res.data.data));
-};
+  dispatch(setPublisher(res.data.data))
+}
 
 export const getAuthor = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
-    res = await axios.get("http://localhost:8090/user/author");
+    res = await axios.get("http://localhost:8090/user/author")
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setAuthor(res.data.data));
-};
+  dispatch(setAuthor(res.data.data))
+}
 export const getBook = () => async (dispatch, getState) => {
-  let sorttype = "createdAt";
-  let sortorder = "-1";
-  let sortType = getState().homeReducers.book.sortType;
+  let sorttype = "release_date"
+  let sortorder = "-1"
+  let sortType = getState().homeReducers.book.sortType
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "createdAt";
-    sortorder = "-1";
+    sorttype = "release_date"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "createdAt";
-    sortorder = "1";
+    sorttype = "release_date"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
-    sorttype = "price";
-    sortorder = "-1";
+    sorttype = "price"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_PRICE_INCREASED) {
-    sorttype = "price";
-    sortorder = "1";
+    sorttype = "price"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_SALES_DECREASED) {
-    sorttype = "sales";
-    sortorder = "-1";
+    sorttype = "sales"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_SALES_INCREASED) {
-    sorttype = "sales";
-    sortorder = "1";
+    sorttype = "sales"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_VIEWS_DECREASED) {
-    sorttype = "view_counts";
-    sortorder = "-1";
+    sorttype = "view_counts"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_VIEWS_INCREASED) {
-    sorttype = "view_counts";
-    sortorder = "1";
+    sorttype = "view_counts"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_INCREASED) {
-    sorttype = "name";
-    sortorder = "1";
+    sorttype = "name"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_DECREASED) {
-    sorttype = "name";
-    sortorder = "-1";
+    sorttype = "name"
+    sortorder = "-1"
   }
-  let branch = getState().homeReducers.book.branch;
-  let _link = "http://localhost:8090/book/allbook";
+  let branch = getState().homeReducers.book.branch
+  let _link = "http://localhost:8090/book/allbook"
   if (branch === "category") {
-    _link = "http://localhost:8090/book/category";
+    _link = "http://localhost:8090/book/category"
   } else if (branch === "publisher") {
-    _link = "http://localhost:8090/book/publisher";
+    _link = "http://localhost:8090/book/publisher"
   } else if (branch === "author") {
-    _link = "http://localhost:8090/book/author";
+    _link = "http://localhost:8090/book/author"
   }
-  let res;
+  let res
   // console.log(getState().homeReducers.book.pageSize);
+  console.log(getState().homeReducers.book.searchtext)
   try {
     res = await axios.post(_link, {
       page: getState().homeReducers.book.page,
       pageSize: getState().homeReducers.book.pageSize,
-      range: null,
+      range: getState().homeReducers.book.range || null,
       sorttype: sorttype,
       sortorder: sortorder,
       searchtext: getState().homeReducers.book.searchtext,
-      id: getState().homeReducers.book.id,
-    });
+      id: getState().homeReducers.book.id
+    })
   } catch (err) {
-    console.log(err.response);
-    return;
+    console.log(err.response)
+    return
   }
-  dispatch(setBook(res.data.data));
-  dispatch(setTotalPage(res.data.totalPage));
-};
+  dispatch(setBook(res.data.data))
+  dispatch(setTotalPage(res.data.totalPage))
+}
 
-export const setBook = (data) => ({
+export const setBook = data => ({
   type: homeTypes.SET_BOOK,
-  data,
-});
-export const setPage = (page) => ({
+  data
+})
+export const setPage = page => ({
   type: homeTypes.SET_PAGE,
-  page,
-});
-export const setPageSize = (pageSize) => ({
+  page
+})
+export const setPageSize = pageSize => ({
   type: homeTypes.SET_PAGE_SIZE,
-  pageSize,
-});
-export const setTotalPage = (totalpage) => ({
+  pageSize
+})
+export const setTotalPage = totalpage => ({
   type: homeTypes.SET_TOTAL_PAGE,
-  totalpage,
-});
-export const setCategory = (data) => ({
+  totalpage
+})
+export const setCategory = data => ({
   type: homeTypes.SET_CATEGORY_BOOK,
-  data,
-});
+  data
+})
 
-export const setPublisher = (data) => ({
+export const setPublisher = data => ({
   type: homeTypes.SET_PUBLISHSER,
-  data,
-});
+  data
+})
 
-export const setAuthor = (data) => ({
+export const setAuthor = data => ({
   type: homeTypes.SET_AUTHOR,
-  data,
-});
-export const setIDBranch = (id) => ({
+  data
+})
+export const setIDBranch = id => ({
   type: homeTypes.SET_ID_BRANCH,
-  id,
-});
+  id
+})
 export const backPage = () => (dispatch, getState) => {
-  let page = getState().homeReducers.book.page;
+  let page = getState().homeReducers.book.page
   if (page > 1) {
-    dispatch(setPage(parseInt(page) - 1));
+    dispatch(setPage(parseInt(page) - 1))
   }
-};
+}
 
 export const nextPage = () => (dispatch, getState) => {
-  let page = getState().homeReducers.book.page;
-  let totalpage = getState().homeReducers.book.totalpage;
+  let page = getState().homeReducers.book.page
+  let totalpage = getState().homeReducers.book.totalpage
   if (page < totalpage) {
-    dispatch(setPage(parseInt(page) + 1));
+    dispatch(setPage(parseInt(page) + 1))
   }
-};
-export const setSortType = (sortType) => async (dispatch, getState) => {
-  dispatch(setPage(1));
-  let sorttype = "createdAt";
-  let sortorder = "-1";
+}
+export const setSortType = sortType => async (dispatch, getState) => {
+  dispatch(setPage(1))
+  dispatch(setPageSize(10))
+  let sorttype = "release_date"
+  let sortorder = "-1"
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "createdAt";
-    sortorder = "-1";
+    sorttype = "release_date"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "createdAt";
-    sortorder = "1";
+    sorttype = "release_date"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
-    sorttype = "price";
-    sortorder = "-1";
+    sorttype = "price"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_PRICE_INCREASED) {
-    sorttype = "price";
-    sortorder = "1";
+    sorttype = "price"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_SALES_DECREASED) {
-    sorttype = "sales";
-    sortorder = "-1";
+    sorttype = "sales"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_SALES_INCREASED) {
-    sorttype = "sales";
-    sortorder = "1";
+    sorttype = "sales"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_VIEWS_DECREASED) {
-    sorttype = "view_counts";
-    sortorder = "-1";
+    sorttype = "view_counts"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_VIEWS_INCREASED) {
-    sorttype = "view_counts";
-    sortorder = "1";
+    sorttype = "view_counts"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_INCREASED) {
-    sorttype = "name";
-    sortorder = "1";
+    sorttype = "name"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_DECREASED) {
-    sorttype = "name";
-    sortorder = "-1";
+    sorttype = "name"
+    sortorder = "-1"
   }
-  dispatch(setSort(sortType, sortorder));
-  let branch = getState().homeReducers.book.branch;
-  let _link = "http://localhost:8090/book/allbook";
+  dispatch(setSort(sortType, sortorder))
+  let branch = getState().homeReducers.book.branch
+  let _link = "http://localhost:8090/book/allbook"
   if (branch === "category") {
-    _link = "http://localhost:8090/book/category";
+    _link = "http://localhost:8090/book/category"
   } else if (branch === "publisher") {
-    _link = "http://localhost:8090/book/publisher";
+    _link = "http://localhost:8090/book/publisher"
   } else if (branch === "author") {
-    _link = "http://localhost:8090/book/author";
+    _link = "http://localhost:8090/book/author"
   }
-  let res;
+  let res
   try {
     res = await axios.post(_link, {
       page: 1,
@@ -257,68 +259,69 @@ export const setSortType = (sortType) => async (dispatch, getState) => {
       sorttype: sorttype,
       sortorder: sortorder,
       searchtext: getState().homeReducers.book.searchtext,
-      id: getState().homeReducers.book.id,
-    });
+      id: getState().homeReducers.book.id
+    })
   } catch (err) {
-    console.log(err.response);
-    return;
+    console.log(err.response)
+    return
   }
-  dispatch(setBook(res.data.data));
-  dispatch(setTotalPage(res.data.totalPage));
-};
-export const setSort = (sortType) => ({
+  dispatch(setBook(res.data.data))
+  dispatch(setTotalPage(res.data.totalPage))
+}
+export const setSort = sortType => ({
   type: homeTypes.SET_SORT_TYPE,
-  sortType,
-});
-export const setRangeType = (range) => async (dispatch, getState) => {
-  dispatch(setPage(1));
-  let sorttype = "createdAt";
-  let sortorder = "-1";
-  let sortType = getState().homeReducers.book.sortType;
+  sortType
+})
+export const setRangeType = range => async (dispatch, getState) => {
+  dispatch(setPage(1))
+
+  let sorttype = "release_date"
+  let sortorder = "-1"
+  let sortType = getState().homeReducers.book.sortType
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "createdAt";
-    sortorder = "-1";
+    sorttype = "release_date"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "createdAt";
-    sortorder = "1";
+    sorttype = "release_date"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
-    sorttype = "price";
-    sortorder = "-1";
+    sorttype = "price"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_PRICE_INCREASED) {
-    sorttype = "price";
-    sortorder = "1";
+    sorttype = "price"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_SALES_DECREASED) {
-    sorttype = "sales";
-    sortorder = "-1";
+    sorttype = "sales"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_SALES_INCREASED) {
-    sorttype = "sales";
-    sortorder = "1";
+    sorttype = "sales"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_VIEWS_DECREASED) {
-    sorttype = "view_counts";
-    sortorder = "-1";
+    sorttype = "view_counts"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_VIEWS_INCREASED) {
-    sorttype = "view_counts";
-    sortorder = "1";
+    sorttype = "view_counts"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_INCREASED) {
-    sorttype = "name";
-    sortorder = "1";
+    sorttype = "name"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_DECREASED) {
-    sorttype = "name";
-    sortorder = "-1";
+    sorttype = "name"
+    sortorder = "-1"
   }
-  let branch = getState().homeReducers.book.branch;
-  let _link = "http://localhost:8090/book/allbook";
+
+  let branch = getState().homeReducers.book.branch
+  let _link = "http://localhost:8090/book/allbook"
   if (branch === "category") {
-    _link = "http://localhost:8090/book/category";
+    _link = "http://localhost:8090/book/category"
   } else if (branch === "publisher") {
-    _link = "http://localhost:8090/book/publisher";
+    _link = "http://localhost:8090/book/publisher"
   } else if (branch === "author") {
-    _link = "http://localhost:8090/book/author";
+    _link = "http://localhost:8090/book/author"
   }
-  let res;
 
+  let res
   // console.log(getState().homeReducers.book.id);
-
   try {
     res = await axios.post(_link, {
       page: 1,
@@ -327,114 +330,163 @@ export const setRangeType = (range) => async (dispatch, getState) => {
       sorttype: sorttype,
       sortorder: sortorder,
       id: getState().homeReducers.book.id,
-      searchtext: getState().homeReducers.book.searchtext,
-    });
+      searchtext: getState().homeReducers.book.searchtext
+    })
   } catch (err) {
-    console.log(err.response);
-    return;
+    console.log(err.response)
+    return
   }
   // console.log(JSON.stringify(res));
-  dispatch(setRange(range));
-  dispatch(setBook(res.data.data));
-  dispatch(setTotalPage(res.data.totalPage));
-};
+  dispatch(setRange(range))
+  dispatch(setBook(res.data.data))
+  dispatch(setPageSize(10))
+  dispatch(setTotalPage(res.data.totalPage))
+}
 
-export const setRange = (range) => ({
+export const setRange = range => ({
   type: homeTypes.SET_RANGE,
-  range,
-});
-export const setBranch = (branch) => ({
+  range
+})
+export const setBranch = branch => ({
   type: homeTypes.SET_BRANCH_SEARCH_BOOK,
-  branch,
-});
-export const setTitle = (title) => ({
+  branch
+})
+export const setTitle = title => ({
   type: homeTypes.SET_NAME_TITLE_ITEM,
-  title,
-});
-export const setSearchText = (searchtext) => ({
+  title
+})
+export const setSearchText = searchtext => ({
   type: homeTypes.SET_SEARCH_TEXT,
-  searchtext,
-});
+  searchtext
+})
 
 export const branchClick = (branch, id) => async (dispatch, getState) => {
-  let _link = "http://localhost:8090/book/allbook";
-  if (branch === "category") {
-    _link = "http://localhost:8090/book/category";
-  } else if (branch === "publisher") {
-    _link = "http://localhost:8090/book/publisher";
-  } else if (branch === "author") {
-    _link = "http://localhost:8090/book/author";
+  dispatch(setPage(1))
+  dispatch(setPageSize(10))
+
+  let sorttype = "release_date"
+  let sortorder = "-1"
+  let sortType = getState().homeReducers.book.sortType
+  if (sortType === sortTypes.SORT_DAY_DECREASED) {
+    sorttype = "release_date"
+    sortorder = "-1"
+  } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
+    sorttype = "release_date"
+    sortorder = "1"
+  } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
+    sorttype = "price"
+    sortorder = "-1"
+  } else if (sortType === sortTypes.SORT_PRICE_INCREASED) {
+    sorttype = "price"
+    sortorder = "1"
+  } else if (sortType === sortTypes.SORT_SALES_DECREASED) {
+    sorttype = "sales"
+    sortorder = "-1"
+  } else if (sortType === sortTypes.SORT_SALES_INCREASED) {
+    sorttype = "sales"
+    sortorder = "1"
+  } else if (sortType === sortTypes.SORT_VIEWS_DECREASED) {
+    sorttype = "view_counts"
+    sortorder = "-1"
+  } else if (sortType === sortTypes.SORT_VIEWS_INCREASED) {
+    sorttype = "view_counts"
+    sortorder = "1"
+  } else if (sortType === sortTypes.SORT_NAME_INCREASED) {
+    sorttype = "name"
+    sortorder = "1"
+  } else if (sortType === sortTypes.SORT_NAME_DECREASED) {
+    sorttype = "name"
+    sortorder = "-1"
   }
-  let res;
+
+  let _link = "http://localhost:8090/book/allbook"
+  if (branch === "category") {
+    _link = "http://localhost:8090/book/category"
+  } else if (branch === "publisher") {
+    _link = "http://localhost:8090/book/publisher"
+  } else if (branch === "author") {
+    _link = "http://localhost:8090/book/author"
+  }
+
+  // console.log(getState().homeReducers.book.range);
+  let res
   try {
     res = await axios.post(_link, {
+      // page: 1,
+      // pageSize: 10,
+      // range: undefined,
+      // sorttype: undefined,
+      // sortorder: undefined,
+      // id: id,
+      // searchtext: undefined,
+
       page: 1,
       pageSize: 10,
-      range: undefined,
-      sorttype: undefined,
-      sortorder: undefined,
-      id: id,
-      searchtext: undefined,
-    });
+      range: getState().homeReducers.book.range || null,
+      sorttype,
+      sortorder,
+      id,
+      searchtext: getState().homeReducers.book.searchtext
+    })
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setSearchText(""));
-  dispatch(setBook(res.data.data));
-  dispatch(setTotalPage(res.data.totalPage));
-};
+  // dispatch(setSearchText(""));
+  dispatch(setBook(res.data.data))
+  dispatch(setTotalPage(res.data.totalPage))
+}
 
 export const searchTextSubmit = () => async (dispatch, getState) => {
-  dispatch(setPage(1));
-  let sorttype = "createdAt";
-  let sortorder = "-1";
-  let sortType = getState().homeReducers.book.sortType;
+  dispatch(setPage(1))
+  let sorttype = "release_date"
+  let sortorder = "-1"
+  let sortType = getState().homeReducers.book.sortType
   if (sortType === sortTypes.SORT_DAY_DECREASED) {
-    sorttype = "createdAt";
-    sortorder = "-1";
+    sorttype = "release_date"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_DAY_INCREASED) {
-    sorttype = "createdAt";
-    sortorder = "1";
+    sorttype = "release_date"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_PRICE_DECREASED) {
-    sorttype = "price";
-    sortorder = "-1";
+    sorttype = "price"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_PRICE_INCREASED) {
-    sorttype = "price";
-    sortorder = "1";
+    sorttype = "price"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_SALES_DECREASED) {
-    sorttype = "sales";
-    sortorder = "-1";
+    sorttype = "sales"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_SALES_INCREASED) {
-    sorttype = "sales";
-    sortorder = "1";
+    sorttype = "sales"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_VIEWS_DECREASED) {
-    sorttype = "view_counts";
-    sortorder = "-1";
+    sorttype = "view_counts"
+    sortorder = "-1"
   } else if (sortType === sortTypes.SORT_VIEWS_INCREASED) {
-    sorttype = "view_counts";
-    sortorder = "1";
+    sorttype = "view_counts"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_INCREASED) {
-    sorttype = "name";
-    sortorder = "1";
+    sorttype = "name"
+    sortorder = "1"
   } else if (sortType === sortTypes.SORT_NAME_DECREASED) {
-    sorttype = "name";
-    sortorder = "-1";
+    sorttype = "name"
+    sortorder = "-1"
   }
-  let branch = getState().homeReducers.book.branch;
-  console.log(branch);
-  let _link = "http://localhost:8090/book/allbook";
+  let branch = getState().homeReducers.book.branch
+  console.log(branch)
+  let _link = "http://localhost:8090/book/allbook"
   if (branch === "category") {
-    _link = "http://localhost:8090/book/category";
+    _link = "http://localhost:8090/book/category"
   } else if (branch === "publisher") {
-    _link = "http://localhost:8090/book/publisher";
+    _link = "http://localhost:8090/book/publisher"
   } else if (branch === "author") {
-    _link = "http://localhost:8090/book/author";
+    _link = "http://localhost:8090/book/author"
   }
-  let res;
+  let res
   // console.log(getState().homeReducers.book.searchtext)
   try {
     if (getState().homeReducers.book.searchtext === "") {
-      const titleName = "ALL BOOK";
+      const titleName = "ALL BOOK"
       res = await axios.post("http://localhost:8090/book/allbook", {
         page: 1,
         pageSize: 10,
@@ -442,11 +494,12 @@ export const searchTextSubmit = () => async (dispatch, getState) => {
         sorttype: sorttype,
         sortorder: sortorder,
         // id: getState().homeReducers.book.id,
-        searchtext: getState().homeReducers.book.searchtext,
-      });
+        searchtext: getState().homeReducers.book.searchtext
+      })
       // console.log(getState().homeReducers.book.branch)
-      dispatch(setBranch(""));
-      dispatch(setTitle(titleName));
+      dispatch(dispatch(setRange(null)))
+      dispatch(setBranch(""))
+      dispatch(setTitle(titleName))
     } else {
       res = await axios.post(_link, {
         page: 1,
@@ -455,88 +508,88 @@ export const searchTextSubmit = () => async (dispatch, getState) => {
         sorttype: sorttype,
         sortorder: sortorder,
         id: getState().homeReducers.book.id,
-        searchtext: getState().homeReducers.book.searchtext,
-      });
+        searchtext: getState().homeReducers.book.searchtext
+      })
     }
   } catch (err) {
-    console.log(err.response);
-    return;
+    console.log(err.response)
+    return
   }
-  dispatch(setBook(res.data.data));
-  dispatch(setTotalPage(res.data.totalPage));
-};
+  dispatch(setBook(res.data.data))
+  dispatch(setPageSize(10))
+  dispatch(setTotalPage(res.data.totalPage))
+}
 
-export const setListProductIds = (data) => ({
+export const setListProductIds = data => ({
   type: homeTypes.SET_LIST_PRODUCT_IDS,
-  data,
-});
-export const getListBookIds = (ids) => async (dispatch, getState) => {
-  let res;
-  console.log(ids);
+  data
+})
+export const getListBookIds = ids => async (dispatch, getState) => {
+  let res
+  console.log(ids)
   try {
     res = await axios.post("http://localhost:8090/api/get-list-books", {
-      ids,
-    });
+      ids
+    })
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setListProductIds(res.data.data));
-};
-export const setListProductCategoryIds = (data) => ({
+  dispatch(setListProductIds(res.data.data))
+}
+export const setListProductCategoryIds = data => ({
   type: homeTypes.SET_LIST_PRODUCT_CATEGORY_IDS,
-  data,
-});
+  data
+})
 export const getListProductCategoryIds = () => async (dispatch, getState) => {
-  let res;
+  let res
   try {
     res = await axios.post(
       "http://localhost:8090/api/get-list-category-ids",
       {}
-    );
+    )
   } catch (err) {
-    return;
+    return
   }
-  dispatch(setListProductCategoryIds(res.data.data));
-};
+  dispatch(setListProductCategoryIds(res.data.data))
+}
 
-export const setListProductRankTop5 = (data) => ({
+export const setListProductRankTop5 = data => ({
   type: homeTypes.SET_LIST_PRODUCT_RANK_TOP_5,
-  data,
-});
-export const getListProductRankTop5 =
-  (values) => async (dispatch, getState) => {
-    let res;
-    try {
-      res = await axios.post(
-        "http://localhost:8090/api/get-rating-rank-product-top-5",
-        {
-          id_category: values,
-        }
-      );
-    } catch (err) {
-      return;
-    }
-    dispatch(setListProductRankTop5(res.data.data));
-  };
+  data
+})
+export const getListProductRankTop5 = values => async (dispatch, getState) => {
+  let res
+  try {
+    res = await axios.post(
+      "http://localhost:8090/api/get-rating-rank-product-top-5",
+      {
+        id_category: values
+      }
+    )
+  } catch (err) {
+    return
+  }
+  dispatch(setListProductRankTop5(res.data.data))
+}
 export const getListProductRankTopAll =
-  (values) => async (dispatch, getState) => {
+  values => async (dispatch, getState) => {
     // console.log(values);
     try {
       const { data } = await axios.post(
         `http://localhost:8090/api/get-rating-rank-product-all`,
         {
-          id_category: values,
+          id_category: values
         }
-      );
+      )
       // console.log(data);
       dispatch({
         type: homeTypes.SET_LIST_PRODUCT_RANK_TOP_ALL,
-        payload: data,
-      });
+        payload: data
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
 export const getListProductTop10ByCategory =
   (id_category, pageNumber) => async (dispatch, getState) => {
@@ -546,18 +599,18 @@ export const getListProductTop10ByCategory =
         `http://localhost:8090/api/get-product-by-category-top-10`,
         {
           id_category,
-          pageNumber,
+          pageNumber
         }
-      );
+      )
       // console.log(data);
       dispatch({
         type: homeTypes.SET_LIST_PRODUCT_TOP_10_BY_CATEGORY,
-        payload: data,
-      });
+        payload: data
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 // export const getListProductTop10ByCategory =
 //   (values) => async (dispatch, getState) => {
 //     // console.log(values);
@@ -575,14 +628,14 @@ export const getListProductTop10ByCategory =
 //       console.log(err);
 //     }
 //   };
-export const setPageSizeListProductByCategory = (data) => ({
+export const setPageSizeListProductByCategory = data => ({
   type: homeTypes.SET_PAGE_SIZE_LIST_PRODUCT_BY_CATEGORY,
-  data,
-});
-export const setListProductByCategory = (data) => ({
+  data
+})
+export const setListProductByCategory = data => ({
   type: homeTypes.SET_LIST_PRODUCT_BY_CATEGORY,
-  data,
-});
+  data
+})
 export const getListProductByCategory =
   ({
     pageNumber = "",
@@ -595,10 +648,11 @@ export const getListProductByCategory =
     max = 0,
     stars = 0,
     sales = "",
-    updatedAtByDay = "",
+    updatedAtByDay = ""
   }) =>
   async (dispatch, getState) => {
-    // console.log(values);
+    // console.log(id_category);
+    // console.log(pageSize)
     try {
       const { data } = await axios.post(
         `http://localhost:8090/api/get-product-by-category-all-pagination?pageNumber=${pageNumber}&pageSize=${pageSize}&published=${published}&name=${name}&id_category=${id_category}&min=${min}&max=${max}&stars=${stars}&sales=${sales}&updatedAtByDay=${updatedAtByDay}&order=${order}`,
@@ -606,15 +660,15 @@ export const getListProductByCategory =
           // skip: values.toSkip,
           // limit: values.limit,
         }
-      );
-      console.log(data);
-      dispatch({ type: homeTypes.SET_LIST_PRODUCT_BY_CATEGORY, payload: data });
+      )
+      // console.log(data);
+      dispatch({ type: homeTypes.SET_LIST_PRODUCT_BY_CATEGORY, payload: data })
     } catch (err) {
-      return;
+      return
     }
     // dispatch(setListProductByCategory(res.data));
     // dispatch({ type: homeTypes.SET_LIST_PRODUCT_BY_CATEGORY, payload: data });
-  };
+  }
 
 export const getListProductSoldTop10ByDay =
   () => async (dispatch, getState) => {
@@ -623,33 +677,33 @@ export const getListProductSoldTop10ByDay =
       const { data } = await axios.post(
         `http://localhost:8090/api/get-best-seller-product-top-5/by-day`,
         {}
-      );
+      )
       // console.log(data);
       dispatch({
         type: homeTypes.SET_LIST_PRODUCT_SOLD_TOP_10_BY_DAY,
-        payload: data,
-      });
+        payload: data
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 export const getListProductSoldTopAllByDay =
-  (values) => async (dispatch, getState) => {
+  values => async (dispatch, getState) => {
     // console.log(values);
     try {
       const { data } = await axios.post(
         `http://localhost:8090/api/get-best-seller-product-all-pagination/by-day`,
         {}
-      );
+      )
       // console.log(data);
       dispatch({
         type: homeTypes.SET_LIST_PRODUCT_SOLD_TOP_ALL_BY_DAY,
-        payload: data,
-      });
+        payload: data
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
 export const getListProductSoldTop10ByWeek =
   (values, pageNumber) => async (dispatch, getState) => {
@@ -658,65 +712,123 @@ export const getListProductSoldTop10ByWeek =
       const { data } = await axios.post(
         `http://localhost:8090/api/get-best-seller-product-all-pagination/by-week`,
         { id_category: values, pageNumber, week: 1 }
-      );
+      )
       // console.log(data);
       dispatch({
         type: homeTypes.SET_LIST_PRODUCT_SOLD_TOP_ALL_BY_WEEK,
-        payload: data,
-      });
+        payload: data
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 export const getListProductSoldTopAllByWeek =
-  (values) => async (dispatch, getState) => {
+  values => async (dispatch, getState) => {
     // console.log(values);
     try {
       const { data } = await axios.post(
         `http://localhost:8090/api/get-best-seller-product-top-10/by-week`,
         {}
-      );
+      )
       // console.log(data);
       dispatch({
         type: homeTypes.SET_LIST_PRODUCT_SOLD_TOP_ALL_BY_WEEK,
-        payload: data,
-      });
+        payload: data
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
-export const getListProductFavorTop2 =
-  (values) => async (dispatch, getState) => {
-    // console.log(values);
-    try {
-      const { data } = await axios.post(
-        `http://localhost:8090/api/get-favor-product`,
-        {}
-      );
-      // console.log(data);
-      dispatch({
-        type: homeTypes.SET_LIST_FAVOR_PRODUCT_TOP_2,
-        payload: data,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+export const getListProductFavorTop2 = values => async (dispatch, getState) => {
+  // console.log(values);
+  try {
+    const { data } = await axios.post(
+      `http://localhost:8090/api/get-favor-product`,
+      {}
+    )
+    // console.log(data);
+    dispatch({
+      type: homeTypes.SET_LIST_FAVOR_PRODUCT_TOP_2,
+      payload: data
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
 export const getListProductBestSellerTop10 =
-  (values) => async (dispatch, getState) => {
+  values => async (dispatch, getState) => {
     // console.log(values);
     try {
       const { data } = await axios.post(
         `http://localhost:8090/get/best-seller`,
         {}
-      );
+      )
       // console.log(data);
       dispatch({
         type: homeTypes.SET_LIST_BEST_SELLER_PRODUCT_TOP_10,
-        payload: data,
-      });
+        payload: data
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
+
+export const getListFlashSalesProductTop10 =
+  () => async (dispatch, getState) => {
+    // console.log(values);
+    try {
+      const { data } = await axios.post(
+        `http://localhost:8090/api/get-best-seller-flash-sales-product-top-5/flash-sales/by-time`,
+        {}
+      )
+      // console.log(data);
+      dispatch({
+        type: homeTypes.SET_LIST_FLASH_SALES_PRODUCT_TOP_10,
+        payload: data
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+export const onChangeCurrency = value => async (dispatch, getState) => {
+  dispatch({
+    type: "CHANGE_CURRENCY",
+    data: value
+  })
+}
+
+// export const getListProductSearch = () => async (dispatch, getState) => {
+//   // console.log(values);
+//   try {
+//     const { data } = await axios.post(
+//       `http://localhost:8090/product/search/list-data-search`,
+//       {}
+//     );
+//     // console.log(data);
+//     dispatch({
+//       type: homeTypes.SET_LIST_PRODUCT_SEARCH,
+//       payload: data,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+export const getNameProductSearch =
+  nameProductSearch => async (dispatch, getState) => {
+    // console.log(nameProductSearch);
+    try {
+      const { data } = await axios.post(
+        `http://localhost:8090/product/name/getIdByNameSearch/${nameProductSearch}`,
+        {}
+      )
+      // console.log(data);
+      dispatch({
+        type: homeTypes.SET_PRODUCT_NAME_SEARCH_BY_ID,
+        payload: data
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }

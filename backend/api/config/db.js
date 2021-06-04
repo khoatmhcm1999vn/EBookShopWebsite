@@ -13,13 +13,15 @@ function initial() {
     password = await bcrypt.hash(password, 10);
     if (!err && count === 0) {
       new User({
+        user_name: "admin",
         email: "admin@gmail.com",
         firstName: "Admin",
-        lastName: "admin",
+        lastName: "admin account",
         password: password,
         phone_number: "0911321145",
         token: token,
         is_admin: true,
+        role: "admin",
         is_verify: true,
       }).save((err) => {
         if (err) {
@@ -34,8 +36,7 @@ function initial() {
 const connectDB = async () => {
   const conn = await mongoose
     .connect(
-      process.env.MONGO_DB_URI ||
-        "mongodb+srv://myMongoDBUser:Abc123456@cluster0.kpppm.mongodb.net/bookshop?retryWrites=true",
+      process.env.DB_CONN_STRING || "mongodb://127.0.0.1:27017/book-shop",
       {
         useNewUrlParser: true,
         useCreateIndex: true,

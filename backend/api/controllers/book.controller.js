@@ -42,7 +42,7 @@ export const getAllBook = async (req, res) => {
   let searchCategory = null;
   searchCategory = await getCategoryIDBySearchText(searchText);
   // Sap xep
-  let sortType = "createdAt";
+  let sortType = "release_date";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -52,7 +52,7 @@ export const getAllBook = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "createdAt" &&
+    sortType !== "release_date" &&
     sortType !== "view_counts" &&
     sortType !== "sales" &&
     sortType !== "name"
@@ -121,7 +121,7 @@ export const getAllBook = async (req, res) => {
     })
       // select('-_id');
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author id_supplier name episode img price sellPrice stars quantity sales published sales view_counts release_date"
       )
       .skip(pageSize * (parseInt(page) - 1))
       .limit(pageSize)
@@ -145,7 +145,7 @@ export const getAllBook = async (req, res) => {
       published: true,
     })
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author id_supplier name episode img price sellPrice stars quantity sales published sales view_counts release_date"
       )
       .skip(pageSize * (parseInt(page) - 1))
       .limit(pageSize)
@@ -184,7 +184,7 @@ export const getBookByPublisher = async (req, res) => {
     searchText = req.body.searchtext;
   }
   //Sap xep
-  let sortType = "createdAt";
+  let sortType = "release_date";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -194,7 +194,7 @@ export const getBookByPublisher = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "createdAt" &&
+    sortType !== "release_date" &&
     sortType !== "view_counts" &&
     sortType !== "sales" &&
     sortType !== "name"
@@ -247,7 +247,7 @@ export const getBookByPublisher = async (req, res) => {
       published: true,
     })
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author name img price quantity published sales view_counts release_date"
       )
       .skip(pageSize * (parseInt(page) - 1))
       .limit(pageSize)
@@ -267,7 +267,7 @@ export const getBookByPublisher = async (req, res) => {
       published: true,
     })
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author name img price quantity published sales view_counts release_date"
       )
       .skip(pageSize * (parseInt(page) - 1))
       .limit(pageSize)
@@ -306,7 +306,7 @@ export const getBookByCategory = async (req, res) => {
     searchText = req.body.searchtext;
   }
   //Sap xep
-  let sortType = "createdAt";
+  let sortType = "release_date";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -316,7 +316,7 @@ export const getBookByCategory = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "createdAt" &&
+    sortType !== "release_date" &&
     sortType !== "view_counts" &&
     sortType !== "sales" &&
     sortType !== "name"
@@ -331,17 +331,30 @@ export const getBookByCategory = async (req, res) => {
   //Tinh tong so trang
   let bookCount, bookFind;
   try {
-    if (range === null) {
-      bookFind = await Book.find({
-        id_category: id,
-        name: new RegExp(searchText, "i"),
-        published: true,
-      });
-    } else {
+    if (range !== null) {
+      // bookFind = await Book.find({
+      //   id_category: id,
+      //   name: new RegExp(searchText, "i"),
+      //   published: true,
+      // });
+
       bookFind = await Book.find({
         id_category: id,
         name: new RegExp(searchText, "i"),
         price: { $gte: objRange.low, $lte: objRange.high },
+        published: true,
+      });
+    } else {
+      // bookFind = await Book.find({
+      //   id_category: id,
+      //   name: new RegExp(searchText, "i"),
+      //   price: { $gte: objRange.low, $lte: objRange.high },
+      //   published: true,
+      // });
+
+      bookFind = await Book.find({
+        id_category: id,
+        name: new RegExp(searchText, "i"),
         published: true,
       });
     }
@@ -364,14 +377,35 @@ export const getBookByCategory = async (req, res) => {
   let sortQuery = {};
   sortQuery[sortType] = sortOrder;
   //Lay du lieu
-  if (range === null) {
+  if (range !== null) {
+    // Book.find({
+    //   id_category: id,
+    //   name: new RegExp(searchText, "i"),
+    //   published: true,
+    // })
+    //   .select(
+    //     "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+    //   )
+    //   .limit(pageSize)
+    //   .skip(pageSize * (page - 1))
+    //   .sort(sortQuery)
+    //   .exec((err, docs) => {
+    //     if (err) {
+    //       console.log(err);
+    //       res.status(500).json({ msg: err });
+    //       return;
+    //     }
+    //     res.status(200).json({ data: docs, totalPage: totalPage });
+    //   });
+
     Book.find({
       id_category: id,
       name: new RegExp(searchText, "i"),
+      price: { $gte: objRange.low, $lte: objRange.high },
       published: true,
     })
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author name img price quantity published sales view_counts release_date"
       )
       .limit(pageSize)
       .skip(pageSize * (page - 1))
@@ -385,14 +419,34 @@ export const getBookByCategory = async (req, res) => {
         res.status(200).json({ data: docs, totalPage: totalPage });
       });
   } else {
+    // Book.find({
+    //   id_category: id,
+    //   name: new RegExp(searchText, "i"),
+    //   price: { $gte: objRange.low, $lte: objRange.high },
+    //   published: true,
+    // })
+    //   .select(
+    //     "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+    //   )
+    //   .limit(pageSize)
+    //   .skip(pageSize * (page - 1))
+    //   .sort(sortQuery)
+    //   .exec((err, docs) => {
+    //     if (err) {
+    //       console.log(err);
+    //       res.status(500).json({ msg: err });
+    //       return;
+    //     }
+    //     res.status(200).json({ data: docs, totalPage: totalPage });
+    //   });
+
     Book.find({
       id_category: id,
       name: new RegExp(searchText, "i"),
-      price: { $gte: objRange.low, $lte: objRange.high },
       published: true,
     })
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author name img price quantity published sales view_counts release_date"
       )
       .limit(pageSize)
       .skip(pageSize * (page - 1))
@@ -417,10 +471,14 @@ export const getBookByAuthor = async (req, res) => {
     return;
   }
   let { id, page } = req.body;
+  // console.log(req.body.range);
   //Khoang gia
   let range = null;
   let objRange = null;
-  if (typeof req.body.range !== "undefined") {
+  if (
+    typeof req.body.range !== "undefined" ||
+    (req.body.range !== null && req.body.range !== undefined)
+  ) {
     range = req.body.range;
     objRange = range;
   }
@@ -430,7 +488,7 @@ export const getBookByAuthor = async (req, res) => {
     searchText = req.body.searchtext;
   }
   //Sap xep
-  let sortType = "createdAt";
+  let sortType = "release_date";
   let sortOrder = "-1";
   if (typeof req.body.sorttype !== "undefined") {
     sortType = req.body.sorttype;
@@ -440,7 +498,7 @@ export const getBookByAuthor = async (req, res) => {
   }
   if (
     sortType !== "price" &&
-    sortType !== "createdAt" &&
+    sortType !== "release_date" &&
     sortType !== "view_counts" &&
     sortType !== "sales" &&
     sortType !== "name"
@@ -457,20 +515,35 @@ export const getBookByAuthor = async (req, res) => {
   sortQuery[sortType] = sortOrder;
   //Tinh tong so trang
   let bookCount, bookFind;
+  console.log(range);
   try {
-    if (range === null) {
-      bookFind = await Book.find({
-        id_author: id,
-        name: new RegExp(searchText, "i"),
-        published: true,
-      });
-    } else {
+    if (range !== null && range !== undefined) {
+      // bookFind = await Book.find({
+      //   id_author: id,
+      //   name: new RegExp(searchText, "i"),
+      //   published: true,
+      // });
+
       bookFind = await Book.find({
         id_author: id,
         name: new RegExp(searchText, "i"),
         price: { $gte: objRange.low, $lte: objRange.high },
         published: true,
       });
+    } else {
+      // bookFind = await Book.find({
+      //   id_author: id,
+      //   name: new RegExp(searchText, "i"),
+      //   price: { $gte: objRange.low, $lte: objRange.high },
+      //   published: true,
+      // });
+
+      bookFind = await Book.find({
+        id_author: id,
+        name: new RegExp(searchText, "i"),
+        published: true,
+      });
+      console.log("test null val");
     }
   } catch (err) {
     res.status(500).json({ msg: err });
@@ -488,14 +561,14 @@ export const getBookByAuthor = async (req, res) => {
   }
 
   //Lay du lieu
-  if (typeof req.body.range === "undefined") {
+  if (typeof req.body.range === "undefined" || range === null) {
     Book.find({
       id_author: id,
       name: new RegExp(searchText, "i"),
       published: true,
     })
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author name img price quantity published sales view_counts release_date"
       )
       .limit(pageSize)
       .skip(pageSize * (page - 1))
@@ -508,6 +581,7 @@ export const getBookByAuthor = async (req, res) => {
         }
         res.status(200).json({ data: docs, totalPage: totalPage });
       });
+    console.log("test null valx2");
   } else {
     Book.find({
       id_author: id,
@@ -516,7 +590,7 @@ export const getBookByAuthor = async (req, res) => {
       published: true,
     })
       .select(
-        "id_category id_nsx id_author name img price quantity published sales view_counts createdAt"
+        "id_category id_nsx id_author name img price quantity published sales view_counts release_date"
       )
       .limit(pageSize)
       .skip(pageSize * (page - 1))
@@ -543,17 +617,22 @@ export const getBookByID = async (req, res) => {
       // __v: 0,
       name: 1,
       describe: 1,
+      episode: 1,
       id_category: 1,
       id_author: 1,
       id_nsx: 1,
+      id_supplier: 1,
       img: 1,
       price: 1,
+      sellPrice: 1,
       quantity: 1,
+      sales: 1,
       published: 1,
       reviewCount: 1,
       stars: 1,
       view_counts: 1,
-      createdAt: 1,
+      release_date: 1,
+      // release_date: 1
     });
   } catch (err) {
     console.log(err);
@@ -614,21 +693,27 @@ export const getRelatedBook = async (req, res) => {
     },
     {
       name: 1,
+      describe: 1,
       id_category: 1,
       id_author: 1,
       id_nsx: 1,
+      id_supplier: 1,
       img: 1,
       price: 1,
+      sellPrice: 1,
       quantity: 1,
+      sales: 1,
       published: 1,
+      reviewCount: 1,
       stars: 1,
       view_counts: 1,
-      createdAt: 1,
+      release_date: 1,
+      // release_date: 1
     }
   )
     // .select("-__v name ")
     .limit(5)
-    .sort({ createdAt: -1 })
+    .sort({ release_date: -1 })
     .exec((err, docs) => {
       if (err) {
         console.log(err);

@@ -18,22 +18,24 @@ const billSchema = new Schema(
       ref: "UserAddress",
       required: false,
     },
-
     products: {
       type: [
         {
           id_category: String,
+          id_supplier: String,
           name: String,
           price: Number,
+          sellPrice: Number,
+          stars: Number,
           // release_date: Date,
-          createdAt: Date,
+          // createdAt: Date,
           img: String,
-          describe: String,
+          // describe: String,
           id_nsx: String,
           id_author: String,
           count: Number,
-          // sales: Number,
-          // quantity: Number,
+          sales: Number,
+          quantity: Number,
           _id: String,
         },
       ],
@@ -44,7 +46,6 @@ const billSchema = new Schema(
     //   type: Boolean,
     //   default: false,
     // },
-
     name: String,
     email: String,
     phone: String,
@@ -52,7 +53,6 @@ const billSchema = new Schema(
     district: String,
     address: String,
     city: String,
-
     // itemsPrice: { type: Number, required: true },
     // shippingPrice: { type: Number, required: true },
     // taxPrice: { type: Number, required: true },
@@ -73,7 +73,5 @@ const billSchema = new Schema(
     timestamps: true,
   }
 );
-
 const Bill = mongoose.model("Bill", billSchema);
-
 export default Bill;

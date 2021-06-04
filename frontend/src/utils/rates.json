@@ -1,0 +1,61 @@
+{
+    "rates": [
+        {
+            "bank": "VIETCOM",
+            "brand": "",
+            "updated": 1579484760000,
+            "date": "20200120",
+            "version": "1",
+            "value": [
+              {
+                  "buy": "3,467.17",
+                  "order": "0",
+                  "name": "CNY",
+                  "sell": "3,502.19",
+                  "transfer": "3,467.17",
+                  "id": "27094059",
+                  "day": "20201221",
+                  "code": "CNY"
+                  },
+                {
+                    "buy": "23,075.00",
+                    "order": "0",
+                    "name": "USD",
+                    "sell": "23,105.00",
+                    "transfer": "23,075.00",
+                    "id": "26771693",
+                    "day": "20200120",
+                    "code": "USD"
+                },
+                {
+                    "buy": "25,309.59",
+                    "order": "1",
+                    "name": "EUR",
+                    "sell": "25,565.24",
+                    "transfer": "25,309.59",
+                    "id": "26772130",
+                    "day": "20200120",
+                    "code": "EUR"
+                },
+                {
+                  "buy": "216.29",
+                  "order": "3",
+                  "name": "JPY",
+                  "sell": "218.48",
+                  "transfer": "216.29",
+                  "id": "27094065",
+                  "day": "20201221",
+                  "code": "JPY"
+                  }
+                ],
+            "order": "0"
+        }
+    ],
+    "golds": [],
+    "time": 4,
+    "excute1_time": 4,
+    "excute2_time": 0,
+    "excute3_time": 0,
+    "count1": 18,
+    "count2": 0
+  }

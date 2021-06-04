@@ -1,22 +1,22 @@
-import React, { useEffect } from "react";
-import Carousel from "react-bootstrap/Carousel";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react"
+import Carousel from "react-bootstrap/Carousel"
+import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
 
-import { getListProductBestSellerTop10 } from "../../actions/home.action";
-import "./ProductCardsSlider.css";
-import StarRating from "../rating/Rating";
+import { getListProductBestSellerTop10 } from "../../actions/home.action"
+import "./ProductCardsSlider.css"
+import StarRating from "../rating/Rating"
 
 const ProductCardsSlider = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const products = useSelector(
-    (state) => state.homeReducers.book.dataProductBestSellerTop10
-  );
-  const productsId = products.map((p, i) => p._id);
+    state => state.homeReducers.book.dataProductBestSellerTop10
+  )
+  const productsId = products.map((p, i) => p._id)
 
   useEffect(() => {
-    dispatch(getListProductBestSellerTop10());
-  }, [dispatch]);
+    dispatch(getListProductBestSellerTop10())
+  }, [dispatch])
 
   //console.log(productsId);
 
@@ -24,7 +24,7 @@ const ProductCardsSlider = () => {
     return (
       <Carousel.Item>
         <div className="card-deck">
-          {array.map((product) => {
+          {array.map(product => {
             for (let i = counter; i < counter + 4; i++) {
               if (product._id === productsId[i]) {
                 return (
@@ -34,7 +34,7 @@ const ProductCardsSlider = () => {
                         height: "130px",
                         display: "flex",
                         justifyContent: "center",
-                        alignItems: "center",
+                        alignItems: "center"
                       }}
                     >
                       <Link to={`/product/${product._id}`}>
@@ -57,16 +57,16 @@ const ProductCardsSlider = () => {
                       </Link>
                     </div>
                   </div>
-                );
+                )
               }
             }
           })}
         </div>
       </Carousel.Item>
-    );
-  };
+    )
+  }
 
-  const settings = { controls: false };
+  const settings = { controls: false }
 
   return (
     <div>
@@ -83,7 +83,7 @@ const ProductCardsSlider = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProductCardsSlider;
+export default ProductCardsSlider

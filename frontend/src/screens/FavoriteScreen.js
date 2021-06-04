@@ -1,59 +1,55 @@
-import React, { useEffect, useState } from "react";
-import AxiosClient from "../config/axiosClient";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { logout } from "../actions/user.action";
-import HeaderTop from "../components/header/header.top";
-import HeaderMiddle from "../components/header/header.middle";
-import FooterTop from "../components/footer/footer.top";
-import FooterMiddle from "../components/footer/footer.middle";
-import FooterBottom from "../components/footer/footer.bottom";
+import React, { useEffect, useState } from "react"
+import AxiosClient from "../config/axiosClient"
+import { useSelector, useDispatch } from "react-redux"
+import { Link } from "react-router-dom"
+import { logout } from "../actions/user.action"
+import HeaderTop from "../components/header/header.top"
+import HeaderMiddle from "../components/header/header.middle"
+import FooterTop from "../components/footer/footer.top"
+import FooterMiddle from "../components/footer/footer.middle"
+import FooterBottom from "../components/footer/footer.bottom"
 
 function FavoritePage({ history }) {
-  const dispatch = useDispatch();
-  const islogin = useSelector((state) => state.userReducers.user.islogin);
-  const currentUser = useSelector(
-    (state) => state.userReducers.user.currentUser
-  );
-  const cart = useSelector(
-    (state) => state.cart.data
-  );
-  const [Favorites, setFavorites] = useState([]);
-  const [Loading, setLoading] = useState(true);
-  let variable = JSON.parse(localStorage.getItem("userInfo"));
+  const dispatch = useDispatch()
+  const islogin = useSelector(state => state.userReducers.user.islogin)
+  const currentUser = useSelector(state => state.userReducers.user.currentUser)
+  const cart = useSelector(state => state.cart.data)
+  const [Favorites, setFavorites] = useState([])
+  const [Loading, setLoading] = useState(true)
+  let variable = JSON.parse(localStorage.getItem("userInfo"))
 
   // console.log(cart)
 
   useEffect(() => {
-    fetchFavoredMovie();
-  }, []);
+    fetchFavoredMovie()
+  }, [])
   const fetchFavoredMovie = () => {
     AxiosClient.post("/api/favourite/getFavoredBook", variable).then(
-      (response) => {
+      response => {
         if (response.success) {
-          setFavorites(response.favorites);
-          setLoading(false);
+          setFavorites(response.favorites)
+          setLoading(false)
         } else {
-          alert("Failed to get subscription videos");
+          alert("Failed to get subscription videos")
         }
       }
-    );
-  };
+    )
+  }
   const onClickDelete = (bookId, userId) => {
     const variables = {
       id_book: bookId,
-      id_user: userId,
-    };
+      id_user: userId
+    }
     AxiosClient.post("/api/favourite/removeFromFavorite", variables).then(
-      (response) => {
+      response => {
         if (response.success) {
-          fetchFavoredMovie();
+          fetchFavoredMovie()
         } else {
-          alert("Failed to Remove From Favorite");
+          alert("Failed to Remove From Favorite")
         }
       }
-    );
-  };
+    )
+  }
   const renderCards = Favorites.map((favorite, index) => {
     return (
       <tr key={index}>
@@ -67,14 +63,15 @@ function FavoritePage({ history }) {
         </td>
         <td>
           <button
+            style={{ marginLeft: "100px" }}
             onClick={() => onClickDelete(favorite.id_book, favorite.id_user)}
           >
             Remove
           </button>
         </td>
       </tr>
-    );
-  });
+    )
+  })
   return (
     <div>
       <header id="header">
@@ -105,7 +102,7 @@ function FavoritePage({ history }) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <p>Please Log in first...</p>
@@ -131,7 +128,7 @@ function FavoritePage({ history }) {
         <FooterBottom />
       </footer>
     </div>
-  );
+  )
 }
 
-export default FavoritePage;
+export default FavoritePage

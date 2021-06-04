@@ -9,14 +9,31 @@ const bookSchema = new Schema(
       required: [true, "can't be blank"],
       index: true,
     },
+    id_flashSales: {
+      type: Schema.Types.ObjectId,
+      ref: "FlashSale",
+    },
     name: {
       type: String,
       required: [true, "can't be blank"],
       index: true,
     },
+    episode: {
+      type: String,
+      default: "",
+    },
     price: {
       type: Number,
       required: [true, "can't be blank"],
+    },
+    sellPrice: {
+      type: Number,
+      default: 0,
+    },
+    currencyUnit: {
+      type: String,
+      enum: ["VND", "USD"],
+      default: "VND",
     },
     quantity: {
       type: Number,
@@ -27,15 +44,21 @@ const bookSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    // release_date: {
-    //   type: Date,
-    //   $dateToString: { format: "%Y-%m-%d", date: "$date" },
-    //   default: new Date(),
-    // },
+    release_date: {
+      type: Date,
+      $dateToString: { format: "%Y-%m-%d", date: "$date" },
+      default: new Date(),
+    },
+    sold_date: {
+      type: Date,
+      $dateToString: { format: "%Y-%m-%d", date: "$date" },
+      default: new Date(),
+    },
     img: {
       type: String,
       required: [true, "can't be blank"],
     },
+    // image_details: [String],
     describe: {
       type: String,
       default: "",
@@ -47,6 +70,10 @@ const bookSchema = new Schema(
     id_author: {
       type: String,
       required: [true, "can't be blank"],
+    },
+    id_supplier: {
+      type: String,
+      // required: [true, "can't be blank"],
     },
     stars: {
       default: 0,
@@ -82,11 +109,8 @@ const bookSchema = new Schema(
     timestamps: true,
   }
 );
-
 bookSchema.virtual("id").get(function () {
   return this._id.toString();
 });
-
 const Book = mongoose.model("Book", bookSchema);
-
 export default Book;

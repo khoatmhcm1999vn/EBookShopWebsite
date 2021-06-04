@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from "react"
+import { Link } from "react-router-dom"
 
 const ProductItem = ({ urlImg, price, describe, id, book, addToCart }) => (
   <div className="col-sm-4">
@@ -21,8 +21,8 @@ const ProductItem = ({ urlImg, price, describe, id, book, addToCart }) => (
           </Link>
           <p
             onClick={() => {
-              book.count = 1;
-              addToCart(book);
+              book.count = 1
+              addToCart(book)
             }}
           >
             <button
@@ -36,5 +36,5 @@ const ProductItem = ({ urlImg, price, describe, id, book, addToCart }) => (
       </div>
     </div>
   </div>
-);
-export default ProductItem;
+)
+export default ProductItem

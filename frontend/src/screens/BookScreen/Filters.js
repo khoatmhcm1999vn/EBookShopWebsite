@@ -1,78 +1,78 @@
-import React, { useState } from "react";
-import DatePicker from "./DatePickerCallendarIcon";
-import { AiOutlineSync } from "react-icons/ai";
-import { useAsyncDebounce } from "react-table";
+import React, { useState } from "react"
+import DatePicker from "./DatePickerCallendarIcon"
+import { AiOutlineSync } from "react-icons/ai"
+import { useAsyncDebounce } from "react-table"
 
-const Filters = (props) => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [categoryFilterValue, setCategoryFilterValue] = useState(null);
-  const [value, setValue] = React.useState(props.globalFilter);
+const Filters = props => {
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [categoryFilterValue, setCategoryFilterValue] = useState(null)
+  const [value, setValue] = React.useState(props.globalFilter)
 
-  const count = props.preGlobalFilteredRows.length;
+  const count = props.preGlobalFilteredRows.length
 
   // attached to onChange event litener of Global filter text input box
-  const onChange = useAsyncDebounce((value) => {
-    props.setGlobalFilter(value || undefined);
-  }, 200);
+  const onChange = useAsyncDebounce(value => {
+    props.setGlobalFilter(value || undefined)
+  }, 200)
 
   // called when a user selects filter start-date
-  const handleStartDate = (date) => {
-    setStartDate(date);
-  };
+  const handleStartDate = date => {
+    setStartDate(date)
+  }
   //called when a user selects filter end-date
-  const handleEndDate = (date) => {
-    setEndDate(date);
-  };
+  const handleEndDate = date => {
+    setEndDate(date)
+  }
 
   // Handles Selected Category filter option and update the state
-  const handleCategoryOptionsChange = (event) => {
-    setCategoryFilterValue(event.target.value);
-  };
+  const handleCategoryOptionsChange = event => {
+    setCategoryFilterValue(event.target.value)
+  }
 
   // Auto Rest All Filters
   const autoResetFilter = () => {
-    setStartDate(null);
-    setEndDate(null);
-    setCategoryFilterValue(null);
-    props.dispatch({ type: "resetFilters" });
-    var radios = document.querySelectorAll('input[name="category-Filters"]');
+    setStartDate(null)
+    setEndDate(null)
+    setCategoryFilterValue(null)
+    props.dispatch({ type: "resetFilters" })
+    var radios = document.querySelectorAll('input[name="category-Filters"]')
     for (let i of radios) {
       if (i.checked) {
-        i.checked = false;
-        break;
+        i.checked = false
+        break
       }
     }
-  };
+  }
 
   // Filter table by selected category option
   const handleFilterByCategory = () => {
-    props.setFilter("category", categoryFilterValue);
-  };
+    props.setFilter("category", categoryFilterValue)
+  }
 
   // Filter table by selected start-date and end-date
   const handleFilterByDate = () => {
     if (startDate && endDate) {
-      props.setFilter("createdAt", [startDate, endDate]);
+      props.setFilter("createdAt", [startDate, endDate])
     }
-  };
+  }
 
   // Handles all calls to filter the table <-- attached to onClick event of "apply filter button" -->
   const applyFilter = () => {
     if (startDate && endDate && categoryFilterValue) {
-      handleFilterByDate();
-      handleFilterByCategory();
+      handleFilterByDate()
+      handleFilterByCategory()
     }
     if (startDate && endDate && !categoryFilterValue) {
-      handleFilterByDate();
+      handleFilterByDate()
     }
     if (!startDate && !endDate && categoryFilterValue) {
-      handleFilterByCategory();
+      handleFilterByCategory()
     }
     if ((!startDate && endDate) || (startDate && !endDate)) {
-      window.alert("Please Make sure you select start-date and end-date");
+      window.alert("Please Make sure you select start-date and end-date")
     }
-  };
+  }
 
   return (
     <div>
@@ -167,19 +167,19 @@ const Filters = (props) => {
         <input
           type="text"
           value={value || ""}
-          onChange={(e) => {
-            setValue(e.target.value);
-            onChange(e.target.value);
+          onChange={e => {
+            setValue(e.target.value)
+            onChange(e.target.value)
           }}
           placeholder={`records by user name`}
           style={{
             fontSize: "1rem",
-            border: "2px solid #32E0C4",
+            border: "2px solid #32E0C4"
           }}
         ></input>
       </span>
     </div>
-  );
-};
+  )
+}
 
-export default Filters;
+export default Filters

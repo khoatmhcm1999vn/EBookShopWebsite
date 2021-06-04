@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 // import Carousel from "react-bootstrap/Carousel";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getListProductTop10ByCategory } from "../../actions/home.action";
-import Rating from "../../components/rating/Rating";
+import { Link, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { getListProductTop10ByCategory } from "../../actions/home.action"
+import Rating from "../../components/rating/Rating"
 
 export default function SliderListProductTop10ByCategory(props) {
   // const { id_category = "all", pageNumber = 1, pageSize = 10 } = useParams();
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const products = useSelector(
-    (state) => state.homeReducers.book.dataTop10ByCategory
-  );
+    state => state.homeReducers.book.dataTop10ByCategory
+  )
   const productCategoryList = useSelector(
-    (state) => state.homeReducers.book.dataProductCategoryIds
-  );
-  const productsPage = useSelector((state) => state.homeReducers.book);
-  const [id_category, setIdCategory] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
+    state => state.homeReducers.book.dataProductCategoryIds
+  )
+  const productsPage = useSelector(state => state.homeReducers.book)
+  const [id_category, setIdCategory] = useState("")
+  const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     dispatch(
@@ -25,12 +25,12 @@ export default function SliderListProductTop10ByCategory(props) {
         id_category !== "all" ? id_category : "",
         pageNumber
       )
-    );
+    )
 
     // return function cleanup() {
     //   setPageNumber(1);
     // };
-  }, [dispatch, id_category, pageNumber]);
+  }, [dispatch, id_category, pageNumber])
 
   // console.log("totalPage: " + productsPage.totalPageCateTop10);
   // console.log("curPage: " + pageNumber);
@@ -260,5 +260,5 @@ export default function SliderListProductTop10ByCategory(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

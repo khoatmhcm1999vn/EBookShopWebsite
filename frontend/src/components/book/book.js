@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import swal from "sweetalert";
+import React, { Component } from "react"
+import swal from "sweetalert"
 // import { Link } from "react-router-dom";
 
 class Book extends Component {
   constructor() {
-    super();
-    this.handleCheckBox = this.handleCheckBox.bind(this);
+    super()
+    this.handleCheckBox = this.handleCheckBox.bind(this)
     this.state = {
       pagination: [],
       book: null,
@@ -26,14 +26,14 @@ class Book extends Component {
       id_author: "",
       id_category: "",
       noti: "",
-      id: null,
-    };
+      id: null
+    }
   }
 
   handleCheckBox(e) {
     this.setState({
-      published: e.target.checked,
-    });
+      published: e.target.checked
+    })
   }
 
   confirmDelete(id) {
@@ -42,47 +42,47 @@ class Book extends Component {
       text: "Once deleted, you will not be able to recover this data!",
       icon: "warning",
       buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
+      dangerMode: true
+    }).then(willDelete => {
       if (willDelete) {
-        this.props.deleteBook(id);
+        this.props.deleteBook(id)
         swal("Poof! Your Book data has been deleted!", {
-          icon: "success",
-        });
+          icon: "success"
+        })
       }
-    });
+    })
   }
 
   componentWillMount() {
-    let tmp = [];
+    let tmp = []
     for (let i = 1; i <= this.props.totalpage; i++) {
-      tmp.push(i);
+      tmp.push(i)
     }
-    this.setState({ pagination: tmp });
+    this.setState({ pagination: tmp })
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.totalpage !== this.props.totalpage) {
-      let tmp = [];
+      let tmp = []
       for (let i = 1; i <= nextProps.totalpage; i++) {
-        tmp.push(i);
+        tmp.push(i)
       }
-      this.setState({ pagination: tmp });
+      this.setState({ pagination: tmp })
     }
     if (nextProps.book !== null) {
       this.setState({
-        imagePreviewUrl: nextProps.book.img,
-      });
+        imagePreviewUrl: nextProps.book.img
+      })
     }
     if (nextProps.isadd === true) {
-      this.reset();
+      this.reset()
     }
     if (nextProps.isupdate === true) {
-      this.reset();
+      this.reset()
     }
   }
   renderPagination() {
     if (this.state.pagination.length === 0) {
-      return null;
+      return null
     } else {
       return (
         <ul className="pagination pagination-custom col-md-6 offset-md-3">
@@ -98,51 +98,51 @@ class Book extends Component {
                 >
                   <a>{element}</a>
                 </li>
-              );
+              )
             } else {
               return (
                 <li onClick={() => this.props.setPage(element)}>
                   <a>{element}</a>
                 </li>
-              );
+              )
             }
           })}
           <li onClick={() => this.props.nextPage()}>
             <a>&raquo;</a>
           </li>
         </ul>
-      );
+      )
     }
   }
-  handleChangeImg = (img) => {
-    if (img === undefined) return;
-    let reader = new FileReader();
+  handleChangeImg = img => {
+    if (img === undefined) return
+    let reader = new FileReader()
     reader.onloadend = () => {
       this.setState({
         file: img,
-        img: reader.result,
-      });
-    };
-    reader.readAsDataURL(img);
-  };
-  invalidPrice = (t) => {
-    var str = t.toString();
-    let count = 0;
-    for (let i = 0; i < str.length; i++) {
-      if (str.charAt(i) == "+" || str.charAt(i) == "-") count++;
-      else break;
+        img: reader.result
+      })
     }
-    str = str.substring(count, str.length);
-    count = 0;
+    reader.readAsDataURL(img)
+  }
+  invalidPrice = t => {
+    var str = t.toString()
+    let count = 0
+    for (let i = 0; i < str.length; i++) {
+      if (str.charAt(i) == "+" || str.charAt(i) == "-") count++
+      else break
+    }
+    str = str.substring(count, str.length)
+    count = 0
     for (let i = 0; i < str.length; i++) {
       if (str.charAt(i) == ".") {
-        count++;
+        count++
       }
-      if (str.charAt(i) < "0" || str.charAt(i) > "9") return false;
+      if (str.charAt(i) < "0" || str.charAt(i) > "9") return false
     }
-    if (count > 1) return false;
-    return !isNaN(Number.parseFloat(str));
-  };
+    if (count > 1) return false
+    return !isNaN(Number.parseFloat(str))
+  }
   submitAddBook = () => {
     const {
       id_category,
@@ -154,88 +154,88 @@ class Book extends Component {
       describe,
       id_nsx,
       id_author,
-      file,
-    } = this.state;
+      file
+    } = this.state
     if (name.length <= 0) {
       this.setState({
-        noti: "Name invalid",
-      });
-      return;
+        noti: "Name invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (createdAt === null) {
       this.setState({
-        noti: "Day invalid",
-      });
-      return;
+        noti: "Day invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (!this.invalidPrice(price)) {
       this.setState({
-        noti: "Price invalid",
-      });
-      return;
+        noti: "Price invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (!this.invalidPrice(quantity)) {
       this.setState({
-        noti: "Quantity invalid",
-      });
-      return;
+        noti: "Quantity invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (id_category === "") {
       this.setState({
-        noti: "Category invalid",
-      });
-      return;
+        noti: "Category invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (id_author === "") {
       this.setState({
-        noti: "Author invalid",
-      });
-      return;
+        noti: "Author invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
 
     if (id_nsx === "") {
       this.setState({
-        noti: "Publisher invalid",
-      });
-      return;
+        noti: "Publisher invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (file === null) {
       this.setState({
-        noti: "File invalid",
-      });
-      return;
+        noti: "File invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     this.props.addBook(
       id_category,
@@ -248,8 +248,8 @@ class Book extends Component {
       id_nsx,
       id_author,
       file
-    );
-  };
+    )
+  }
   submitUpdateBook = () => {
     const {
       id_category,
@@ -263,88 +263,88 @@ class Book extends Component {
       id_author,
       file,
       id,
-      img,
-    } = this.state;
+      img
+    } = this.state
     if (name.length <= 0) {
       this.setState({
-        noti: "Name invalid",
-      });
-      return;
+        noti: "Name invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (createdAt === null) {
       this.setState({
-        noti: "Day invalid",
-      });
-      return;
+        noti: "Day invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (!this.invalidPrice(price)) {
       this.setState({
-        noti: "Price invalid",
-      });
-      return;
+        noti: "Price invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (!this.invalidPrice(quantity)) {
       this.setState({
-        noti: "Quantity invalid",
-      });
-      return;
+        noti: "Quantity invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (id_category === "") {
       this.setState({
-        noti: "Category invalid",
-      });
-      return;
+        noti: "Category invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (id_author === "") {
       this.setState({
-        noti: "Author invalid",
-      });
-      return;
+        noti: "Author invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
 
     if (id_nsx === "") {
       this.setState({
-        noti: "Publisher invalid",
-      });
-      return;
+        noti: "Publisher invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     if (file === null && img === "") {
       this.setState({
-        noti: "File invalid",
-      });
-      return;
+        noti: "File invalid"
+      })
+      return
     } else {
       this.setState({
-        noti: "",
-      });
+        noti: ""
+      })
     }
     this.props.updateBook(
       id,
@@ -358,8 +358,8 @@ class Book extends Component {
       id_nsx,
       id_author,
       file
-    );
-  };
+    )
+  }
   renderBtnSubmit = () => {
     if (this.state.curr === "add") {
       return (
@@ -380,7 +380,7 @@ class Book extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="form-group">
@@ -400,9 +400,9 @@ class Book extends Component {
             </button>
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
   reset = () => {
     this.setState({
       noti: "",
@@ -422,9 +422,9 @@ class Book extends Component {
       id_nsx: "",
       id_author: "",
       id_category: "",
-      id: null,
-    });
-  };
+      id: null
+    })
+  }
   renderMenuCategory = () => {
     if (this.props.category) {
       return this.props.category.map((element, index) => {
@@ -433,18 +433,18 @@ class Book extends Component {
             onClick={() =>
               this.setState({
                 category: element.name,
-                id_category: element._id,
+                id_category: element._id
               })
             }
           >
             <a>{element.name}</a>
           </li>
-        );
-      });
+        )
+      })
     } else {
-      return null;
+      return null
     }
-  };
+  }
   renderMenuAuthor = () => {
     if (this.props.author) {
       return this.props.author.map((element, index) => {
@@ -456,12 +456,12 @@ class Book extends Component {
           >
             <a>{element.name}</a>
           </li>
-        );
-      });
+        )
+      })
     } else {
-      return null;
+      return null
     }
-  };
+  }
   renderMenuPublisher = () => {
     if (this.props.publisher) {
       return this.props.publisher.map((element, index) => {
@@ -473,29 +473,29 @@ class Book extends Component {
           >
             <a>{element.name}</a>
           </li>
-        );
-      });
+        )
+      })
     } else {
-      return null;
+      return null
     }
-  };
-  getNameCategoryByID = (id) => {
+  }
+  getNameCategoryByID = id => {
     for (let i = 0; i < this.props.category.length; i++) {
-      if (id === this.props.category[i]._id) return this.props.category[i].name;
+      if (id === this.props.category[i]._id) return this.props.category[i].name
     }
-  };
-  getNameAuthorByID = (id) => {
+  }
+  getNameAuthorByID = id => {
     for (let i = 0; i < this.props.author.length; i++) {
-      if (id === this.props.author[i]._id) return this.props.author[i].name;
+      if (id === this.props.author[i]._id) return this.props.author[i].name
     }
-  };
-  getNamePublisherByID = (id) => {
+  }
+  getNamePublisherByID = id => {
     for (let i = 0; i < this.props.publisher.length; i++) {
-      console.log(id + " === " + this.props.publisher[i]._id);
+      console.log(id + " === " + this.props.publisher[i]._id)
       if (id === this.props.publisher[i]._id)
-        return this.props.publisher[i].name;
+        return this.props.publisher[i].name
     }
-  };
+  }
   render() {
     // console.log(this.state.quantity);
 
@@ -587,7 +587,7 @@ class Book extends Component {
                                     element.id_nsx
                                   ),
                                   img: element.img,
-                                  id: element._id,
+                                  id: element._id
                                 })
                               }
                               className="btn btn-success"
@@ -611,7 +611,7 @@ class Book extends Component {
                           </div>
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -637,10 +637,10 @@ class Book extends Component {
                       </label>
                       <div className="col-lg-10">
                         <input
-                          onChange={(e) => {
+                          onChange={e => {
                             this.setState({
-                              name: e.target.value,
-                            });
+                              name: e.target.value
+                            })
                           }}
                           value={this.state.name}
                           className="form-control"
@@ -659,9 +659,9 @@ class Book extends Component {
                       <div className="col-lg-10">
                         <input
                           value={this.state.createdAt}
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({
-                              createdAt: e.target.value,
+                              createdAt: e.target.value
                             })
                           }
                           className="form-control "
@@ -679,9 +679,9 @@ class Book extends Component {
                       <div className="col-lg-10">
                         <input
                           value={this.state.price}
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({
-                              price: e.target.value,
+                              price: e.target.value
                             })
                           }
                           className="form-control "
@@ -698,9 +698,9 @@ class Book extends Component {
                       <div className="col-lg-10">
                         <input
                           value={this.state.quantity}
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({
-                              quantity: e.target.value,
+                              quantity: e.target.value
                             })
                           }
                           className="form-control "
@@ -729,9 +729,9 @@ class Book extends Component {
                       <div className="col-lg-10">
                         <input
                           value={this.state.describe}
-                          onChange={(e) =>
+                          onChange={e =>
                             this.setState({
-                              describe: e.target.value,
+                              describe: e.target.value
                             })
                           }
                           className="form-control"
@@ -808,7 +808,7 @@ class Book extends Component {
                           id="ccomment"
                           name="comment"
                           required
-                          onChange={(e) =>
+                          onChange={e =>
                             this.handleChangeImg(e.target.files[0])
                           }
                         />
@@ -839,7 +839,7 @@ class Book extends Component {
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
-export default Book;
+export default Book

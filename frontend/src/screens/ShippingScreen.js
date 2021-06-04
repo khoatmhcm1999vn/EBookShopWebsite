@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"
 // import Message from "../components/message/Message";
-import CheckoutSteps from "../components/checkoutsteps/CheckoutSteps";
-import { saveShippingAddress } from "../actions/cart.action";
-import { getAddress, deleteAddress } from "../actions/user.action";
+import CheckoutSteps from "../components/checkoutsteps/CheckoutSteps"
+import { saveShippingAddress } from "../actions/cart.action"
+import { getAddress, deleteAddress } from "../actions/user.action"
 
-import { isAuthenticated } from "../config/store.config";
-import { logout } from "../actions/user.action";
+import { isAuthenticated } from "../config/store.config"
+import { logout } from "../actions/user.action"
 
 // import Loader from "../components/loading/loading";
 // import SearchBar from "../components/searchbar/SearchBar";
 
-import HeaderTop from "../components/header/header.top";
-import HeaderMiddle from "../components/header/header.middle";
-import FooterTop from "../components/footer/footer.top";
-import FooterMiddle from "../components/footer/footer.middle";
-import FooterBottom from "../components/footer/footer.bottom";
-import AddressForm from "./AddressForm";
+import HeaderTop from "../components/header/header.top"
+import HeaderMiddle from "../components/header/header.middle"
+import FooterTop from "../components/footer/footer.top"
+import FooterMiddle from "../components/footer/footer.middle"
+import FooterBottom from "../components/footer/footer.bottom"
+import AddressForm from "./AddressForm"
 
 const Address = ({
   adr,
@@ -26,7 +26,7 @@ const Address = ({
   enableAddressEditForm,
   confirmDeliveryAddress,
   onAddressSubmit,
-  onDeleteAddress,
+  onDeleteAddress
 }) => {
   return (
     <div className="flexRow addressContainer">
@@ -50,7 +50,7 @@ const Address = ({
                   onClick={() => enableAddressEditForm(adr)}
                   style={{
                     fontWeight: "500",
-                    color: "#2874f0",
+                    color: "#2874f0"
                   }}
                 >
                   Edit
@@ -68,7 +68,7 @@ const Address = ({
                 onClick={() => confirmDeliveryAddress(adr)}
                 style={{
                   width: "200px",
-                  margin: "10px 0",
+                  margin: "10px 0"
                 }}
               >
                 Save and Delivery here!
@@ -85,45 +85,43 @@ const Address = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 const ShippingScreen = ({ history }) => {
-  const userAddr = useSelector((state) => state.userReducers.user);
-  const currentUser = useSelector(
-    (state) => state.userReducers.user.currentUser
-  );
-  const islogin = useSelector((state) => state.userReducers.user.islogin);
+  const userAddr = useSelector(state => state.userReducers.user)
+  const currentUser = useSelector(state => state.userReducers.user.currentUser)
+  const islogin = useSelector(state => state.userReducers.user.islogin)
 
-  const cart = useSelector((state) => state.cart.data);
+  const cart = useSelector(state => state.cart.data)
 
-  const [address, setAddress] = useState([]);
+  const [address, setAddress] = useState([])
 
   // const [newAddress, setNewAddress] = useState(false);
-  const [confirmAddress, setConfirmAddress] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [confirmAddress, setConfirmAddress] = useState(false)
+  const [selectedAddress, setSelectedAddress] = useState(null)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   if (!currentUser) {
-    history.push("/login_register");
+    history.push("/login_register")
   }
 
-  const onAddressSubmit = (addr) => {
-    console.log(addr);
+  const onAddressSubmit = addr => {
+    console.log(addr)
 
-    history.push("/payment");
+    history.push("/payment")
 
     // setSelectedAddress(addr);
     // setConfirmAddress(true);
     // setOrderSummary(true);
-  };
+  }
 
-  const selectAddress = (addr) => {
-    console.log(addr);
+  const selectAddress = addr => {
+    console.log(addr)
     const updatedAddress =
       address._id === addr._id
         ? { ...address, selected: true }
-        : { ...address, selected: false };
+        : { ...address, selected: false }
 
     // const updatedAddress = address.map((adr) =>
     //   adr._id === addr._id
@@ -131,23 +129,23 @@ const ShippingScreen = ({ history }) => {
     //     : { ...adr, selected: false }
     // );
 
-    setAddress(updatedAddress);
-  };
+    setAddress(updatedAddress)
+  }
 
-  const confirmDeliveryAddress = (addr) => {
-    console.log(addr);
-    setSelectedAddress(addr);
-    dispatch(saveShippingAddress(addr._id));
-    setConfirmAddress(true);
-    history.push("/payment");
-  };
+  const confirmDeliveryAddress = addr => {
+    console.log(addr)
+    setSelectedAddress(addr)
+    dispatch(saveShippingAddress(addr._id))
+    setConfirmAddress(true)
+    history.push("/payment")
+  }
 
-  const enableAddressEditForm = (addr) => {
-    console.log(addr);
+  const enableAddressEditForm = addr => {
+    console.log(addr)
     const updatedAddress =
       address._id === addr._id
         ? { ...address, edit: true }
-        : { ...address, edit: false };
+        : { ...address, edit: false }
 
     // const updatedAddress = address.map((adr) =>
     //   adr._id === addr._id ? { ...adr, edit: true } : { ...adr, edit: false }
@@ -155,16 +153,16 @@ const ShippingScreen = ({ history }) => {
 
     // setNewAddress(true);
 
-    setAddress(updatedAddress);
-  };
+    setAddress(updatedAddress)
+  }
 
   useEffect(() => {
-    isAuthenticated() && dispatch(getAddress());
+    isAuthenticated() && dispatch(getAddress())
 
     // if (userAddr.address?.length > 0) {
     //   setBillingAddressId(address[0]._id);
     // }
-  }, [dispatch]);
+  }, [dispatch])
 
   useEffect(() => {
     // const address = userAddr.address.address.map((adr) => ({
@@ -173,13 +171,13 @@ const ShippingScreen = ({ history }) => {
     //   edit: false,
     // }));
 
-    const address = { ...userAddr.address, selected: false, edit: false };
+    const address = { ...userAddr.address, selected: false, edit: false }
 
-    setAddress(address);
-  }, [userAddr.address]);
+    setAddress(address)
+  }, [userAddr.address])
 
   // console.log(userAddr.address);
-  console.log(address);
+  console.log(address)
   // console.log(newAddress);
   // console.log(confirmAddress);
 
@@ -194,13 +192,13 @@ const ShippingScreen = ({ history }) => {
   //   history.push("/payment");
   // };
 
-  const onDeleteAddress = (addressId) => {
+  const onDeleteAddress = addressId => {
     // console.log(addressId);
     // alert("abc");
     // return;
 
-    dispatch(deleteAddress(addressId));
-  };
+    dispatch(deleteAddress(addressId))
+  }
 
   return (
     <div>
@@ -265,7 +263,7 @@ const ShippingScreen = ({ history }) => {
         <FooterBottom />
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default ShippingScreen;
+export default ShippingScreen

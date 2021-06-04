@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
 
 class Statistical extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       billNumberDay: null,
       productNumberDay: null,
@@ -25,8 +25,8 @@ class Statistical extends Component {
       billNumberQuauter: null,
       productNumberQuauter: null,
       UserNumberQuauter: null,
-      totalQuauter: null,
-    };
+      totalQuauter: null
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -35,24 +35,24 @@ class Statistical extends Component {
         billNumberDay: nextProps.dataByDay.length,
         productNumberDay: this.calculatorProductNumber(nextProps.dataByDay),
         UserNumberDay: this.calculatorUserNumber(nextProps.dataByDay),
-        totalDay: this.calculatorTotal(nextProps.dataByDay),
-      });
+        totalDay: this.calculatorTotal(nextProps.dataByDay)
+      })
     }
     if (nextProps.dataByMonth !== this.props.dataByMonth) {
       this.setState({
         billNumberMonth: nextProps.dataByMonth.length,
         productNumberMonth: this.calculatorProductNumber(nextProps.dataByMonth),
         UserNumberMonth: this.calculatorUserNumber(nextProps.dataByMonth),
-        totalMonth: this.calculatorTotal(nextProps.dataByMonth),
-      });
+        totalMonth: this.calculatorTotal(nextProps.dataByMonth)
+      })
     }
     if (nextProps.dataByYear !== this.props.dataByYear) {
       this.setState({
         billNumberYear: nextProps.dataByYear.length,
         productNumberYear: this.calculatorProductNumber(nextProps.dataByYear),
         UserNumberYear: this.calculatorUserNumber(nextProps.dataByYear),
-        totalYear: this.calculatorTotal(nextProps.dataByYear),
-      });
+        totalYear: this.calculatorTotal(nextProps.dataByYear)
+      })
     }
     if (nextProps.dataByQuauter !== this.props.dataByQuauter) {
       this.setState({
@@ -61,144 +61,144 @@ class Statistical extends Component {
           nextProps.dataByQuauter
         ),
         UserNumberQuauter: this.calculatorUserNumber(nextProps.dataByQuauter),
-        totalQuauter: this.calculatorTotal(nextProps.dataByQuauter),
-      });
+        totalQuauter: this.calculatorTotal(nextProps.dataByQuauter)
+      })
     }
   }
 
-  calculatorTotal = (bills) => {
-    let total = 0;
+  calculatorTotal = bills => {
+    let total = 0
     for (let i = 0; i < bills.length; i++) {
       for (let k = 0; k < bills[i].products.length; k++) {
         total += parseInt(
           bills[i].products[k].count * parseInt(bills[i].products[k].price)
-        );
+        )
       }
     }
-    return total;
-  };
-  calculatorProductNumber = (bills) => {
-    let total = 0;
+    return total
+  }
+  calculatorProductNumber = bills => {
+    let total = 0
     for (let i = 0; i < bills.length; i++) {
       for (let k = 0; k < bills[i].products.length; k++) {
-        total += parseInt(bills[i].products[k].count);
+        total += parseInt(bills[i].products[k].count)
       }
     }
-    return total;
-  };
-  calculatorUserNumber = (bills) => {
-    let arr = [];
+    return total
+  }
+  calculatorUserNumber = bills => {
+    let arr = []
     for (let i = 0; i < bills.length; i++) {
       if (arr.indexOf(bills.user) === -1) {
-        arr.push(bills.user);
+        arr.push(bills.user)
       }
     }
-    return arr.length;
-  };
+    return arr.length
+  }
 
   handleGetStatisticalByYear = () => {
-    let year = this.state.year;
-    let check = true;
+    let year = this.state.year
+    let check = true
     if (year.length === 0) {
-      this.setState({ notiGetYear: "Please enter Year" });
-      return;
+      this.setState({ notiGetYear: "Please enter Year" })
+      return
     } else {
-      this.setState({ notiGetYear: "" });
+      this.setState({ notiGetYear: "" })
     }
     for (let i = 0; i < year.length; i++) {
       if (year.charAt(i) < "0" || year.charAt(i) > "9") {
-        check = false;
-        break;
+        check = false
+        break
       }
     }
     if (check === false) {
-      this.setState({ notiGetYear: "Year invalid" });
-      return;
+      this.setState({ notiGetYear: "Year invalid" })
+      return
     } else {
-      this.setState({ notiGetYear: "" });
+      this.setState({ notiGetYear: "" })
     }
     if (parseInt(year) < 1990 || parseInt(year) > 3000) {
       this.setState({
-        notiGetYear: "Year range 1990 - 3000",
-      });
-      return;
+        notiGetYear: "Year range 1990 - 3000"
+      })
+      return
     } else {
-      this.setState({ notiGetYear: "" });
+      this.setState({ notiGetYear: "" })
     }
-    this.props.getStatisticalByYear(year);
-  };
+    this.props.getStatisticalByYear(year)
+  }
   handleGetStatisticalByQuauter = () => {
-    let year = this.state.yearQuauter;
-    let quauter = this.state.quauter;
-    let check = true;
+    let year = this.state.yearQuauter
+    let quauter = this.state.quauter
+    let check = true
     if (year.length === 0) {
       this.setState({
-        notiYearQuauter: "Please enter year",
-      });
-      check = false;
+        notiYearQuauter: "Please enter year"
+      })
+      check = false
     } else {
       this.setState({
-        notiYearQuauter: "",
-      });
+        notiYearQuauter: ""
+      })
     }
     if (quauter.length === 0) {
       this.setState({
-        notiQuauter: "Please enter quauter",
-      });
-      check = false;
+        notiQuauter: "Please enter quauter"
+      })
+      check = false
     } else {
       this.setState({
-        notiQuauter: "",
-      });
+        notiQuauter: ""
+      })
     }
     if (check === false) {
-      return;
+      return
     }
-    check = true;
+    check = true
     for (let i = 0; i < year.length; i++) {
       if (year.charAt(i) < "0" || year.charAt(i) > "9") {
-        check = false;
-        break;
+        check = false
+        break
       }
     }
     if (check === false) {
-      this.setState({ notiYearQuauter: "Year invalid" });
-      return;
+      this.setState({ notiYearQuauter: "Year invalid" })
+      return
     } else {
-      this.setState({ notiYearQuauter: "" });
+      this.setState({ notiYearQuauter: "" })
     }
     if (parseInt(year) < 1990 || parseInt(year) > 3000) {
       this.setState({
-        notiYearQuauter: "Year range 1990 - 3000",
-      });
-      return;
+        notiYearQuauter: "Year range 1990 - 3000"
+      })
+      return
     } else {
-      this.setState({ notiYearQuauter: "" });
+      this.setState({ notiYearQuauter: "" })
     }
 
-    check = true;
+    check = true
     for (let i = 0; i < quauter.length; i++) {
       if (quauter.charAt(i) < "0" || quauter.charAt(i) > "9") {
-        check = false;
-        break;
+        check = false
+        break
       }
     }
     if (check === false) {
-      this.setState({ notiQuauter: "Quauter invalid" });
-      return;
+      this.setState({ notiQuauter: "Quauter invalid" })
+      return
     } else {
-      this.setState({ notiQuauter: "" });
+      this.setState({ notiQuauter: "" })
     }
     if (parseInt(quauter) < 1 || parseInt(quauter) > 4) {
       this.setState({
-        notiQuauter: "Year range 1 - 4",
-      });
-      return;
+        notiQuauter: "Year range 1 - 4"
+      })
+      return
     } else {
-      this.setState({ notiQuauter: "" });
+      this.setState({ notiQuauter: "" })
     }
-    this.props.getStatisticalByQuauter(year, quauter);
-  };
+    this.props.getStatisticalByQuauter(year, quauter)
+  }
 
   render() {
     return (
@@ -233,9 +233,9 @@ class Statistical extends Component {
                       marginLeft: "10px",
                       height: "30px",
                       backgroundColor: "#F7F7F7",
-                      borderRadius: "5px",
+                      borderRadius: "5px"
                     }}
-                    onChange={(e) =>
+                    onChange={e =>
                       this.props.getStatisticalByDay(e.target.value)
                     }
                   />
@@ -276,9 +276,9 @@ class Statistical extends Component {
                       marginLeft: "10px",
                       height: "30px",
                       backgroundColor: "#F7F7F7",
-                      borderRadius: "5px",
+                      borderRadius: "5px"
                     }}
-                    onChange={(e) =>
+                    onChange={e =>
                       this.props.getStatisticalByMonth(e.target.value)
                     }
                   />
@@ -319,15 +319,15 @@ class Statistical extends Component {
                       marginLeft: "10px",
                       height: "30px",
                       backgroundColor: "#F7F7F7",
-                      borderRadius: "5px",
+                      borderRadius: "5px"
                     }}
                     min="2000"
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.keyCode === 13) {
-                        this.handleGetStatisticalByYear();
+                        this.handleGetStatisticalByYear()
                       }
                     }}
-                    onChange={(e) => this.setState({ year: e.target.value })}
+                    onChange={e => this.setState({ year: e.target.value })}
                   />
                   <span style={{ marginLeft: "50px" }}>
                     {this.state.notiGetYear}
@@ -369,14 +369,14 @@ class Statistical extends Component {
                       marginLeft: "10px",
                       height: "30px",
                       backgroundColor: "#F7F7F7",
-                      borderRadius: "5px",
+                      borderRadius: "5px"
                     }}
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.keyCode === 13) {
-                        this.handleGetStatisticalByQuauter();
+                        this.handleGetStatisticalByQuauter()
                       }
                     }}
-                    onChange={(e) =>
+                    onChange={e =>
                       this.setState({ yearQuauter: e.target.value })
                     }
                   />
@@ -390,14 +390,14 @@ class Statistical extends Component {
                       marginLeft: "10px",
                       height: "30px",
                       backgroundColor: "#F7F7F7",
-                      borderRadius: "5px",
+                      borderRadius: "5px"
                     }}
-                    onKeyDown={(e) => {
+                    onKeyDown={e => {
                       if (e.keyCode === 13) {
-                        this.handleGetStatisticalByQuauter();
+                        this.handleGetStatisticalByQuauter()
                       }
                     }}
-                    onChange={(e) => this.setState({ quauter: e.target.value })}
+                    onChange={e => this.setState({ quauter: e.target.value })}
                   />
                   <span style={{ marginLeft: "50px" }}>
                     {this.state.notiQuauter}
@@ -429,7 +429,7 @@ class Statistical extends Component {
           </div>
         </section>
       </section>
-    );
+    )
   }
 }
-export default Statistical;
+export default Statistical

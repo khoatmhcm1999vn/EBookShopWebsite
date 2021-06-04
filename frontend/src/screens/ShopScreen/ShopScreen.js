@@ -1,21 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from "react"
 // import Carousel from "react-bootstrap/Carousel";
 // import MessageBox from "../../components/message/Message";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../actions/user.action";
-import { getListProductByCategory } from "../../actions/home.action";
+import { Link, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../../actions/user.action"
+import { getListProductByCategory } from "../../actions/home.action"
 
-import HeaderTop from "../../components/header/header.top";
-import HeaderMiddle from "../../components/header/header.middle";
-import HeaderBottom from "../../components/header/header.bottom";
-import FooterTop from "../../components/footer/footer.top";
-import FooterMiddle from "../../components/footer/footer.middle";
-import FooterBottom from "../../components/footer/footer.bottom";
+import HeaderTop from "../../components/header/header.top"
+import HeaderMiddle from "../../components/header/header.middle"
+import HeaderBottom from "../../components/header/header.bottom"
+import FooterTop from "../../components/footer/footer.top"
+import FooterMiddle from "../../components/footer/footer.middle"
+import FooterBottom from "../../components/footer/footer.bottom"
 // import Product from "../../components/Product/Product";
-import { prices, ratings, times } from "../../utils/utils";
-import RatingNormal from "../../components/RatingNormal";
-import Rating from "../../components/rating/Rating";
+import { prices, ratings, times } from "../../utils/utils"
+import RatingNormal from "../../components/RatingNormal"
+import Rating from "../../components/rating/Rating"
+import DatePicker from "../BookScreen/DatePickerCallendarIcon"
 
 export default function ShopScreen(props) {
   const {
@@ -28,20 +29,18 @@ export default function ShopScreen(props) {
     pageNumber = 1,
     pageSize = 10,
     sales = "all",
-    updatedAtByDay = "all",
-  } = useParams();
+    updatedAtByDay = "all"
+  } = useParams()
 
-  const cart = useSelector((state) => state.cart);
-  const islogin = useSelector((state) => state.userReducers.user.islogin);
-  const products = useSelector(
-    (state) => state.homeReducers.book.dataByCategory
-  );
-  const productsBe = useSelector((state) => state.homeReducers.book);
+  const cart = useSelector(state => state.cart)
+  const islogin = useSelector(state => state.userReducers.user.islogin)
+  const products = useSelector(state => state.homeReducers.book.dataByCategory)
+  const productsBe = useSelector(state => state.homeReducers.book)
   const productCategoryList = useSelector(
-    (state) => state.homeReducers.book.dataProductCategoryIds
-  );
+    state => state.homeReducers.book.dataProductCategoryIds
+  )
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(
@@ -55,9 +54,9 @@ export default function ShopScreen(props) {
         stars,
         order,
         sales: sales !== "all" ? sales : "",
-        updatedAtByDay: updatedAtByDay !== "all" ? updatedAtByDay : "",
+        updatedAtByDay: updatedAtByDay !== "all" ? updatedAtByDay : ""
       })
-    );
+    )
   }, [
     dispatch,
     pageNumber,
@@ -69,71 +68,90 @@ export default function ShopScreen(props) {
     stars,
     order,
     sales,
-    updatedAtByDay,
-  ]);
+    updatedAtByDay
+  ])
 
-  const getFilterUrl = (filter) => {
-    const filterPage = filter.page || pageNumber;
-    const filterPageSize = filter.pageSize || pageSize;
-    const filterCategory = filter.id_category || id_category;
-    const filterName = filter.name || name;
-    const filterRating = filter.stars || stars;
-    const sortOrder = filter.order || order;
-    const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min;
-    const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max;
-    let filterSales = filter.sales || sales;
-    let filterUpdatedAtByDay = filter.updatedAtByDay || updatedAtByDay;
+  const getFilterUrl = filter => {
+    let filterPage = filter.page || pageNumber
+    const filterPageSize = filter.pageSize || pageSize
+    const filterCategory = filter.id_category || id_category
+    const filterName = filter.name || name
+    const filterRating = filter.stars || stars
+    const sortOrder = filter.order || order
+    const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min
+    const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max
+    let filterSales = filter.sales || sales
+    let filterUpdatedAtByDay = filter.updatedAtByDay || updatedAtByDay
+    if (
+      filterPageSize != 10 ||
+      (filterCategory != "all" && filterPage != 1) ||
+      (filterMin != 0 && filterPage != 1) ||
+      (filterRating != 0 && filterPage != 1) ||
+      (filterUpdatedAtByDay != "all" && filterPage != 1)
+    ) {
+      // filterPageSize = 10;
+      filterPage = 1
+      console.log("test if")
+    }
     if (
       sortOrder == "lowsale" ||
       sortOrder == "highsale" ||
       sortOrder == "highupdated"
     )
-      filterSales = "1";
-    else filterSales = "all";
-    if (filterUpdatedAtByDay !== "all") filterSales = "1";
-    console.log(filterSales);
+      filterSales = "1"
+    else filterSales = "all"
+    if (filterUpdatedAtByDay !== "all") filterSales = "1"
+    // console.log(filterPageSize);
+    // console.log(filterPage);
+    // console.log(filterCategory);
     // console.log(filterRating);
     // console.log(filterPageSize);
     // console.log(filterMax);
-    return `/shop-page/id_category/${filterCategory}/name/${filterName}/min/${filterMin}/max/${filterMax}/stars/${filterRating}/sales/${filterSales}/updatedAtByDay/${filterUpdatedAtByDay}/order/${sortOrder}/pageNumber/${filterPage}/pageSize/${filterPageSize}`;
-  };
+    return `/shop-page/id_category/${filterCategory}/name/${filterName}/min/${filterMin}/max/${filterMax}/stars/${filterRating}/sales/${filterSales}/updatedAtByDay/${filterUpdatedAtByDay}/order/${sortOrder}/pageNumber/${filterPage}/pageSize/${filterPageSize}`
+  }
 
   const clearFilter = () => {
-    const filterPage = 1;
-    const filterPageSize = 10;
-    const filterCategory = "all";
-    const filterName = "all";
-    const filterRating = 0;
-    const sortOrder = "newest";
-    const filterMin = 0;
-    const filterMax = 0;
-    const filterSales = "all";
-    const filterUpdatedAtByDay = "all";
-    console.log(sortOrder);
+    const filterPage = 1
+    const filterPageSize = 10
+    const filterCategory = "all"
+    const filterName = "all"
+    const filterRating = 0
+    const sortOrder = "newest"
+    const filterMin = 0
+    const filterMax = 0
+    const filterSales = "all"
+    const filterUpdatedAtByDay = "all"
+    console.log(sortOrder)
     // console.log(filterMin);
     // console.log(filterMax);
     return props.history.push(
       `/shop-page/id_category/${filterCategory}/name/${filterName}/min/${filterMin}/max/${filterMax}/stars/${filterRating}/sales/${filterSales}/updatedAtByDay/${filterUpdatedAtByDay}/order/${sortOrder}/pageNumber/${filterPage}/pageSize/${filterPageSize}`
-    );
-  };
+    )
+  }
 
-  const clearFilterRating = (filter) => {
-    const filterPage = filter.page || pageNumber;
-    const filterPageSize = filter.pageSize || pageSize;
-    const filterCategory = filter.id_category || id_category;
-    const filterName = filter.name || name;
-    const filterRating = 0;
-    const sortOrder = filter.order || order;
-    const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min;
-    const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max;
-    const filterSales = "all";
-    const filterUpdatedAtByDay = "all";
+  const clearFilterRating = filter => {
+    // const filterPage = filter.page || pageNumber;
+    // const filterPageSize = filter.pageSize || pageSize;
+    // const filterCategory = filter.id_category || id_category;
+    // const sortOrder = filter.order || order;
+    // const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min;
+    // const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max;
 
-    return `/shop-page/id_category/${filterCategory}/name/${filterName}/min/${filterMin}/max/${filterMax}/stars/${filterRating}/sales/${filterSales}/updatedAtByDay/${filterUpdatedAtByDay}/order/${sortOrder}/pageNumber/${filterPage}/pageSize/${filterPageSize}`;
-  };
+    const filterPage = 1
+    const filterPageSize = 10
+    const filterCategory = "all"
+    const filterName = "all"
+    const filterRating = 0
+    const sortOrder = "newest"
+    const filterMin = 0
+    const filterMax = 0
+    const filterSales = "all"
+    const filterUpdatedAtByDay = "all"
+    return `/shop-page/id_category/${filterCategory}/name/${filterName}/min/${filterMin}/max/${filterMax}/stars/${filterRating}/sales/${filterSales}/updatedAtByDay/${filterUpdatedAtByDay}/order/${sortOrder}/pageNumber/${filterPage}/pageSize/${filterPageSize}`
+  }
 
   // console.log(productCategoryList);
-  // console.log(productsBe);
+  console.log("pagecate " + productsBe.pagesCate)
   // console.log(order);
 
   return (
@@ -148,8 +166,8 @@ export default function ShopScreen(props) {
         />
         <HeaderBottom
           isDisabled={true}
-          isActivatedHome={true}
           history={props.history}
+          isActivatedShopPage={true}
         />
       </header>
       <div className="main-container col2-left-layout no-margin-top">
@@ -170,7 +188,7 @@ export default function ShopScreen(props) {
                         <span>/</span>
                       </li>
                       <li className="category6719">
-                        <strong>Manga</strong>
+                        <strong>Shop Page</strong>
                       </li>
                     </ol>
                   </div>
@@ -279,7 +297,7 @@ export default function ShopScreen(props) {
                                       <Link
                                         to={getFilterUrl({
                                           min: p.min,
-                                          max: p.max,
+                                          max: p.max
                                         })}
                                         className={
                                           `${p.min}-${p.max}` ===
@@ -331,7 +349,7 @@ export default function ShopScreen(props) {
                                                 : ""
                                             }
                                             to={getFilterUrl({
-                                              id_category: "all",
+                                              id_category: "all"
                                             })}
                                             title="Any"
                                           >
@@ -347,7 +365,7 @@ export default function ShopScreen(props) {
                                                   : ""
                                               }
                                               to={getFilterUrl({
-                                                id_category: c._id,
+                                                id_category: c._id
                                               })}
                                               title={c.name}
                                             >
@@ -394,7 +412,7 @@ export default function ShopScreen(props) {
                                               : ""
                                           }
                                           to={getFilterUrl({
-                                            updatedAtByDay: c.value,
+                                            updatedAtByDay: c.value
                                           })}
                                           title={c.value}
                                         >
@@ -529,12 +547,12 @@ export default function ShopScreen(props) {
                                   <div className="selectBox selectBox-order">
                                     <select
                                       value={order}
-                                      onChange={(e) => {
+                                      onChange={e => {
                                         props.history.push(
                                           getFilterUrl({
-                                            order: e.target.value,
+                                            order: e.target.value
                                           })
-                                        );
+                                        )
                                       }}
                                     >
                                       <option value="newest">
@@ -594,12 +612,12 @@ export default function ShopScreen(props) {
                               Page Size
                               <select
                                 value={pageSize}
-                                onChange={(e) => {
+                                onChange={e => {
                                   props.history.push(
                                     getFilterUrl({
-                                      pageSize: e.target.value,
+                                      pageSize: e.target.value
                                     })
-                                  );
+                                  )
                                 }}
                               >
                                 <option value="10">10</option>
@@ -651,7 +669,8 @@ export default function ShopScreen(props) {
                                           >
                                             <span className="product-image">
                                               <img
-                                                src={p.img}
+                                                // src={p.img}
+                                                src={`http://localhost:8090/${p.img}`}
                                                 alt={p.name}
                                                 width="200"
                                                 height="200"
@@ -699,7 +718,7 @@ export default function ShopScreen(props) {
                           )}
                         </ul>
                         <div className="row center pagination">
-                          {[...Array(productsBe.pagesCate).keys()].map((x) => (
+                          {[...Array(productsBe.pagesCate).keys()].map(x => (
                             <Link
                               className={
                                 x + 1 === productsBe.pageCate ? "active" : ""
@@ -741,5 +760,5 @@ export default function ShopScreen(props) {
         <FooterBottom />
       </footer>
     </div>
-  );
+  )
 }

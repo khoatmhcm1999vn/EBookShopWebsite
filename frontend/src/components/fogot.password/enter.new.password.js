@@ -1,31 +1,31 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
 
 class EnterNewPassword extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       newpassword: "",
       confirm: "",
-      noti: "",
-    };
+      noti: ""
+    }
   }
   handleSubmit() {
     if (this.state.newpassword.length < 6) {
-      this.setState({ noti: "Password must contain at least 6 characters" });
-      return;
+      this.setState({ noti: "Password must contain at least 6 characters" })
+      return
     } else {
-      this.setState({ noti: "" });
+      this.setState({ noti: "" })
     }
     if (this.state.confirm !== this.state.newpassword) {
       this.setState({
-        noti: "Confirm invalid",
-      });
-      return;
+        noti: "Confirm invalid"
+      })
+      return
     } else {
-      this.setState({ noti: "" });
+      this.setState({ noti: "" })
     }
-    this.props.submitEnterNewPassword();
+    this.props.submitEnterNewPassword()
   }
   render() {
     return (
@@ -43,9 +43,9 @@ class EnterNewPassword extends Component {
           <input
             type="password"
             placeholder="New Password"
-            onChange={(e) => {
-              this.props.setNewPassword(e.target.value);
-              this.setState({ newpassword: e.target.value });
+            onChange={e => {
+              this.props.setNewPassword(e.target.value)
+              this.setState({ newpassword: e.target.value })
             }}
           />
           <br />
@@ -53,9 +53,9 @@ class EnterNewPassword extends Component {
           <input
             type="password"
             placeholder="Confirm"
-            onChange={(e) => {
-              this.props.setConfirm(e.target.value);
-              this.setState({ confirm: e.target.value });
+            onChange={e => {
+              this.props.setConfirm(e.target.value)
+              this.setState({ confirm: e.target.value })
             }}
           />
           <br />
@@ -66,11 +66,11 @@ class EnterNewPassword extends Component {
             Submit
           </button>
           <h2>
-            <Link to="/">Bring me back Home</Link>
+            <Link to="/login_register">Bring me back Login Page</Link>
           </h2>
         </div>
       </div>
-    );
+    )
   }
 }
-export default EnterNewPassword;
+export default EnterNewPassword

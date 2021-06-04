@@ -15,11 +15,14 @@ const cartSchema = new Schema(
       type: [
         {
           id_category: String,
+          id_supplier: String,
           name: String,
           price: Number,
-          release_date: Date,
+          sellPrice: Number,
+          stars: Number,
+          // release_date: Date,
           img: String,
-          describe: String,
+          // describe: String,
           id_nsx: String,
           id_author: String,
           count: Number,

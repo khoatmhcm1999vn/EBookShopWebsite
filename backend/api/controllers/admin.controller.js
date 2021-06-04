@@ -17,6 +17,7 @@ import Publisher from "../models/publisher.model.js";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import redis_client from "../../../redis_connect.js";
 import fs from "fs";
 import expressAsyncHandler from "express-async-handler";
 
@@ -24,89 +25,96 @@ import excel from "exceljs";
 import excelToJson from "convert-excel-to-json";
 import mongoose from "mongoose";
 
-import { generateToken } from "../utils/utils.js";
+import { generateToken, generateRefreshToken } from "../utils/utils.js";
 
 const uploadImg = async (path) => {
   let res;
-
   try {
     res = await cloudinaryConfig.uploader.upload(path);
   } catch (err) {
     console.log(err);
     return false;
   }
-
   return res.secure_url;
 };
 
 export const addBook = async (req, res) => {
   if (
-    typeof req.file === "undefined" ||
+    // typeof req.file === "undefined" ||
     typeof req.body.name === "undefined" ||
-    typeof req.body.id_category === "undefined" ||
     typeof req.body.quantity === "undefined" ||
-    typeof req.body.published === "undefined" ||
+    // typeof req.body.published === "undefined" ||
     typeof req.body.price === "undefined" ||
-    typeof req.body.createdAt === "undefined" ||
-    typeof req.body.describe === "undefined" ||
+    typeof req.body.release_date === "undefined" ||
+    // typeof req.body.describe === "undefined" ||
+    typeof req.body.id_category === "undefined" ||
     typeof req.body.id_nsx === "undefined" ||
+    typeof req.body.id_supplier === "undefined" ||
     typeof req.body.id_author === "undefined"
   ) {
-    res.json({ success: false, message: "👎 Dữ liệu nhập vào bị lỗi!" });
-    return;
+    return res
+      .status(401)
+      .json({ success: false, message: "👎 Dữ liệu nhập vào bị lỗi!" });
   }
 
   const {
     id_category,
     name,
+    episode,
     price,
     quantity,
     published,
-    createdAt,
+    release_date,
     describe,
     id_nsx,
+    id_supplier,
     id_author,
   } = req.body;
 
-  let urlImg = await uploadImg(req.file.path);
-
-  if (urlImg === false) {
-    res.json({
-      success: false,
-      message: "👎 Có sự cố xảy ra khi upload ảnh lên cloud!",
-    });
-    return;
-  }
+  console.log(req.file);
+  let urlImg;
+  if (req.file == undefined) urlImg = "react1.jpeg";
+  // else urlImg = await uploadImg(req.file.path);
+  // // let urlImg = (await uploadImg(req.file.path)) || "react1.jpeg";
+  // if (urlImg === false) {
+  //   return res.status(500).json({
+  //     success: false,
+  //     message: "👎 Có sự cố xảy ra khi upload ảnh lên cloud!",
+  //   });
+  // }
+  console.log(urlImg);
 
   const newBook = new Book({
-    id_category: id_category,
-    name: name,
-    price: price,
+    id_category,
+    name,
+    episode,
+    price,
     quantity,
     published,
-    createdAt: createdAt,
+    release_date,
     img: urlImg,
-    describe: describe,
-    id_nsx: id_nsx,
-    id_author: id_author,
+    describe,
+    id_nsx,
+    id_supplier,
+    id_author,
   });
 
   try {
     newBook.save();
   } catch (err) {
-    res.json({
+    return res.status(500).json({
       success: false,
       message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
     });
-    return;
   }
 
-  fs.unlink(req.file.path, (err) => {
-    if (err) throw err;
-    console.log("path/file.txt was deleted");
-  });
-
-  res.status(201).json({ success: true, message: "👍 Thêm mới thành công!" });
+  // fs.unlink(req.file.path, (err) => {
+  //   if (err) throw err;
+  //   console.log("Path/file.txt was deleted!");
+  // });
+  return res
+    .status(201)
+    .json({ success: true, message: "👍 Thêm mới thành công!" });
 };
 
 export const updateBook = async (req, res) => {
@@ -117,15 +125,14 @@ export const updateBook = async (req, res) => {
     typeof req.body.quantity === "undefined" ||
     typeof req.body.published === "undefined" ||
     typeof req.body.price === "undefined" ||
-    typeof req.body.createdAt === "undefined" ||
+    typeof req.body.release_date === "undefined" ||
     typeof req.body.describe === "undefined" ||
     typeof req.body.id_nsx === "undefined" ||
     typeof req.body.id_author === "undefined"
   ) {
-    res
+    return res
       .status(422)
-      .json({ success: false, message: " 👎 Dữ liệu nhập vào bị lỗi!" });
-    return;
+      .json({ success: false, message: "👎 Dữ liệu nhập vào bị lỗi!" });
   }
   let {
     name,
@@ -134,7 +141,7 @@ export const updateBook = async (req, res) => {
     price,
     quantity,
     published,
-    createdAt,
+    release_date,
     describe,
     id_nsx,
     id_author,
@@ -144,16 +151,14 @@ export const updateBook = async (req, res) => {
     bookFind = await Book.findById(id);
   } catch (err) {
     console.log(err);
-    res
+    return res
       .status(500)
-      .json({ success: false, message: " 👎 Book không tồn tại!" });
-    return;
+      .json({ success: false, message: "👎 Book không tồn tại!" });
   }
   if (bookFind === null) {
-    res
+    return res
       .status(404)
-      .json({ success: false, message: " 👎 Book không tồn tại!" });
-    return;
+      .json({ success: false, message: "👎 Book không tồn tại!" });
   }
   let urlImg = null;
   // console.log(req.file);
@@ -163,24 +168,21 @@ export const updateBook = async (req, res) => {
     }
     if (urlImg !== null) {
       if (urlImg === false) {
-        res.status(500).json({
+        return res.status(500).json({
           success: false,
-          message: " 👎 Có sự cố xảy ra khi upload ảnh lên cloud!",
+          message: "👎 Có sự cố xảy ra khi upload ảnh lên cloud!",
         });
-        return;
       }
     }
     if (urlImg === null) urlImg = bookFind.img;
     console.log(urlImg);
     // console.log(bookFind);
-    // res.json({ msg: "fail" });
-    // return;
     bookFind.id_category = id_category;
     bookFind.name = name;
     bookFind.price = parseFloat(price);
     bookFind.quantity = parseFloat(quantity);
     bookFind.published = published;
-    bookFind.createdAt = createdAt;
+    bookFind.release_date = release_date;
     bookFind.describe = describe;
     bookFind.id_nsx = id_nsx;
     bookFind.id_author = id_author;
@@ -192,11 +194,11 @@ export const updateBook = async (req, res) => {
     });
     fs.unlink(req.file.path, (err) => {
       if (err) throw err;
-      console.log("path/file.txt was deleted");
+      console.log("Path/file.txt was deleted!");
     });
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: " 👍 Cập nhật thành công!",
+      message: "👍 Cập nhật thành công!",
       data: bookFind,
     });
   } else {
@@ -206,7 +208,7 @@ export const updateBook = async (req, res) => {
     bookFind.price = parseFloat(price);
     bookFind.quantity = parseFloat(quantity);
     bookFind.published = published;
-    bookFind.createdAt = createdAt;
+    bookFind.release_date = release_date;
     bookFind.describe = describe;
     bookFind.id_nsx = id_nsx;
     bookFind.id_author = id_author;
@@ -220,16 +222,17 @@ export const updateBook = async (req, res) => {
     //   if (err) throw err;
     //   console.log("path/file.txt was deleted");
     // });
-    res
+    return res
       .status(200)
-      .json({ success: true, message: " 👍 Thành công!", data: bookFind });
+      .json({ success: true, message: "👍 Thành công!", data: bookFind });
   }
 };
 
 export const deletebook = async (req, res) => {
   if (typeof req.params.id === "undefined") {
-    res.json({ result: "error", message: "👎 Dữ liệu Book bị lỗi!" });
-    return;
+    return res
+      .status(401)
+      .json({ result: "error", message: "👎 Dữ liệu Book bị lỗi!" });
   }
 
   let bookFind;
@@ -237,38 +240,39 @@ export const deletebook = async (req, res) => {
     bookFind = await Book.findById(req.params.id);
   } catch (err) {
     console.log(err);
-    res.json({ result: "error", message: "👎 Không tìm thấy Book!" });
-    return;
+    return res
+      .status(401)
+      .json({ result: "error", message: "👎 Không tìm thấy Book!" });
   }
 
   bookFind.remove();
-  res.json({ result: "success", message: "👍 Xóa thành công!" });
+  return res
+    .status(200)
+    .json({ result: "success", message: "👍 Xóa thành công!" });
 };
 
 export const deactivateBook = async (req, res) => {
   if (typeof req.params.id === "undefined") {
-    res
+    return res
       .status(422)
-      .json({ success: false, message: " 👎 Dữ liệu Book bị lỗi!" });
-    return;
+      .json({ success: false, message: "👎 Dữ liệu Book bị lỗi!" });
   }
   let bookFind;
   try {
     bookFind = await Book.findById(req.params.id);
   } catch (err) {
     console.log(err);
-    res
+    return res
       .status(500)
-      .json({ success: false, message: " 👎 Không tìm thấy Book!" });
-    return;
+      .json({ success: false, message: "👎 Không tìm thấy Book!" });
   }
   if (!bookFind.published) bookFind.published = true;
   else bookFind.published = false;
   await bookFind.save();
   // bookFind.remove();
-  res
+  return res
     .status(200)
-    .json({ success: true, message: " 👍 Thành công!", data: bookFind });
+    .json({ success: true, message: "👍 Thành công!", data: bookFind });
 };
 
 export const addPublisher = async (req, res) => {
@@ -917,8 +921,11 @@ export const login = async (req, res) => {
     typeof req.body.email === "undefined" ||
     typeof req.body.password == "undefined"
   ) {
-    res.json({ result: "error", message: "👎 Sai email hoặc mật khẩu!" });
-    return;
+    return res.status(401).json({
+      status: 401,
+      result: "error",
+      message: "👎 Sai email hoặc mật khẩu!",
+    });
   }
 
   let { email, password } = req.body;
@@ -926,27 +933,133 @@ export const login = async (req, res) => {
   try {
     userFind = await User.findOne({ email: email });
   } catch (err) {
-    res.json({ result: "error", message: "👎 User không tồn tại!" });
-    return;
+    return res.status(400).json({
+      status: 400,
+      result: "error",
+      message: "👎 User không tồn tại!",
+    });
   }
 
   if (userFind == null) {
-    res.json({ result: "error", message: "👎 User không tồn tại!" });
-    return;
+    return res.status(400).json({
+      status: 400,
+      result: "error",
+      message: "👎 User không tồn tại!",
+    });
   }
 
+  if (userFind.isLocked) {
+    console.log("locked");
+    return userFind.incrementLoginAttempts(function (err) {
+      if (err) {
+        return res.status(400).json({
+          status: 400,
+          result: "error",
+          message: "👎 Có lỗi xảy ra!",
+        });
+      }
+      return res.status(400).json({
+        status: 400,
+        result: "error",
+        message: "👎 You have exceeded the maximum number of login attempts!",
+      });
+
+      // return done(null, false, {
+      //   msg:
+      //     "You have exceeded the maximum number of login attempts.  Your account is locked until " +
+      //     moment(user.lockUntil).tz(config.server.timezone).format("LT z") +
+      //     ".  You may attempt to log in again after that time.",
+      // });
+    });
+  }
+  // if (!user.isVerified) {
+  //   return done(null, false, {
+  //     msg:
+  //       'Your email has not been verified.  Check your inbox for a verification email.<p><a href="/user/verify-resend/' +
+  //       email +
+  //       '" class="btn waves-effect white black-text"><i class="material-icons left">email</i>Re-send verification email</a></p>',
+  //   });
+  // }
+  // user.comparePassword(password, function (err, isMatch) {
+  //   if (isMatch) {
+  //     return done(null, user);
+  //   } else {
+  //     user.incrementLoginAttempts(function (err) {
+  //       if (err) {
+  //         return done(err);
+  //       }
+  //       return done(null, false, {
+  //         msg: "Invalid password.  Please try again.",
+  //       });
+  //     });
+  //   }
+  // });
+
   if (!userFind.is_verify) {
-    res.json({ result: "error", message: "👎 User chưa xác thực!" });
-    return;
+    return res.status(400).json({
+      status: 400,
+      result: "error",
+      message: "👎 User chưa xác thực!",
+    });
   }
 
   if (!bcrypt.compareSync(password, userFind.password)) {
-    res.json({ result: "error", message: "👎 Mật khẩu không đúng!" });
-    return;
+    console.log("wrong password");
+    userFind.incrementLoginAttempts(function (err) {
+      // console.log(err);
+      if (err) {
+        return res.status(400).json({
+          status: 400,
+          result: "error",
+          message: "👎 Có lỗi xảy ra!",
+        });
+      }
+      // res.json({
+      //   status: 400,
+      //   result: "error",
+      //   message: "👎 Mật khẩu không đúng!",
+      // });
+    });
+    return res.status(400).json({
+      status: 400,
+      result: "error",
+      message: "👎 Mật khẩu không đúng!",
+    });
   }
 
-  let token = generateToken(userFind);
+  // const access_token = jwt.sign(
+  //   { sub: user._id },
+  //   process.env.JWT_ACCESS_SECRET,
+  //   { expiresIn: process.env.JWT_ACCESS_TIME }
+  // );
+  // const refresh_token = generateRefreshToken(user._id);
+  // return res.json({
+  //   status: true,
+  //   message: "login success",
+  //   data: { access_token, refresh_token },
+  // });
 
+  const access_token = generateToken(userFind);
+  const refresh_token = generateRefreshToken(userFind);
+  return res.status(200).json({
+    status: 200,
+    result: "success",
+    message: "👍 Đăng nhập thành công!",
+    // data: { access_token, refresh_token },
+    access_token,
+    refresh_token,
+    user: {
+      user_name: userFind.user_name,
+      email: userFind.email,
+      firstName: userFind.firstName,
+      lastName: userFind.lastName,
+      // address: userFind.address,
+      phone_number: userFind.phone_number,
+      id: userFind._id,
+      is_admin: userFind.is_admin,
+      role: userFind.role,
+    },
+  });
   // let token = jwt.sign(
   //   {
   //     _id: userFind._id,
@@ -956,28 +1069,41 @@ export const login = async (req, res) => {
   //   },
   //   process.env.JWT_SECRET
   // );
-
-  res.status(200).json({
-    result: "success",
-    message: "👍 Đăng nhập thành công!",
-    token: token,
-    user: {
-      email: userFind.email,
-      firstName: userFind.firstName,
-      lastName: userFind.lastName,
-      // address: userFind.address,
-      phone_number: userFind.phone_number,
-      id: userFind._id,
-      is_admin: userFind.is_admin,
-    },
-  });
 };
 
-export const meController = (req, res) => {
-  const authorization = req.headers.authorization;
+export function getAccessToken(req, res) {
+  const user = req.userData;
+  const access_token = generateToken(user);
+  // const access_token = jwt.sign(
+  //   { sub: user_id },
+  //   process.env.JWT_ACCESS_SECRET,
+  //   { expiresIn: process.env.JWT_ACCESS_TIME }
+  // );
+  const refresh_token = generateRefreshToken(user);
+  return res.status(201).json({
+    status: true,
+    message: "success",
+    // data: { access_token, refresh_token },
+    access_token,
+    refresh_token,
+  });
+}
 
-  if (!authorization) {
-    return res.json({
+export async function logOut(req, res) {
+  const token = undefined;
+  console.log(token);
+  const user_id = req.userData._id;
+  await redis_client.del(user_id.toString());
+  await redis_client.set("BL_" + user_id.toString(), JSON.stringify({ token }));
+  return res.status(201).json({ status: true, message: "success." });
+}
+
+export const meController = (req, res) => {
+  const authorization = req.headers.authorization.split(" ")[1] || null;
+  // console.log(authorization);
+
+  if (!authorization || authorization == null) {
+    return res.status(401).json({
       success: false,
       message: "Unauthorization",
     });
@@ -987,31 +1113,31 @@ export const meController = (req, res) => {
 
   const token = authorization;
   if (!token || token === "") {
-    return res.json({
+    return res.status(401).json({
       success: false,
       message: "Unauthorization",
     });
   }
 
   try {
-    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+    const decodeToken = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
     User.findById(decodeToken._id)
-      .select("firstName is_admin _id email")
+      .select("firstName is_admin role _id email user_name")
       .exec((err, user) => {
         if (err || !user) {
-          return res.json({
+          return res.status(401).json({
             success: false,
             message: "Unauthorization 3",
           });
         }
-        return res.json({
+        return res.status(201).json({
           success: true,
           message: "OK",
           user,
         });
       });
   } catch (err) {
-    return res.json({
+    return res.status(401).json({
       success: false,
       message: "Unauthorization 4",
     });

@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 const FooterMiddle = () => (
   <div className="footer-widget">
@@ -110,5 +110,5 @@ const FooterMiddle = () => (
       </div>
     </div>
   </div>
-);
-export default FooterMiddle;
+)
+export default FooterMiddle

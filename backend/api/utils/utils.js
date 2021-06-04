@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import redis_client from "../../../redis_connect.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -6,16 +7,42 @@ export const generateToken = (user) => {
   return jwt.sign(
     {
       _id: user._id,
-      email: user.email,
+      user_name: user.user_name,
       is_admin: user.is_admin,
-      iat: Math.floor(Date.now() / 1000) - 60 * 30,
+      role: user.role,
+      // iat: (Math.floor(Date.now() / 1000) - 60 * 30),
+      // iat: new Date(parseInt(Math.floor(Date.now() / 1000) - 60 * 30) * 1000),
     },
-    process.env.JWT_SECRET || "shhhhh",
-    {
-      expiresIn: "2d",
-    }
+    process.env.JWT_ACCESS_SECRET ||
+      "9e2fbe2f30f3bee85171dd00f4ff10d6745b120387a6bbcc16e5b5dd3524b8cdcae69586bf183b01b3c88215a4eb339e99ae9d98aab83b44872e972bae355ec4",
+    // {
+    //   expiresIn: 60 * 30,
+    // }
+    { expiresIn: process.env.JWT_ACCESS_TIME }
   );
 };
+export function generateRefreshToken(user) {
+  const refresh_token = jwt.sign(
+    {
+      _id: user._id,
+      user_name: user.user_name,
+      is_admin: user.is_admin,
+      role: user.role,
+    },
+    process.env.JWT_REFRESH_SECRET ||
+      "901fa0c0364e907c1a857621f4c884f4cbe2f2ab6c1b770822a2d82a573d74cf1ff9777067b52e471920d098a0bc8e4f53917a89cf42f6bc98364a3df8539d34",
+    { expiresIn: process.env.JWT_REFRESH_TIME }
+  );
+
+  redis_client.get(user._id.toString(), (err, data) => {
+    if (err) throw err;
+    redis_client.set(
+      user._id.toString(),
+      JSON.stringify({ token: refresh_token })
+    );
+  });
+  return refresh_token;
+}
 
 // <h2>[Order ${order._id}] (${order.createdAt.toString().substring(0, 10)})</h2>
 {
@@ -37,7 +64,6 @@ export const generateToken = (user) => {
   </tr>
   <tr></tr> */
 }
-
 export const payOrderEmailTemplate = (order, address) => {
   // const fullName = order.user.firstName + " " + order.user.lastName;
   const orderDate = new Date(order.createdAt).toLocaleDateString();
@@ -90,9 +116,7 @@ export const payOrderEmailTemplate = (order, address) => {
   </p>
   `;
 };
-
 // ${address.code}<br/>
-
 export const payOrderEmailTemplateLogin = (order, address) => {
   const fullName = order.user.firstName + " " + order.user.lastName;
   const orderDate = new Date(order.createdAt).toLocaleDateString();

@@ -20,9 +20,7 @@ const validator = {
   isValidObjId,
   isValidFile,
 };
-
 export default validator;
-
 // module.exports = {
 //   isValidObjId,
 //   isValidFile,

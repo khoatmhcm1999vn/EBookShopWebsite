@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from "react"
+import { Link } from "react-router-dom"
 
 const VerifyPayment = () => (
   <div className="container text-center">
@@ -17,5 +17,5 @@ const VerifyPayment = () => (
       </h2>
     </div>
   </div>
-);
-export default VerifyPayment;
+)
+export default VerifyPayment

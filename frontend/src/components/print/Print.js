@@ -1,34 +1,34 @@
-import React from "react";
+import React from "react"
 import {
   Select,
   InputLabel,
   FormControl,
   makeStyles,
-  MenuItem,
-} from "@material-ui/core/";
+  MenuItem
+} from "@material-ui/core/"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   typography: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(2)
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 120
   },
   selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
+    marginTop: theme.spacing(2)
+  }
+}))
 
 const Print = ({ printAs }) => {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
     <FormControl variant="outlined" className={classes.formControl}>
       <InputLabel id="demo-simple-select-outlined-label">Print</InputLabel>
       <Select
         labelId="demo-simple-select-outlined-label"
         id="demo-simple-select-outlined"
-        onChange={(e) => printAs(e)}
+        onChange={e => printAs(e)}
         label="Print"
         autoWidth
       >
@@ -36,7 +36,7 @@ const Print = ({ printAs }) => {
         <MenuItem value="excel">Print as excel</MenuItem>
       </Select>
     </FormControl>
-  );
-};
+  )
+}
 
-export default Print;
+export default Print
