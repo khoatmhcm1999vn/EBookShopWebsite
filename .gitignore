@@ -1,27 +1,26 @@
-# OS X
-.DS_Store*
-Icon?
-._*
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
+# dependencies
+/node_modules
+/.pnp
+/package-lock.json
+/yarn.lock
+.pnp.js
+/node
 
-# Linux
-.directory
-*~
+# testing
+/coverage
 
+# production
+/build
 
-# npm
-node_modules
-package-lock.json
-*.log
-*.gz
+# misc
+.DS_Store
+.env
+.env.development.local
+.env.test.local
+.env.production.local
 
-
-# Coveralls
-coverage
-
-# Benchmarking
-benchmarks/graphs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

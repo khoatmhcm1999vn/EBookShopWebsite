@@ -36,7 +36,7 @@ function initial() {
 const connectDB = async () => {
   const conn = await mongoose
     .connect(
-      process.env.DB_CONN_STRING || "mongodb://127.0.0.1:27017/book-shop",
+      process.env.DB_CONN_STRING || "mongodb+srv://nhoxtin456:Admin123@cluster0.9whoysl.mongodb.net/test/?retryWrites=true&w=majority&appName=Cluster0",
       {
         useNewUrlParser: true,
         useCreateIndex: true,
