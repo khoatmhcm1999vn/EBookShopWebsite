@@ -9,16 +9,17 @@ import * as userActions from "../actions/user.action"
 
 class AdminHomeContainer extends Component {
   async componentDidMount() {
-    this.props.homeActions.getTopProduct()
-    this.props.homeActions.getCountProductBill()
-    this.props.homeActions.getCountProductStock()
-    this.props.homeActions.getCountBill()
+    //this.props.homeActions.getTopProduct()
+    //this.props.homeActions.getCountProductBill()
+    //this.props.homeActions.getCountProductStock()
+    //this.props.homeActions.getCountBill()
 
     let res = await this.props.userActions.loadUser()
     // console.log(res);
     // console.log(this.props.currentUser.user.is_admin);
-    if (res === false || !res.is_admin || res === null)
+    if (res === false || !res.is_admin || res === null) {
       this.props.history.push("/login_register")
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (

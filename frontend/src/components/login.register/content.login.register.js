@@ -37,7 +37,7 @@ const ContentLoginRegister = ({
   loginSubmit,
   islogin,
   currentUser,
-  setCapchaValue,
+  //setCapchaValue,
   history,
   cart
 }) => {
@@ -247,11 +247,11 @@ const ContentLoginRegister = ({
                     setConfirm(e.target.value)
                   }}
                 />
-                <ReCAPTCHA
+                {/* <ReCAPTCHA
                   onChange={setCapchaValue}
                   sitekey="6Lc5cLkZAAAAAN8mFk85HQieB9toPcWFoW0RXCNR"
                 />
-                <br />
+                <br /> */}
                 {islogin && islogin ? (
                   <div key={1} className="panel panel-default">
                     <div className="panel-heading">

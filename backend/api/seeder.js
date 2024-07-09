@@ -18,7 +18,8 @@ import Bill from "./models/bill.model.js";
 
 // Connect to DB
 mongoose.connect(
-  process.env.DB_CONN_STRING,
+  process.env.DB_CONN_STRING ||
+  "mongodb+srv://nhoxtin456:Admin123@cluster0.9whoysl.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0",
   {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -31,26 +32,26 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Read JSON files
-const users = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/users.json`, "utf-8")
-);
-const products = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/product.json`, "utf-8")
-);
+// const users = JSON.parse(
+//   fs.readFileSync(`${__dirname}/data/users.json`, "utf-8")
+// );
+// const products = JSON.parse(
+//   fs.readFileSync(`${__dirname}/data/product.json`, "utf-8")
+// );
 const categories = JSON.parse(
   fs.readFileSync(`${__dirname}/data/category.json`, "utf-8")
 );
-const reviews = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/reviews.json`, "utf-8")
-);
+// const reviews = JSON.parse(
+//   fs.readFileSync(`${__dirname}/data/reviews.json`, "utf-8")
+// );
 
 //Import into DB
 const importData = async () => {
   try {
-    await User.create(users);
-    await Book.create(products);
+    //await User.create(users);
+    //await Book.create(products);
     await Category.create(categories);
-    await Comment.create(reviews);
+    //await Comment.create(reviews);
     console.log(`Data Imported`.green.inverse);
     process.exit();
   } catch (error) {
@@ -60,11 +61,11 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    await User.deleteMany();
-    await Book.deleteMany();
+    //await User.deleteMany();
+    //await Book.deleteMany();
     await Category.deleteMany();
-    await Comment.deleteMany();
-    await Bill.deleteMany();
+    //await Comment.deleteMany();
+    //await Bill.deleteMany();
     console.log("Data Destroy".red.inverse);
     process.exit();
   } catch (error) {

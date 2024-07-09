@@ -24,7 +24,7 @@ const LoginRegister = ({
   loginSubmit,
   islogin,
   currentUser,
-  setCapchaValue,
+  //setCapchaValue,
   history,
   cart
 }) => (
@@ -45,7 +45,7 @@ const LoginRegister = ({
     loginSubmit={() => loginSubmit()}
     islogin={islogin}
     currentUser={currentUser}
-    setCapchaValue={value => setCapchaValue(value)}
+    //setCapchaValue={value => setCapchaValue(value)}
     history={history}
     cart={cart}
   />
