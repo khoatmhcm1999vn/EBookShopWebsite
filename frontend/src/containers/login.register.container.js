@@ -23,8 +23,8 @@ class LoginRegisterContainer extends Component {
       password: "",
       confirm: "",
       notificationRegister: "",
-      notificationLogin: "",
-      captchaValue: ""
+      notificationLogin: ""
+      //captchaValue: ""
     }
   }
   async componentDidMount() {
@@ -65,13 +65,13 @@ class LoginRegisterContainer extends Component {
     return true
   }
 
-  isvalidCaptcha = captcha => {
-    if (captcha === "") return false
-    return true
-  }
+  // isvalidCaptcha = captcha => {
+  //   if (captcha === "") return false
+  //   return true
+  // }
 
   registerSubmit = async () => {
-    console.log(this.state.captchaValue)
+    //console.log(this.state.captchaValue)
     if (!this.isvalidUserName(this.state.user_name)) {
       this.setState({ notificationRegister: "Username invalid" })
       return
@@ -106,12 +106,12 @@ class LoginRegisterContainer extends Component {
       this.setState({ notificationRegister: "Lastname invalid" })
       return
     }
-    if (!this.isvalidCaptcha(this.state.captchaValue)) {
-      this.setState({ notificationRegister: "Captcha empty" })
-      return
-    } else {
-      this.setState({ notificationRegister: "" })
-    }
+    // if (!this.isvalidCaptcha(this.state.captchaValue)) {
+    //   this.setState({ notificationRegister: "Captcha empty" })
+    //   return
+    // } else {
+    //   this.setState({ notificationRegister: "" })
+    // }
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/user/register`, {
         user_name: this.state.user_name,
@@ -120,23 +120,25 @@ class LoginRegisterContainer extends Component {
         firstName: this.state.firstname,
         lastName: this.state.lastname,
         // address: this.state.address,
-        phone_number: this.state.phone,
-        captchaValue: this.state.captchaValue
+        phone_number: this.state.phone
+        //captchaValue: this.state.captchaValue
       })
     } catch (err) {
       console.log(err.response.data)
-      if (err.response.data.message === "👎 Please select captcha")
-        this.setState({ notificationRegister: "👎 Please select captcha" })
-      else if (err.response.data.message === "👎 Failed captcha verification")
-        this.setState({
-          notificationRegister: "👎 Failed captcha verification"
-        })
-      else if (err.response.data.message === "👎 Email đã tồn tại!")
+      // if (err.response.data.message === "👎 Please select captcha")
+      //   this.setState({ notificationRegister: "👎 Please select captcha" })
+      // else 
+      // if (err.response.data.message === "👎 Failed captcha verification")
+      //   this.setState({
+      //     notificationRegister: "👎 Failed captcha verification"
+      //   })
+      // else 
+      if (err.response.data.message === "👎 Email đã tồn tại!")
         this.setState({ notificationRegister: "👎 Email đã tồn tại!" })
       else this.setState({ notificationRegister: "👍 Đăng ký thành công!" })
       return
     }
-    window.grecaptcha.reset()
+    //window.grecaptcha.reset()
     this.setState({ notificationRegister: "👍 Đăng ký thành công!" })
   }
 
@@ -213,16 +215,16 @@ class LoginRegisterContainer extends Component {
           loginSubmit={() => this.loginSubmit()}
           islogin={this.props.islogin}
           currentUser={this.props.currentUser}
-          setCapchaValue={value => this.setState({ captchaValue: value })}
+          //setCapchaValue={value => this.setState({ captchaValue: value })}
           cart={this.props.cart}
           history={this.props.history}
-          // logout={() => this.props.actions.logout()}
-          //   sortType={this.props.sortType}
-          //   setSortType={(value) => this.props.homeActions.setSortType(value)}
-          //   setRangeType={(range) => this.props.homeActions.setRangeType(range)}
-          //   setSearchText={(value) => this.props.homeActions.setSearchText(value)}
-          //   searchTextSubmit={() => this.props.homeActions.searchTextSubmit()}
-          //   history={this.props.history}
+        // logout={() => this.props.actions.logout()}
+        //   sortType={this.props.sortType}
+        //   setSortType={(value) => this.props.homeActions.setSortType(value)}
+        //   setRangeType={(range) => this.props.homeActions.setRangeType(range)}
+        //   setSearchText={(value) => this.props.homeActions.setSearchText(value)}
+        //   searchTextSubmit={() => this.props.homeActions.searchTextSubmit()}
+        //   history={this.props.history}
         />
       </div>
     )

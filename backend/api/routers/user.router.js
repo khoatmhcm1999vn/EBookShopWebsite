@@ -21,7 +21,7 @@ import { recaptchaGoogleCheck } from "../middleware/index.js";
 
 const userRouter = express.Router();
 
-userRouter.post("/user/register", recaptchaGoogleCheck, register);
+userRouter.post("/user/register", register);
 userRouter.get("/user/verify/:token", verifyAccount);
 userRouter.post("/user/resend", resendLink);
 userRouter.post("/user/login", login);

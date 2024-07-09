@@ -18,7 +18,7 @@ export const generateToken = (user) => {
     // {
     //   expiresIn: 60 * 30,
     // }
-    { expiresIn: process.env.JWT_ACCESS_TIME }
+    { expiresIn: process.env.JWT_ACCESS_TIME || 60 * 30 }
   );
 };
 export function generateRefreshToken(user) {
@@ -31,7 +31,7 @@ export function generateRefreshToken(user) {
     },
     process.env.JWT_REFRESH_SECRET ||
     "901fa0c0364e907c1a857621f4c884f4cbe2f2ab6c1b770822a2d82a573d74cf1ff9777067b52e471920d098a0bc8e4f53917a89cf42f6bc98364a3df8539d34",
-    { expiresIn: process.env.JWT_REFRESH_TIME }
+    { expiresIn: process.env.JWT_REFRESH_TIME || 60 * 30 }
   );
 
   redis_client.get(user._id.toString(), (err, data) => {

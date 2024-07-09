@@ -62,7 +62,7 @@ function GetAccessToken(req, res) {
   const access_token = jwt.sign(
     { sub: user_id },
     process.env.JWT_ACCESS_SECRET,
-    { expiresIn: process.env.JWT_ACCESS_TIME }
+    { expiresIn: process.env.JWT_ACCESS_TIME || 60 * 30 }
   );
   const refresh_token = generateRefreshToken(user_id);
   return res.json({
@@ -76,7 +76,7 @@ function generateRefreshToken(user_id) {
   const refresh_token = jwt.sign(
     { sub: user_id },
     process.env.JWT_REFRESH_SECRET,
-    { expiresIn: process.env.JWT_REFRESH_TIME }
+    { expiresIn: process.env.JWT_REFRESH_TIME || 60 * 30 }
   );
 
   redis_client.get(user_id.toString(), (err, data) => {
