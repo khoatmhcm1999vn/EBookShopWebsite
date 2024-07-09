@@ -18,7 +18,7 @@ export const verifyToken = async (req, res) => {
     let decoded = await jwt.verify(
       token,
       process.env.JWT_ACCESS_SECRET ||
-        "9e2fbe2f30f3bee85171dd00f4ff10d6745b120387a6bbcc16e5b5dd3524b8cdcae69586bf183b01b3c88215a4eb339e99ae9d98aab83b44872e972bae355ec4"
+      "9e2fbe2f30f3bee85171dd00f4ff10d6745b120387a6bbcc16e5b5dd3524b8cdcae69586bf183b01b3c88215a4eb339e99ae9d98aab83b44872e972bae355ec4"
     );
     if (decoded.user_name == user_name) {
       return res

@@ -18,8 +18,7 @@ import Bill from "./models/bill.model.js";
 
 // Connect to DB
 mongoose.connect(
-  process.env.MONGO_DB_URI ||
-  "mongodb+srv://nhoxtin456:Admin123@cluster0.9whoysl.mongodb.net/test/?retryWrites=true&w=majority&appName=Cluster0",
+  process.env.DB_CONN_STRING,
   {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -51,7 +50,7 @@ const importData = async () => {
     await User.create(users);
     await Book.create(products);
     await Category.create(categories);
-    // await Comment.create(reviews);
+    await Comment.create(reviews);
     console.log(`Data Imported`.green.inverse);
     process.exit();
   } catch (error) {
@@ -64,7 +63,7 @@ const deleteData = async () => {
     await User.deleteMany();
     await Book.deleteMany();
     await Category.deleteMany();
-    //await Review.deleteMany();
+    await Comment.deleteMany();
     await Bill.deleteMany();
     console.log("Data Destroy".red.inverse);
     process.exit();

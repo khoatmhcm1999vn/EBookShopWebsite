@@ -14,7 +14,7 @@ export const generateToken = (user) => {
       // iat: new Date(parseInt(Math.floor(Date.now() / 1000) - 60 * 30) * 1000),
     },
     process.env.JWT_ACCESS_SECRET ||
-      "9e2fbe2f30f3bee85171dd00f4ff10d6745b120387a6bbcc16e5b5dd3524b8cdcae69586bf183b01b3c88215a4eb339e99ae9d98aab83b44872e972bae355ec4",
+    "9e2fbe2f30f3bee85171dd00f4ff10d6745b120387a6bbcc16e5b5dd3524b8cdcae69586bf183b01b3c88215a4eb339e99ae9d98aab83b44872e972bae355ec4",
     // {
     //   expiresIn: 60 * 30,
     // }
@@ -30,7 +30,7 @@ export function generateRefreshToken(user) {
       role: user.role,
     },
     process.env.JWT_REFRESH_SECRET ||
-      "901fa0c0364e907c1a857621f4c884f4cbe2f2ab6c1b770822a2d82a573d74cf1ff9777067b52e471920d098a0bc8e4f53917a89cf42f6bc98364a3df8539d34",
+    "901fa0c0364e907c1a857621f4c884f4cbe2f2ab6c1b770822a2d82a573d74cf1ff9777067b52e471920d098a0bc8e4f53917a89cf42f6bc98364a3df8539d34",
     { expiresIn: process.env.JWT_REFRESH_TIME }
   );
 
