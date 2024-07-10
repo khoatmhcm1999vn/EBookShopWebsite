@@ -13,23 +13,28 @@ class CategoryContainer extends Component {
   constructor() {
     super()
   }
+  // async componentWillMount() {
+  //   this.props.bookActions.getCategory()
+  //   let res = await this.props.userActions.loadUser()
+  //   if (!res.is_admin || this.props.currentUser === null)
+  //     this.props.history.push("/login_register")
+  // }
+  // componentWillReceiveProps(nextProps) {
+  //   if (
+  //     nextProps.islogin !== this.props.islogin &&
+  //     nextProps.islogin === false
+  //   ) {
+  //     this.props.history.push("/login_register")
+  //   }
+  //   if (nextProps.page !== this.props.page) {
+  //     this.props.bookActions.getCategory()
+  //   }
+  // }
+
   async componentWillMount() {
-    this.props.bookActions.getCategory()
-    let res = await this.props.userActions.loadUser()
-    if (!res.is_admin || this.props.currentUser === null)
-      this.props.history.push("/login_register")
+    this.props.bookActions.getCategory();
   }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.islogin !== this.props.islogin &&
-      nextProps.islogin === false
-    ) {
-      this.props.history.push("/login_register")
-    }
-    if (nextProps.page !== this.props.page) {
-      this.props.bookActions.getCategory()
-    }
-  }
+
   render() {
     return (
       <section id="container" className="">

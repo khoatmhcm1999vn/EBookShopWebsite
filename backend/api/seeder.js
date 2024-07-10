@@ -19,7 +19,7 @@ import Bill from "./models/bill.model.js";
 // Connect to DB
 mongoose.connect(
   process.env.DB_CONN_STRING ||
-  "mongodb+srv://nhoxtin456:Admin123@cluster0.9whoysl.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0",
+  "mongodb://nhoxtin14567:Admin123456@cluster0.9whoysl.mongodb.net/",
   {
     useNewUrlParser: true,
     useCreateIndex: true,
