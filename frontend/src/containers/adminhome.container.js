@@ -13,23 +13,25 @@ class AdminHomeContainer extends Component {
     //this.props.homeActions.getCountProductBill()
     //this.props.homeActions.getCountProductStock()
     //this.props.homeActions.getCountBill()
-
-    let res = await this.props.userActions.loadUser()
+    //let res = await this.props.userActions.loadUser()
     // console.log(res);
     // console.log(this.props.currentUser.user.is_admin);
-    if (res === false || !res.is_admin || res === null) {
-      this.props.history.push("/login_register")
-    }
+    // if (this.props.currentUser === false || !res.is_admin || res === null) {
+    //   this.props.history.push("/login_register")
+    // }
   }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.islogin !== this.props.islogin &&
-      nextProps.islogin === false
-    ) {
-      this.props.history.push("/login_register")
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (
+  //     nextProps.islogin !== this.props.islogin &&
+  //     nextProps.islogin === false
+  //   ) {
+  //     //this.props.history.push("/login_register")
+  //     console.log(this.props.islogin)
+  //   }
+  // }
+
   render() {
+    console.log(this.props.currentUser)
     return (
       <section id="container" className="">
         <NavbarContainer />

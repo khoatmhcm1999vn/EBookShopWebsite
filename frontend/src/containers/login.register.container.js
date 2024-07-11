@@ -197,11 +197,9 @@ class LoginRegisterContainer extends Component {
       res.data.refresh_token,
       res.data.user
     )
-    // if (res.data.user.is_admin) this.props.history.push("/dashboard");
-    //if (res.data.user.is_admin) document.location.href = "/dashboard"
-    // else this.props.history.push("/");
-    //else document.location.href = "/"
-    document.location.href = "/"
+
+    if (res.data.user.is_admin) document.location.href = "/dashboard"
+    else document.location.href = "/"
   }
 
   render() {
