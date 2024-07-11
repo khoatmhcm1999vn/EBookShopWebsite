@@ -33,9 +33,9 @@ class HeaderMiddle extends Component {
         <li
           className="btn-custom"
           onClick={() => {
-            window.location.reload()
             this.props.logout()
             this.props.history.push("/")
+            window.location.reload()
           }}
         >
           <a>

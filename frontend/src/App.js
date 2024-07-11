@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css"
 
 import { useDispatch, useSelector } from "react-redux"
 import { getListProductCategoryIds } from "./actions/home.action"
-import { loadUser, logout } from "./actions/user.action"
+import { loadUser, logout, setLoginSuccess } from "./actions/user.action"
 
 import AdminHomeContainer from "./containers/adminhome.container"
 import SupportScreen from "./screens/SupportScreen"
@@ -53,6 +53,7 @@ import RankingScreen from "./screens/RankingScreen/RankingScreen"
 import "./i18n"
 import AdminDashboardScreen from "./screens/AdminDashboardScreen"
 // import SearchBox from "./components/SearchBox/SearchBox";
+import { getUser, getExpiryDate, getRefreshToken } from "./config/store.config"
 
 export default function App() {
   const dispatch = useDispatch()
@@ -67,12 +68,20 @@ export default function App() {
 
   useEffect(() => {
     //isMounted.current = true
+    //console.log("test")
+    if (getUser()) {
+      dispatch(setLoginSuccess(getUser()))
+    }
     //dispatch(getListProductCategoryIds())
   }, [dispatch])
 
-  // const islogin = useSelector((state) => state.userReducers.user.islogin);
-  const currentUser = useSelector(state => state.userReducers.user.currentUser)
+  const { currentUser } = useSelector(state => state.userReducers.user)
+  // const categories = useSelector(
+  //   state => state.homeReducers.book.dataProductCategoryIds
+  // )
+  //console.log(categories)
   console.log(currentUser)
+  //console.log(getUser())
 
   // const setAutoLogout = (milliseconds) => {
   //   setTimeout(() => {

@@ -177,7 +177,7 @@ export const loginSuccess =
     console.log(expiryDate)
     localStorage.setItem("expiryDate", expiryDate.toISOString())
     // dispatch(setCurrentUser(user));
-    dispatch(setLoginSuccess(user))
+    //dispatch(setLoginSuccess(user))
 
     let cart = storeConfig.getCart()
     storeConfig.removeCart()
@@ -224,7 +224,7 @@ export const logout = () => (dispatch, getState) => {
   localStorage.removeItem("cart")
   localStorage.removeItem("shippingAddress")
   dispatch({ type: USER_SIGNOUT })
-  document.location.href = "/login_register"
+  //document.location.href = "/login_register"
   // dispatch(setLoginFail());
 }
 

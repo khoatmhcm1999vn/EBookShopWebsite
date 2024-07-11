@@ -36,6 +36,8 @@ const HomeScreen = ({ history }) => {
   // }, [dispatch]);
   // console.log(bookSearchData);
 
+  //console.log(islogin)
+
   return (
     <div>
       <header id="header">
