@@ -53,15 +53,15 @@ const HomeScreen = ({ history }) => {
         />
       </header>
       {/* <ScrollButton /> */}
-      <CarouselImageSlider />
+      {/* <CarouselImageSlider /> */}
       {/* <SliderBrands /> */}
-      <HomePageTheme />
-      <SliderCards />
+      {/* <HomePageTheme /> */}
+      {/* <SliderCards />
       <SliderListFlashSalesProductTop10 />
       <SliderListProductSoldTop10ByDay />
       <SliderListProductTop10ByCategory />
       <SliderListProductSoldTop10ByWeek />
-      <SliderListProductRankTop5 />
+      <SliderListProductRankTop5 /> */}
       <footer id="footer">
         <FooterTop />
         <FooterMiddle />

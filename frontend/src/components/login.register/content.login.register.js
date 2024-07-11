@@ -73,7 +73,7 @@ const ContentLoginRegister = ({
                     <span>/</span>
                   </li>
                   <li className="active">
-                    <strong>Login/Register</strong>
+                    <strong>Login / Register</strong>
                   </li>
                 </ol>
               </div>
@@ -151,7 +151,7 @@ const ContentLoginRegister = ({
                     Login
                   </button>
                 )}
-                <div className="col-md-6">
+                {/* <div className="col-md-6">
                   <div className="mt-5">
                     <a
                       className="btn btn-block social-btn google"
@@ -175,7 +175,7 @@ const ContentLoginRegister = ({
                       Log in with Github
                     </a>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="col-sm-1">

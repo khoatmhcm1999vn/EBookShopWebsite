@@ -158,10 +158,10 @@
       $(function () {
         $(".knob").knob({
           draw: function () {
-            $(this.i).val(this.cv + "%");
-          },
-        });
-      });
+            $(this.i).val(this.cv + "%")
+          }
+        })
+      })
 
       //carousel
       $(document).ready(function () {
@@ -169,15 +169,15 @@
           navigation: true,
           slideSpeed: 300,
           paginationSpeed: 400,
-          singleItem: true,
-        });
-      });
+          singleItem: true
+        })
+      })
 
       //custom select box
 
       $(function () {
-        $("select.styled").customSelect();
-      });
+        $("select.styled").customSelect()
+      })
 
       /* ---------- Map ---------- */
       $(function () {
@@ -188,16 +188,16 @@
               {
                 values: gdpData,
                 scale: ["#000", "#000"],
-                normalizeFunction: "polynomial",
-              },
-            ],
+                normalizeFunction: "polynomial"
+              }
+            ]
           },
           backgroundColor: "#eef3f7",
           onLabelShow: function (e, el, code) {
-            el.html(el.html() + " (GDP - " + gdpData[code] + ")");
-          },
-        });
-      });
+            el.html(el.html() + " (GDP - " + gdpData[code] + ")")
+          }
+        })
+      })
     </script>
   </body>
 </html>

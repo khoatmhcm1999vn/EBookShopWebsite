@@ -27,39 +27,46 @@ class LoginRegisterContainer extends Component {
       //captchaValue: ""
     }
   }
-  async componentDidMount() {
-    let res = await this.props.actions.loadUser()
-    this.props.cartActions.getCart()
-    if (res.is_admin === false && this.props.currentUser !== null)
-      this.props.history.push("/")
-    // console.log(this.props.currentUser.user);
-    else if (res.is_admin === true && this.props.currentUser !== null)
-      document.location.href = "/dashboard"
-    // else if (!res.is_admin || this.props.currentUser === null)
-    //   this.props.history.push("/login_register");
-    // else if (this.props.islogin) this.props.history.push("/");
-  }
+
+  // async componentDidMount() {
+  //   let res = await this.props.actions.loadUser()
+  //   this.props.cartActions.getCart()
+  //   if (res.is_admin === false && this.props.currentUser !== null)
+  //     this.props.history.push("/")
+  //   // console.log(this.props.currentUser.user);
+  //   else if (res.is_admin === true && this.props.currentUser !== null)
+  //     document.location.href = "/dashboard"
+  //   // else if (!res.is_admin || this.props.currentUser === null)
+  //   //   this.props.history.push("/login_register");
+  //   // else if (this.props.islogin) this.props.history.push("/");
+  // }
+
   isvalidFirstName = firstName => {
     if (firstName === "") return false
     return true
   }
+
   isvalidLastName = lastname => {
     if (lastname === "") return false
     return true
   }
+
   isvalidPassword = password => {
     if (password.length < 6) return false
     return true
   }
+
   isvalidConfirm = (password, confirm) => {
     if (confirm != password) return false
     return true
   }
+
   isvalidEmail = email => {
     if (email === "" || email.indexOf("@") === -1 || email.indexOf(".") === -1)
       return false
     return true
   }
+
   isvalidUserName = user_name => {
     if (user_name === "") return false
     return true
@@ -127,12 +134,12 @@ class LoginRegisterContainer extends Component {
       console.log(err.response.data)
       // if (err.response.data.message === "👎 Please select captcha")
       //   this.setState({ notificationRegister: "👎 Please select captcha" })
-      // else 
+      // else
       // if (err.response.data.message === "👎 Failed captcha verification")
       //   this.setState({
       //     notificationRegister: "👎 Failed captcha verification"
       //   })
-      // else 
+      // else
       if (err.response.data.message === "👎 Email đã tồn tại!")
         this.setState({ notificationRegister: "👎 Email đã tồn tại!" })
       else this.setState({ notificationRegister: "👍 Đăng ký thành công!" })
@@ -191,10 +198,12 @@ class LoginRegisterContainer extends Component {
       res.data.user
     )
     // if (res.data.user.is_admin) this.props.history.push("/dashboard");
-    if (res.data.user.is_admin) document.location.href = "/dashboard"
+    //if (res.data.user.is_admin) document.location.href = "/dashboard"
     // else this.props.history.push("/");
-    else document.location.href = "/"
+    //else document.location.href = "/"
+    document.location.href = "/"
   }
+
   render() {
     return (
       <div>
@@ -218,23 +227,25 @@ class LoginRegisterContainer extends Component {
           //setCapchaValue={value => this.setState({ captchaValue: value })}
           cart={this.props.cart}
           history={this.props.history}
-        // logout={() => this.props.actions.logout()}
-        //   sortType={this.props.sortType}
-        //   setSortType={(value) => this.props.homeActions.setSortType(value)}
-        //   setRangeType={(range) => this.props.homeActions.setRangeType(range)}
-        //   setSearchText={(value) => this.props.homeActions.setSearchText(value)}
-        //   searchTextSubmit={() => this.props.homeActions.searchTextSubmit()}
-        //   history={this.props.history}
+          // logout={() => this.props.actions.logout()}
+          //   sortType={this.props.sortType}
+          //   setSortType={(value) => this.props.homeActions.setSortType(value)}
+          //   setRangeType={(range) => this.props.homeActions.setRangeType(range)}
+          //   setSearchText={(value) => this.props.homeActions.setSearchText(value)}
+          //   searchTextSubmit={() => this.props.homeActions.searchTextSubmit()}
+          //   history={this.props.history}
         />
       </div>
     )
   }
 }
+
 const mapStateToProps = state => ({
   islogin: state.userReducers.user.islogin,
   currentUser: state.userReducers.user.currentUser,
   cart: state.cart.data
 })
+
 const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(userActions, dispatch),
@@ -242,6 +253,7 @@ const mapDispatchToProps = dispatch => {
     cartActions: bindActionCreators(cartActions, dispatch)
   }
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps

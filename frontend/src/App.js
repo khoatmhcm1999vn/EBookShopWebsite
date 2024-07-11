@@ -59,20 +59,20 @@ export default function App() {
   // const location = useLocation();
   // const history = useHistory();
 
-  const isMounted = useRef(false)
-  if (!isMounted.current) {
-    // getLocalStorage('token') &&
-    dispatch(loadUser())
-  }
+  // const isMounted = useRef(false)
+  // if (!isMounted.current) {
+  //   // getLocalStorage('token') &&
+  //   dispatch(loadUser())
+  // }
 
   useEffect(() => {
-    isMounted.current = true
-    dispatch(getListProductCategoryIds())
+    //isMounted.current = true
+    //dispatch(getListProductCategoryIds())
   }, [dispatch])
 
   // const islogin = useSelector((state) => state.userReducers.user.islogin);
   const currentUser = useSelector(state => state.userReducers.user.currentUser)
-  // console.log(currentUser);
+  console.log(currentUser)
 
   // const setAutoLogout = (milliseconds) => {
   //   setTimeout(() => {

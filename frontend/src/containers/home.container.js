@@ -24,24 +24,26 @@ class HomeContainer extends React.Component {
     }
     this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
-  componentWillMount() {
-    this.props.actions.loadUser()
-    this.props.homeActions.getCategory()
-    this.props.homeActions.getPublisher()
-    this.props.homeActions.getBook()
-    this.props.homeActions.getAuthor()
-    this.props.cartActions.getCart()
-    document.title = "[TellMe] Trang bán hàng"
-  }
-  componentWillReceiveProps(nextProps) {
-    // console.log(nextProps.pageSize);
-    if (
-      nextProps.page !== this.props.page ||
-      nextProps.pageSize !== this.props.pageSize
-    ) {
-      this.props.homeActions.getBook()
-    }
-  }
+
+  // componentWillMount() {
+  //   this.props.actions.loadUser()
+  //   this.props.homeActions.getCategory()
+  //   this.props.homeActions.getPublisher()
+  //   this.props.homeActions.getBook()
+  //   this.props.homeActions.getAuthor()
+  //   this.props.cartActions.getCart()
+  //   document.title = "[TellMe] Trang bán hàng"
+  // }
+
+  // componentWillReceiveProps(nextProps) {
+  //   // console.log(nextProps.pageSize);
+  //   if (
+  //     nextProps.page !== this.props.page ||
+  //     nextProps.pageSize !== this.props.pageSize
+  //   ) {
+  //     this.props.homeActions.getBook()
+  //   }
+  // }
 
   handleChangeCurrency = event => {
     console.log(event.target.value)
