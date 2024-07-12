@@ -32,7 +32,7 @@ class CategoryContainer extends Component {
   // }
 
   async componentWillMount() {
-    this.props.bookActions.getCategory();
+    this.props.bookActions.getCategory()
   }
 
   render() {

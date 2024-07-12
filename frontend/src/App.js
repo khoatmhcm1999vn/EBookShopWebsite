@@ -148,16 +148,20 @@ export default function App() {
       {/* ADMIN */}
       <AdminRoute exact path="/dashboard" component={AdminHomeContainer} />
       <AdminRoute path="/support" component={SupportScreen} />
-      <Route exact path="/bookmanager" component={BookContainer} />
-      <Route exact path="/book" component={BookScreen} />
-      <Route exact path="/bill" component={BillScreen} />
+      <AdminRoute exact path="/bookmanager" component={BookContainer} />
+      <AdminRoute exact path="/book" component={BookScreen} />
+      <AdminRoute exact path="/bill" component={BillScreen} />
       {/* <Route path="/test" component={BookTable} /> */}
       <AdminRoute exact path="/categorymanager" component={CategoryContainer} />
-      <Route exact path="/authormanager" component={AuthorContainer} />
-      <Route exact path="/publishermanager" component={PublisherContainer} />
-      <Route exact path="/usermanager" component={UserContainer} />
-      <Route exact path="/statistical" component={StatisticalContainer} />
-      <Route exact path="/billmanager" component={BillContainer} />
+      <AdminRoute exact path="/authormanager" component={AuthorContainer} />
+      <AdminRoute
+        exact
+        path="/publishermanager"
+        component={PublisherContainer}
+      />
+      <AdminRoute exact path="/usermanager" component={UserContainer} />
+      <AdminRoute exact path="/statistical" component={StatisticalContainer} />
+      <AdminRoute exact path="/billmanager" component={BillContainer} />
       <Route exact path="/login_register" component={LoginRegisterContainer} />
       <Route
         exact
@@ -179,29 +183,22 @@ export default function App() {
         path="/product/:id"
       />
       <Route exact path="/cart" component={CartContainer} />
-      <PrivateRoute path="/shipping" component={ShippingScreen}></PrivateRoute>
-      <PrivateRoute path="/payment" component={PaymentScreen}></PrivateRoute>
-      <PrivateRoute
-        path="/placeorder"
-        component={PlaceOrderScreen}
-      ></PrivateRoute>
-      <PrivateRoute path="/order/:id" component={OrderScreen}></PrivateRoute>
-      <PrivateRoute
-        exact
-        path="/wishlist"
-        component={FavoriteScreen}
-      ></PrivateRoute>
+      <PrivateRoute path="/shipping" component={ShippingScreen} />
+      <PrivateRoute path="/payment" component={PaymentScreen} />
+      <PrivateRoute path="/placeorder" component={PlaceOrderScreen} />
+      <PrivateRoute path="/order/:id" component={OrderScreen} />
+      <PrivateRoute exact path="/wishlist" component={FavoriteScreen} />
       <Route exact path="/paymentg/:token" component={VerifyPaymentContainer} />
 
       <Route exact path="/contacts" component={ContactScreen} />
       <Route exact path="/shop" component={HomeContainer} />
 
-      <Route path="/shop-page/name/:name?" component={ShopScreen} exact></Route>
+      <Route exact path="/shop-page/name/:name?" component={ShopScreen} />
       <Route
+        exact
         path="/shop-page/id_category/:id_category"
         component={ShopScreen}
-        exact
-      ></Route>
+      />
       <Route
         exact
         path="/shop-page/id_category/:id_category/sales/:sales/updatedAtByDay/:updatedAtByDay"
