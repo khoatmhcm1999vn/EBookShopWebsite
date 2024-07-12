@@ -40,18 +40,18 @@ export default function SupportScreen() {
       const sk = socketIOClient(ENDPOINT)
       setSocket(sk)
       sk.emit("onLogin", {
-        _id: user._id,
+        id: user.id,
         name: user.firstName,
         is_admin: user.is_admin
       })
       sk.on("message", data => {
-        if (allSelectedUser._id === data._id) {
+        if (allSelectedUser.id === data.id) {
           allMessages = [...allMessages, data]
         } else {
-          const existUser = allUsers.find(user => user._id === data._id)
+          const existUser = allUsers.find(user => user.id === data.id)
           if (existUser) {
             allUsers = allUsers.map(user =>
-              user._id === existUser._id ? { ...user, unread: true } : user
+              user.id === existUser.id ? { ...user, unread: true } : user
             )
             setUsers(allUsers)
           }
@@ -59,10 +59,10 @@ export default function SupportScreen() {
         setMessages(allMessages)
       })
       sk.on("updateUser", updatedUser => {
-        const existUser = allUsers.find(user => user._id === updatedUser._id)
+        const existUser = allUsers.find(user => user.id === updatedUser.id)
         if (existUser) {
           allUsers = allUsers.map(user =>
-            user._id === existUser._id ? updatedUser : user
+            user.id === existUser.id ? updatedUser : user
           )
           setUsers(allUsers)
         } else {
@@ -84,10 +84,10 @@ export default function SupportScreen() {
   const selectUser = user => {
     allSelectedUser = user
     setSelectedUser(allSelectedUser)
-    const existUser = allUsers.find(x => x._id === user._id)
+    const existUser = allUsers.find(x => x.id === user.id)
     if (existUser) {
       allUsers = allUsers.map(x =>
-        x._id === existUser._id ? { ...x, unread: false } : x
+        x.id === existUser.id ? { ...x, unread: false } : x
       )
       setUsers(allUsers)
     }
@@ -110,7 +110,7 @@ export default function SupportScreen() {
           body: messageBody,
           name: user.firstName,
           is_admin: user.is_admin,
-          _id: selectedUser._id
+          id: selectedUser.id
         })
       }, 1000)
     }
@@ -140,17 +140,17 @@ export default function SupportScreen() {
             </div>
           </div>
           <div className="col-1 support-users">
-            {users.filter(x => x._id !== user._id).length === 0 && (
+            {users.filter(x => x.id !== user.id).length === 0 && (
               <MessageBox>No Online User Found</MessageBox>
             )}
             <ul>
               {users
-                .filter(x => x._id !== user._id)
+                .filter(x => x.id !== user.id)
                 .map(user => (
                   <li
-                    key={user._id}
+                    key={user.id}
                     className={
-                      user._id === selectedUser._id ? "  selected" : "  "
+                      user.id === selectedUser.id ? "  selected" : "  "
                     }
                   >
                     <button
@@ -174,7 +174,7 @@ export default function SupportScreen() {
             </ul>
           </div>
           <div className="col-3 support-messages">
-            {!selectedUser._id ? (
+            {!selectedUser.id ? (
               <MessageBox>Select a user to start chat</MessageBox>
             ) : (
               <div>

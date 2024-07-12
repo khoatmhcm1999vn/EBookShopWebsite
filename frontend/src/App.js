@@ -110,6 +110,7 @@ export default function App() {
       }
     />
   )
+
   const AdminRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
@@ -119,7 +120,7 @@ export default function App() {
         ) : (
           <Redirect
             to={{
-              pathname: "/login_register",
+              pathname: "/dashboard",
               state: { from: props.location }
             }}
           />
@@ -145,13 +146,13 @@ export default function App() {
       <ToastContainer autoClose={1000} />
       <Route exact path="/" component={HomeScreen} />
       {/* ADMIN */}
-      <Route exact path="/dashboard" component={AdminHomeContainer} />
-      <AdminRoute path="/support" component={SupportScreen}></AdminRoute>
+      <AdminRoute exact path="/dashboard" component={AdminHomeContainer} />
+      <AdminRoute path="/support" component={SupportScreen} />
       <Route exact path="/bookmanager" component={BookContainer} />
       <Route exact path="/book" component={BookScreen} />
       <Route exact path="/bill" component={BillScreen} />
-      <Route path="/test" component={BookTable} />
-      <Route exact path="/categorymanager" component={CategoryContainer} />
+      {/* <Route path="/test" component={BookTable} /> */}
+      <AdminRoute exact path="/categorymanager" component={CategoryContainer} />
       <Route exact path="/authormanager" component={AuthorContainer} />
       <Route exact path="/publishermanager" component={PublisherContainer} />
       <Route exact path="/usermanager" component={UserContainer} />
@@ -166,7 +167,7 @@ export default function App() {
       <Route exact path="/resend-token" component={ResendTokenContainer} />
       <Route exact path="/forgotpass/" component={ForgotPasswordContainer} />
       {/* USER */}
-      <Route exact path="/profile/:email" component={ProfileContainer} />
+      <PrivateRoute exact path="/profile/:email" component={ProfileContainer} />
       <PrivateRoute
         exact
         path="/purchase_history"
@@ -217,7 +218,7 @@ export default function App() {
         component={ShopScreen}
       />
       <Route exact path="/shop-page" component={ShopScreen} />
-      <Route exact path="/testadmin" component={AdminDashboardScreen} />
+      {/* <Route exact path="/testadmin" component={AdminDashboardScreen} /> */}
 
       <Route exact path="/ranking-page" component={RankingScreen} />
       <Route

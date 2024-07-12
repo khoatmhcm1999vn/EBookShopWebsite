@@ -18,6 +18,7 @@ export default function ChatBox(props) {
   ])
   const currentUser = useSelector(state => state.userReducers.user.currentUser)
   const { user } = currentUser
+  console.log(user)
 
   useEffect(() => {
     if (uiMessagesRef.current) {
@@ -29,7 +30,7 @@ export default function ChatBox(props) {
     }
     if (socket) {
       socket.emit("onLogin", {
-        _id: user._id,
+        id: user.id,
         name: user.firstName,
         is_admin: user.is_admin
       })
@@ -57,7 +58,7 @@ export default function ChatBox(props) {
           body: messageBody,
           name: user.firstName,
           is_admin: user.is_admin,
-          _id: user._id
+          id: user.id
         })
       }, 1000)
     }
