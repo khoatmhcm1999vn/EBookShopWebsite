@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, createContext } from "react"
 import {
   // BrowserRouter as Router,
   // Switch,
@@ -54,6 +54,10 @@ import "./i18n"
 import AdminDashboardScreen from "./screens/AdminDashboardScreen"
 // import SearchBox from "./components/SearchBox/SearchBox";
 import { getUser, getExpiryDate, getRefreshToken } from "./config/store.config"
+import { useCookies } from "react-cookie"
+import { getJwtToken } from "./utils/cookie"
+
+export const AuthUser = createContext()
 
 export default function App() {
   const dispatch = useDispatch()
@@ -66,21 +70,82 @@ export default function App() {
   //   dispatch(loadUser())
   // }
 
-  useEffect(() => {
-    //isMounted.current = true
-    //console.log("test")
-    if (getUser()) {
-      dispatch(setLoginSuccess(getUser()))
-    }
-    //dispatch(getListProductCategoryIds())
-  }, [dispatch])
+  const [auth, setAuth] = useState({
+    isLogin: false,
+    isAdmin: true
+  })
+  const [isExpiredToken, setIsExpiredToken] = useState(false)
+  const [cookies, setCookie] = useCookies(["access_token", "refresh-token"])
 
-  const { currentUser } = useSelector(state => state.userReducers.user)
+  const readCookie = () => {
+    const token = getJwtToken()
+    const refreshToken = getRefreshToken()
+    let user = null
+    const base64Url = token.split(".")[1]
+    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
+    var jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+        })
+        .join("")
+    )
+    user = JSON.parse(jsonPayload)
+    if (token && refreshToken) {
+      if (user.role.includes("admin")) {
+        return {
+          isLogin: true,
+          isAdmin: true,
+          isSuperAdmin: false
+        }
+      } else if (user.role.includes("SUPER_ADMIN")) {
+        return {
+          isLogin: true,
+          isAdmin: true,
+          isSuperAdmin: true
+        }
+      } else {
+        return {
+          isLogin: true,
+          isAdmin: false
+        }
+      }
+    } else {
+      return {
+        isLogin: false,
+        isAdmin: false
+      }
+    }
+  }
+
+  useEffect(() => {
+    setAuth(readCookie())
+  }, [])
+
+  useEffect(() => {
+    if (auth && Object.keys(cookies).length === 0) {
+      setIsExpiredToken(true)
+    }
+  }, [cookies])
+
+  console.log(auth)
+
+  // useEffect(() => {
+  //   //isMounted.current = true
+  //   //console.log("test")
+  //   if (getUser()) {
+  //     dispatch(setLoginSuccess(getUser()))
+  //   }
+  //   //dispatch(getListProductCategoryIds())
+  // }, [dispatch])
+
+  // const { currentUser } = useSelector(state => state.userReducers.user)
   // const categories = useSelector(
   //   state => state.homeReducers.book.dataProductCategoryIds
   // )
   //console.log(categories)
-  console.log(currentUser)
+  //console.log(currentUser)
   //console.log(getUser())
 
   // const setAutoLogout = (milliseconds) => {
@@ -88,16 +153,17 @@ export default function App() {
   //     dispatch(logout());
   //   }, milliseconds);
   // };
-  if (currentUser) {
-    // setAutoLogout(60 * 60 * 10000);
-  }
+  // if (currentUser) {
+  //   // setAutoLogout(60 * 60 * 10000);
+  // }
 
+  const currentUser = null
   // if (currentUser) console.log(currentUser.user.is_admin);
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={props =>
-        currentUser && !currentUser.user.is_admin ? (
+        auth.isAdmin ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -115,7 +181,7 @@ export default function App() {
     <Route
       {...rest}
       render={props =>
-        currentUser && currentUser.user.is_admin ? (
+        auth.isAdmin ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -144,85 +210,107 @@ export default function App() {
           }}
         /> */}
       <ToastContainer autoClose={1000} />
-      <Route exact path="/" component={HomeScreen} />
-      {/* ADMIN */}
-      <AdminRoute exact path="/dashboard" component={AdminHomeContainer} />
-      <AdminRoute path="/support" component={SupportScreen} />
-      <AdminRoute exact path="/bookmanager" component={BookContainer} />
-      <AdminRoute exact path="/book" component={BookScreen} />
-      <AdminRoute exact path="/bill" component={BillScreen} />
-      {/* <Route path="/test" component={BookTable} /> */}
-      <AdminRoute exact path="/categorymanager" component={CategoryContainer} />
-      <AdminRoute exact path="/authormanager" component={AuthorContainer} />
-      <AdminRoute
-        exact
-        path="/publishermanager"
-        component={PublisherContainer}
-      />
-      <AdminRoute exact path="/usermanager" component={UserContainer} />
-      <AdminRoute exact path="/statistical" component={StatisticalContainer} />
-      <AdminRoute exact path="/billmanager" component={BillContainer} />
-      <Route exact path="/login_register" component={LoginRegisterContainer} />
-      <Route
-        exact
-        path="/confirm/:token"
-        component={VerifyRegisterAccountContainer}
-      />
-      <Route exact path="/resend-token" component={ResendTokenContainer} />
-      <Route exact path="/forgotpass/" component={ForgotPasswordContainer} />
-      {/* USER */}
-      <PrivateRoute exact path="/profile/:email" component={ProfileContainer} />
-      <PrivateRoute
-        exact
-        path="/purchase_history"
-        component={HistoryPurchase}
-      />
-      <Route
-        render={props => <ProductDetailContainer {...props} />}
-        exact
-        path="/product/:id"
-      />
-      <Route exact path="/cart" component={CartContainer} />
-      <PrivateRoute path="/shipping" component={ShippingScreen} />
-      <PrivateRoute path="/payment" component={PaymentScreen} />
-      <PrivateRoute path="/placeorder" component={PlaceOrderScreen} />
-      <PrivateRoute path="/order/:id" component={OrderScreen} />
-      <PrivateRoute exact path="/wishlist" component={FavoriteScreen} />
-      <Route exact path="/paymentg/:token" component={VerifyPaymentContainer} />
+      <AuthUser.Provider value={{ auth, setAuth }}>
+        <Route exact path="/" component={HomeScreen} />
+        {/* ADMIN */}
+        <AdminRoute exact path="/dashboard" component={AdminHomeContainer} />
+        <AdminRoute path="/support" component={SupportScreen} />
+        <AdminRoute exact path="/bookmanager" component={BookContainer} />
+        <AdminRoute exact path="/book" component={BookScreen} />
+        <AdminRoute exact path="/bill" component={BillScreen} />
+        {/* <Route path="/test" component={BookTable} /> */}
+        <AdminRoute
+          exact
+          path="/categorymanager"
+          component={CategoryContainer}
+        />
+        <AdminRoute exact path="/authormanager" component={AuthorContainer} />
+        <AdminRoute
+          exact
+          path="/publishermanager"
+          component={PublisherContainer}
+        />
+        <AdminRoute exact path="/usermanager" component={UserContainer} />
+        <AdminRoute
+          exact
+          path="/statistical"
+          component={StatisticalContainer}
+        />
+        <AdminRoute exact path="/billmanager" component={BillContainer} />
+        <Route
+          exact
+          path="/login_register"
+          component={LoginRegisterContainer}
+        />
+        <Route
+          exact
+          path="/confirm/:token"
+          component={VerifyRegisterAccountContainer}
+        />
+        <Route exact path="/resend-token" component={ResendTokenContainer} />
+        <Route exact path="/forgotpass/" component={ForgotPasswordContainer} />
+        {/* USER */}
+        <PrivateRoute
+          exact
+          path="/profile/:email"
+          component={ProfileContainer}
+        />
+        <PrivateRoute
+          exact
+          path="/purchase_history"
+          component={HistoryPurchase}
+        />
+        <Route
+          render={props => <ProductDetailContainer {...props} />}
+          exact
+          path="/product/:id"
+        />
+        <Route exact path="/cart" component={CartContainer} />
+        <PrivateRoute path="/shipping" component={ShippingScreen} />
+        <PrivateRoute path="/payment" component={PaymentScreen} />
+        <PrivateRoute path="/placeorder" component={PlaceOrderScreen} />
+        <PrivateRoute path="/order/:id" component={OrderScreen} />
+        <PrivateRoute exact path="/wishlist" component={FavoriteScreen} />
+        <Route
+          exact
+          path="/paymentg/:token"
+          component={VerifyPaymentContainer}
+        />
 
-      <Route exact path="/contacts" component={ContactScreen} />
-      <Route exact path="/shop" component={HomeContainer} />
+        <Route exact path="/contacts" component={ContactScreen} />
+        <Route exact path="/shop" component={HomeContainer} />
 
-      <Route exact path="/shop-page/name/:name?" component={ShopScreen} />
-      <Route
-        exact
-        path="/shop-page/id_category/:id_category"
-        component={ShopScreen}
-      />
-      <Route
-        exact
-        path="/shop-page/id_category/:id_category/sales/:sales/updatedAtByDay/:updatedAtByDay"
-        component={ShopScreen}
-      />
-      <Route
-        exact
-        path="/shop-page/sales/:sales/updatedAtByDay/:updatedAtByDay"
-        component={ShopScreen}
-      />
-      <Route
-        exact
-        path="/shop-page/id_category/:id_category/name/:name/min/:min/max/:max/stars/:stars/sales/:sales/updatedAtByDay/:updatedAtByDay/order/:order/pageNumber/:pageNumber/pageSize/:pageSize"
-        component={ShopScreen}
-      />
-      <Route exact path="/shop-page" component={ShopScreen} />
-      {/* <Route exact path="/testadmin" component={AdminDashboardScreen} /> */}
+        <Route exact path="/shop-page/name/:name?" component={ShopScreen} />
+        <Route
+          exact
+          path="/shop-page/id_category/:id_category"
+          component={ShopScreen}
+        />
+        <Route
+          exact
+          path="/shop-page/id_category/:id_category/sales/:sales/updatedAtByDay/:updatedAtByDay"
+          component={ShopScreen}
+        />
+        <Route
+          exact
+          path="/shop-page/sales/:sales/updatedAtByDay/:updatedAtByDay"
+          component={ShopScreen}
+        />
+        <Route
+          exact
+          path="/shop-page/id_category/:id_category/name/:name/min/:min/max/:max/stars/:stars/sales/:sales/updatedAtByDay/:updatedAtByDay/order/:order/pageNumber/:pageNumber/pageSize/:pageSize"
+          component={ShopScreen}
+        />
+        <Route exact path="/shop-page" component={ShopScreen} />
+        {/* <Route exact path="/testadmin" component={AdminDashboardScreen} /> */}
 
-      <Route exact path="/ranking-page" component={RankingScreen} />
-      <Route
-        exact
-        path="/ranking-page/id_category/:id_category"
-        component={RankingScreen}
-      />
+        <Route exact path="/ranking-page" component={RankingScreen} />
+        <Route
+          exact
+          path="/ranking-page/id_category/:id_category"
+          component={RankingScreen}
+        />
+      </AuthUser.Provider>
     </>
   )
 }

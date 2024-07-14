@@ -11,7 +11,7 @@ export const setCookieData = (key, value) => {
 }
 
 export const saveJwtToken = token => {
-  setCookieData("jwt-token", token)
+  setCookieData("access-token", token)
 }
 
 export const saveRefreshToken = token => {
@@ -23,7 +23,7 @@ export const saveDeviceToken = token => {
 }
 
 export const getJwtToken = () => {
-  return cookie.get("jwt-token")
+  return cookie.get("access-token")
 }
 
 export const getRefreshToken = () => {
@@ -35,7 +35,7 @@ export const getDeviceToken = () => {
 }
 
 export const removeJwtToken = () => {
-  return cookie.remove("jwt-token")
+  return cookie.remove("access-token")
 }
 
 export const removeRefreshToken = () => {

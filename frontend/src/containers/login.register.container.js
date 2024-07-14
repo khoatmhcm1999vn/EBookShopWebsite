@@ -7,6 +7,7 @@ import * as userActions from "../actions/user.action"
 import * as cartActions from "../actions/cart.action"
 // import { getUser } from "../config/store.config";
 // import * as homeActions from "../actions/home.action";
+import { saveJwtToken, saveRefreshToken } from "../utils/cookie"
 
 class LoginRegisterContainer extends Component {
   constructor(props) {
@@ -197,9 +198,27 @@ class LoginRegisterContainer extends Component {
       res.data.refresh_token,
       res.data.user
     )
+    saveJwtToken(res.data.access_token)
+    saveRefreshToken(res.data.refresh_token)
 
-    if (res.data.user.is_admin) document.location.href = "/dashboard"
-    else document.location.href = "/"
+    var base64Url = res.data.access_token.split(".")[1]
+    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
+    var jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+        })
+        .join("")
+    )
+    console.log(JSON.parse(jsonPayload))
+
+    setTimeout(() => {
+      window.location.href = "/"
+    }, 1000)
+
+    //if (res.data.user.is_admin) document.location.href = "/dashboard"
+    //else document.location.href = "/"
   }
 
   render() {

@@ -104,7 +104,7 @@ export function verifyToken(req, res, next) {
 }
 export function verifyRefreshToken(req, res, next) {
   const refresh_token = req.query.refresh_token;
-  // console.log(refresh_token);
+  console.log(refresh_token);
 
   if (refresh_token === null)
     return res.status(401).json({
@@ -115,7 +115,7 @@ export function verifyRefreshToken(req, res, next) {
     const decoded = jwt.verify(
       refresh_token,
       process.env.JWT_REFRESH_SECRET ||
-      "901fa0c0364e907c1a857621f4c884f4cbe2f2ab6c1b770822a2d82a573d74cf1ff9777067b52e471920d098a0bc8e4f53917a89cf42f6bc98364a3df8539d34"
+        "901fa0c0364e907c1a857621f4c884f4cbe2f2ab6c1b770822a2d82a573d74cf1ff9777067b52e471920d098a0bc8e4f53917a89cf42f6bc98364a3df8539d34"
     );
     req.userData = decoded;
 
