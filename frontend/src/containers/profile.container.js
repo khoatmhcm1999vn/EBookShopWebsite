@@ -28,13 +28,13 @@ class ProfileContainer extends Component {
     //console.log(storeConfig.getUser().email)
     // if(this.props.match.params.email !==  storeConfig.getUser().email)
     //     this.props.history.push('/')
-    if (storeConfig.getUser() !== null) {
+    if (this.props.currentUser !== null) {
       this.setState({
-        email: storeConfig.getUser().email,
-        firstName: storeConfig.getUser().firstName,
-        lastName: storeConfig.getUser().lastName,
-        address: storeConfig.getUser().address,
-        phone_number: storeConfig.getUser().phone_number
+        email: this.props.currentUser.user.email,
+        firstName: this.props.currentUser.user.firstName,
+        lastName: this.props.currentUser.user.lastName,
+        address: this.props.currentUser.user.address,
+        phone_number: this.props.currentUser.user.phone_number
       })
     }
   }
@@ -45,7 +45,7 @@ class ProfileContainer extends Component {
     let res = null
     try {
       res = await axios.post("http://localhost:8090/user/updatepassword", {
-        email: storeConfig.getUser().email,
+        email: this.props.currentUser.user.email,
         oldpassword: oldpassword,
         newpassword: newpassword
       })
@@ -115,7 +115,8 @@ class ProfileContainer extends Component {
 const mapStateToProps = state => ({
   islogin: state.userReducers.user.islogin,
   isupdate: state.profileReducers.profile.isupdate,
-  cart: state.cart.data
+  cart: state.cart.data,
+  currentUser: state.userReducers.user.currentUser
 })
 
 const mapDispatchToProps = dispatch => {

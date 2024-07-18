@@ -15,9 +15,9 @@ class AuthorContainer extends Component {
   }
   async componentWillMount() {
     this.props.bookActions.getAuthor()
-    let res = await this.props.userActions.loadUser()
-    if (!res.is_admin || this.props.currentUser === null)
-      this.props.history.push("/login_register")
+    // let res = await this.props.userActions.loadUser()
+    // if (!res.is_admin || this.props.currentUser === null)
+    //   this.props.history.push("/login_register")
     // if (
     //   res === false ||
     //   !this.props.currentUser.user.is_admin ||
@@ -26,12 +26,12 @@ class AuthorContainer extends Component {
     //   this.props.history.push("/login_register");
   }
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.islogin !== this.props.islogin &&
-      nextProps.islogin === false
-    ) {
-      this.props.history.push("/login_register")
-    }
+    // if (
+    //   nextProps.islogin !== this.props.islogin &&
+    //   nextProps.islogin === false
+    // ) {
+    //   this.props.history.push("/login_register")
+    // }
     if (nextProps.page !== this.props.page) {
       this.props.bookActions.getAuthor()
     }

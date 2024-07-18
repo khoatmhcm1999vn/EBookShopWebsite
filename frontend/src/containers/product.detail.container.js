@@ -21,7 +21,7 @@ class ProductDetailContainer extends Component {
     this.props.productActions.getBookRelated(id)
     this.props.productActions.getBookRelatedByRating(id)
     this.props.productActions.getCommentByIDBook(id)
-    this.props.cartActions.getCart()
+    //this.props.cartActions.getCart()
   }
   componentWillReceiveProps(nextProps, prevState) {
     if (nextProps.mproductDetail !== null) {

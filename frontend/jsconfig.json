@@ -1,6 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es6"
+    "module": "commonjs",
+    "target": "ES6",
+    "baseUrl": "./src"
   },
-  "exclude": ["node_modules"]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"],
+
+  "resolve": {
+    "mainFields": ["module", "jsnext:main", "browser", "main"]
+  }
 }

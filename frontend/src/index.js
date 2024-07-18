@@ -11,11 +11,9 @@ ReactDOM.render(
   <React.StrictMode>
     <CookiesProvider>
       <Provider store={store}>
-        <React.StrictMode>
-          <Router>
-            <App cookie={Cookies} />
-          </Router>
-        </React.StrictMode>
+        <Router>
+          <App cookie={Cookies} />
+        </Router>
       </Provider>
     </CookiesProvider>
   </React.StrictMode>,

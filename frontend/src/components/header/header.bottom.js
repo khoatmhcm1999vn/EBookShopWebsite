@@ -158,9 +158,9 @@ class HeaderBottom extends Component {
                     )}
                   </li>
                   <li>
-                    <Link to="/testadmin" className="">
+                    {/* <Link to="/testadmin" className="">
                       Test
-                    </Link>
+                    </Link> */}
                   </li>
                 </ul>
               </div>

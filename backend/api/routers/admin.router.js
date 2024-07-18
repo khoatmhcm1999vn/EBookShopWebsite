@@ -121,15 +121,15 @@ adminRouter.get("/admin/downloadBook", excelDownloadBookController);
 adminRouter.post(
   "/admin/addbook",
   upload.single("file"),
-  requireSignin,
-  adminMiddleware,
+  //requireSignin,
+  //adminMiddleware,
   addBook
 );
 adminRouter.post(
   "/admin/updatebook",
   upload.single("file"),
-  requireSignin,
-  adminMiddleware,
+  //requireSignin,
+  //adminMiddleware,
   updateBook
 );
 adminRouter.put(

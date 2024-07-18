@@ -30,7 +30,7 @@ export default function ChatBox(props) {
     }
     if (socket) {
       socket.emit("onLogin", {
-        id: user.id,
+        _id: user._id,
         name: user.firstName,
         is_admin: user.is_admin
       })
@@ -58,7 +58,7 @@ export default function ChatBox(props) {
           body: messageBody,
           name: user.firstName,
           is_admin: user.is_admin,
-          id: user.id
+          _id: user._id
         })
       }, 1000)
     }

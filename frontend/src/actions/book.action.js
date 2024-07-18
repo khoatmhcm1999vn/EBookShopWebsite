@@ -655,7 +655,7 @@ export const addBook =
     data.append("id_author", id_author)
     let res
     try {
-      res = await axiosClient.post("/admin/addbook", data)
+      res = await axios.post("http://localhost:8090/admin/addbook", data)
       if (res.success) toast.success(res.message)
       else toast.error(res.message)
     } catch (err) {
@@ -697,7 +697,7 @@ export const updateBook =
     data.append("id_author", id_author)
     let res
     try {
-      res = await axiosClient.post("/admin/updatebook", data)
+      res = await axios.post("http://localhost:8090/admin/updatebook", data)
       if (res.success) toast.success(res.message)
       else toast.error(res.message)
     } catch (err) {

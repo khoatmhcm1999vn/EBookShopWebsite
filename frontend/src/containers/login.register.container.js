@@ -5,9 +5,8 @@ import { bindActionCreators } from "redux"
 import LoginRegister from "../components/login.register/login.register"
 import * as userActions from "../actions/user.action"
 import * as cartActions from "../actions/cart.action"
-// import { getUser } from "../config/store.config";
-// import * as homeActions from "../actions/home.action";
 import { saveJwtToken, saveRefreshToken } from "../utils/cookie"
+import { parseJwt } from "../utils/jwtToken"
 
 class LoginRegisterContainer extends Component {
   constructor(props) {
@@ -25,7 +24,6 @@ class LoginRegisterContainer extends Component {
       confirm: "",
       notificationRegister: "",
       notificationLogin: ""
-      //captchaValue: ""
     }
   }
 
@@ -58,7 +56,7 @@ class LoginRegisterContainer extends Component {
   }
 
   isvalidConfirm = (password, confirm) => {
-    if (confirm != password) return false
+    if (confirm !== password) return false
     return true
   }
 
@@ -73,13 +71,7 @@ class LoginRegisterContainer extends Component {
     return true
   }
 
-  // isvalidCaptcha = captcha => {
-  //   if (captcha === "") return false
-  //   return true
-  // }
-
   registerSubmit = async () => {
-    //console.log(this.state.captchaValue)
     if (!this.isvalidUserName(this.state.user_name)) {
       this.setState({ notificationRegister: "Username invalid" })
       return
@@ -114,12 +106,7 @@ class LoginRegisterContainer extends Component {
       this.setState({ notificationRegister: "Lastname invalid" })
       return
     }
-    // if (!this.isvalidCaptcha(this.state.captchaValue)) {
-    //   this.setState({ notificationRegister: "Captcha empty" })
-    //   return
-    // } else {
-    //   this.setState({ notificationRegister: "" })
-    // }
+
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/user/register`, {
         user_name: this.state.user_name,
@@ -127,26 +114,16 @@ class LoginRegisterContainer extends Component {
         password: this.state.password,
         firstName: this.state.firstname,
         lastName: this.state.lastname,
-        // address: this.state.address,
+
         phone_number: this.state.phone
-        //captchaValue: this.state.captchaValue
       })
     } catch (err) {
-      console.log(err.response.data)
-      // if (err.response.data.message === "👎 Please select captcha")
-      //   this.setState({ notificationRegister: "👎 Please select captcha" })
-      // else
-      // if (err.response.data.message === "👎 Failed captcha verification")
-      //   this.setState({
-      //     notificationRegister: "👎 Failed captcha verification"
-      //   })
-      // else
       if (err.response.data.message === "👎 Email đã tồn tại!")
         this.setState({ notificationRegister: "👎 Email đã tồn tại!" })
       else this.setState({ notificationRegister: "👍 Đăng ký thành công!" })
       return
     }
-    //window.grecaptcha.reset()
+
     this.setState({ notificationRegister: "👍 Đăng ký thành công!" })
   }
 
@@ -201,24 +178,13 @@ class LoginRegisterContainer extends Component {
     saveJwtToken(res.data.access_token)
     saveRefreshToken(res.data.refresh_token)
 
-    var base64Url = res.data.access_token.split(".")[1]
-    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
-    var jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
-        })
-        .join("")
-    )
-    console.log(JSON.parse(jsonPayload))
-
     setTimeout(() => {
-      window.location.href = "/"
+      if (parseJwt(res.data.access_token).role.includes("admin")) {
+        window.location.href = "/dashboard"
+      } else {
+        window.location.href = "/"
+      }
     }, 1000)
-
-    //if (res.data.user.is_admin) document.location.href = "/dashboard"
-    //else document.location.href = "/"
   }
 
   render() {
@@ -241,16 +207,8 @@ class LoginRegisterContainer extends Component {
           loginSubmit={() => this.loginSubmit()}
           islogin={this.props.islogin}
           currentUser={this.props.currentUser}
-          //setCapchaValue={value => this.setState({ captchaValue: value })}
           cart={this.props.cart}
           history={this.props.history}
-          // logout={() => this.props.actions.logout()}
-          //   sortType={this.props.sortType}
-          //   setSortType={(value) => this.props.homeActions.setSortType(value)}
-          //   setRangeType={(range) => this.props.homeActions.setRangeType(range)}
-          //   setSearchText={(value) => this.props.homeActions.setSearchText(value)}
-          //   searchTextSubmit={() => this.props.homeActions.searchTextSubmit()}
-          //   history={this.props.history}
         />
       </div>
     )
@@ -266,7 +224,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(userActions, dispatch),
-    // homeActions: bindActionCreators(homeActions, dispatch),
     cartActions: bindActionCreators(cartActions, dispatch)
   }
 }

@@ -17,21 +17,21 @@ class StatisticalContainer extends Component {
       dataByQuauter: []
     }
   }
-  async componentDidMount() {
-    let res = await this.props.userActions.loadUser()
-    // console.log(this.props.currentUser.user.is_admin);
-    // console.log(res);
-    if (!res.is_admin || this.props.currentUser === null)
-      this.props.history.push("/login_register")
-  }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.islogin !== this.props.islogin &&
-      nextProps.islogin === false
-    ) {
-      this.props.history.push("/login_register")
-    }
-  }
+  // async componentDidMount() {
+  //   let res = await this.props.userActions.loadUser()
+  //   // console.log(this.props.currentUser.user.is_admin);
+  //   // console.log(res);
+  //   if (!res.is_admin || this.props.currentUser === null)
+  //     this.props.history.push("/login_register")
+  // }
+  // componentWillReceiveProps(nextProps) {
+  //   if (
+  //     nextProps.islogin !== this.props.islogin &&
+  //     nextProps.islogin === false
+  //   ) {
+  //     this.props.history.push("/login_register")
+  //   }
+  // }
   getStatisticalByDay = async value => {
     let date = value.split("-")
     let res = null

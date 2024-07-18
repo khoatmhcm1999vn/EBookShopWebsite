@@ -670,7 +670,7 @@ export default function ShopScreen(props) {
                                             <span className="product-image">
                                               <img
                                                 // src={p.img}
-                                                src={`http://localhost:8090/${p.img}`}
+                                                src={`${p.img}`}
                                                 alt={p.name}
                                                 width="200"
                                                 height="200"

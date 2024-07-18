@@ -6,6 +6,7 @@ import { userTypes } from "../constants/action.types"
 import { getCart } from "../actions/cart.action"
 import { USER_SIGNOUT, userConstants } from "../constants/userConstants"
 import storeConfig from "../config/store.config"
+import { removeJwtToken, removeRefreshToken } from "utils/cookie"
 export const setUser = data => ({
   type: userTypes.SET_USER,
   data
@@ -16,6 +17,7 @@ export const getUser = () => async (dispatch, getState) => {
     res = await axiosClient.get(
       "/admin/getAllUser/" + getState().userReducers.user.page
     )
+    console.log(res)
   } catch (err) {
     console.log(err)
     return
@@ -169,15 +171,15 @@ export const setCurrentUser = user => {
 
 export const loginSuccess =
   (token, refreshToken, user) => async (dispatch, getState) => {
-    storeConfig.setUser(user)
-    storeConfig.setToken(token)
-    storeConfig.setRefreshToken(refreshToken)
-    const remainingMilliseconds = 60 * 60 * 1000
-    const expiryDate = new Date(new Date().getTime() + remainingMilliseconds)
-    console.log(expiryDate)
-    localStorage.setItem("expiryDate", expiryDate.toISOString())
-    // dispatch(setCurrentUser(user));
-    //dispatch(setLoginSuccess(user))
+    // storeConfig.setUser(user)
+    // storeConfig.setToken(token)
+    // storeConfig.setRefreshToken(refreshToken)
+    // const remainingMilliseconds = 60 * 60 * 1000
+    // const expiryDate = new Date(new Date().getTime() + remainingMilliseconds)
+    // console.log(expiryDate)
+    // localStorage.setItem("expiryDate", expiryDate.toISOString())
+    dispatch(setCurrentUser(user))
+    dispatch(setLoginSuccess(user))
 
     let cart = storeConfig.getCart()
     storeConfig.removeCart()
@@ -223,8 +225,11 @@ export const logout = () => (dispatch, getState) => {
   localStorage.removeItem("expiryDate")
   localStorage.removeItem("cart")
   localStorage.removeItem("shippingAddress")
+  removeJwtToken()
+  removeRefreshToken()
   dispatch({ type: USER_SIGNOUT })
-  //document.location.href = "/login_register"
+
+  document.location.href = "/"
   // dispatch(setLoginFail());
 }
 

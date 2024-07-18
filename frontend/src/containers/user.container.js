@@ -13,18 +13,18 @@ class UserContainer extends Component {
     super()
   }
   async componentWillMount() {
-    this.props.userActions.getUser()
-    let res = await this.props.userActions.loadUser()
-    if (!res.is_admin || this.props.currentUser === null)
-      this.props.history.push("/login_register")
+    //this.props.userActions.getUser()
+    // let res = await this.props.userActions.loadUser()
+    // if (!res.is_admin || this.props.currentUser === null)
+    //   this.props.history.push("/login_register")
   }
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.islogin !== this.props.islogin &&
-      nextProps.islogin === false
-    ) {
-      this.props.history.push("/login_register")
-    }
+    // if (
+    //   nextProps.islogin !== this.props.islogin &&
+    //   nextProps.islogin === false
+    // ) {
+    //   this.props.history.push("/login_register")
+    // }
     if (nextProps.page !== this.props.page) {
       this.props.userActions.getUser()
     }

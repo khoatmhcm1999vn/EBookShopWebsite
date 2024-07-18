@@ -53,9 +53,10 @@ import RankingScreen from "./screens/RankingScreen/RankingScreen"
 import "./i18n"
 import AdminDashboardScreen from "./screens/AdminDashboardScreen"
 // import SearchBox from "./components/SearchBox/SearchBox";
-import { getUser, getExpiryDate, getRefreshToken } from "./config/store.config"
+
 import { useCookies } from "react-cookie"
-import { getJwtToken } from "./utils/cookie"
+import { getJwtToken, getRefreshToken } from "./utils/cookie"
+import { getCurrentUser } from "./utils/jwtToken"
 
 export const AuthUser = createContext()
 
@@ -66,7 +67,7 @@ export default function App() {
 
   // const isMounted = useRef(false)
   // if (!isMounted.current) {
-  //   // getLocalStorage('token') &&
+  //    getLocalStorage('token') &&
   //   dispatch(loadUser())
   // }
 
@@ -80,30 +81,15 @@ export default function App() {
   const readCookie = () => {
     const token = getJwtToken()
     const refreshToken = getRefreshToken()
-    let user = null
-    const base64Url = token.split(".")[1]
-    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
-    var jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
-        })
-        .join("")
-    )
-    user = JSON.parse(jsonPayload)
+
     if (token && refreshToken) {
+      const user = getCurrentUser()
+      dispatch(setLoginSuccess(user))
       if (user.role.includes("admin")) {
         return {
           isLogin: true,
           isAdmin: true,
           isSuperAdmin: false
-        }
-      } else if (user.role.includes("SUPER_ADMIN")) {
-        return {
-          isLogin: true,
-          isAdmin: true,
-          isSuperAdmin: true
         }
       } else {
         return {
@@ -140,13 +126,11 @@ export default function App() {
   //   //dispatch(getListProductCategoryIds())
   // }, [dispatch])
 
-  // const { currentUser } = useSelector(state => state.userReducers.user)
+  const { currentUser } = useSelector(state => state.userReducers.user)
+  console.log(currentUser)
   // const categories = useSelector(
   //   state => state.homeReducers.book.dataProductCategoryIds
   // )
-  //console.log(categories)
-  //console.log(currentUser)
-  //console.log(getUser())
 
   // const setAutoLogout = (milliseconds) => {
   //   setTimeout(() => {
@@ -157,18 +141,16 @@ export default function App() {
   //   // setAutoLogout(60 * 60 * 10000);
   // }
 
-  const currentUser = null
-  // if (currentUser) console.log(currentUser.user.is_admin);
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={props =>
-        auth.isAdmin ? (
+        auth.isLogin && !auth.isAdmin ? (
           <Component {...props} />
         ) : (
           <Redirect
             to={{
-              pathname: "/login_register",
+              pathname: "/",
               state: { from: props.location }
             }}
           />
@@ -186,7 +168,7 @@ export default function App() {
         ) : (
           <Redirect
             to={{
-              pathname: "/dashboard",
+              pathname: "/",
               state: { from: props.location }
             }}
           />
@@ -276,10 +258,8 @@ export default function App() {
           path="/paymentg/:token"
           component={VerifyPaymentContainer}
         />
-
         <Route exact path="/contacts" component={ContactScreen} />
         <Route exact path="/shop" component={HomeContainer} />
-
         <Route exact path="/shop-page/name/:name?" component={ShopScreen} />
         <Route
           exact
@@ -303,13 +283,15 @@ export default function App() {
         />
         <Route exact path="/shop-page" component={ShopScreen} />
         {/* <Route exact path="/testadmin" component={AdminDashboardScreen} /> */}
-
         <Route exact path="/ranking-page" component={RankingScreen} />
         <Route
           exact
           path="/ranking-page/id_category/:id_category"
           component={RankingScreen}
         />
+        {/* <Route path="*">
+          <Redirect push to="/" replace />
+        </Route> */}
       </AuthUser.Provider>
     </>
   )

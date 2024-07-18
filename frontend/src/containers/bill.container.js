@@ -15,10 +15,10 @@ class BillContainer extends Component {
     super()
   }
   async componentWillMount() {
-    this.props.bookActions.getBill("true")
-    let res = await this.props.userActions.loadUser()
-    if (!res.is_admin || this.props.currentUser === null)
-      this.props.history.push("/login_register")
+    //this.props.bookActions.getBill("true")
+    // let res = await this.props.userActions.loadUser()
+    // if (!res.is_admin || this.props.currentUser === null)
+    //   this.props.history.push("/login_register")
     // if (
     //   res === false ||
     //   !this.props.currentUser.user.is_admin ||
@@ -26,14 +26,14 @@ class BillContainer extends Component {
     // )
     //   this.props.history.push("/login_register");
   }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.islogin !== this.props.islogin &&
-      nextProps.islogin === false
-    ) {
-      this.props.history.push("/login_register")
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (
+  //     nextProps.islogin !== this.props.islogin &&
+  //     nextProps.islogin === false
+  //   ) {
+  //     this.props.history.push("/login_register")
+  //   }
+  // }
   render() {
     return (
       <section id="container" className="">

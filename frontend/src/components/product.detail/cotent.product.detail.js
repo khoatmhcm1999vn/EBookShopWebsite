@@ -238,10 +238,7 @@ class ContentProductDetail extends Component {
               <div className="product-details">
                 <div className="col-sm-5">
                   <div className="view-product">
-                    <img
-                      src={`http://localhost:8090/${this.props.mproductDetail.img}`}
-                      alt=""
-                    />
+                    <img src={`${this.props.mproductDetail.img}`} alt="" />
                   </div>
                   <div
                     id="similar-product"

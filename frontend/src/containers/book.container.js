@@ -18,20 +18,20 @@ class BookContainer extends Component {
     this.props.bookActions.getBook()
     this.props.bookActions.getAuthorAll()
     // this.props.productActions.getBookDetail(null);
-    let res = await this.props.userActions.loadUser()
-    if (!res.is_admin || this.props.currentUser === null)
-      this.props.history.push("/login_register")
+    // let res = await this.props.userActions.loadUser()
+    // if (!res.is_admin || this.props.currentUser === null)
+    //   this.props.history.push("/login_register")
   }
   componentWillReceiveProps(nextProps) {
     // if (nextProps.page !== this.props.page) {
     //   this.props.bookActions.getBook();
     // }
-    if (
-      nextProps.islogin !== this.props.islogin &&
-      nextProps.islogin === false
-    ) {
-      this.props.history.push("/login_register")
-    }
+    // if (
+    //   nextProps.islogin !== this.props.islogin &&
+    //   nextProps.islogin === false
+    // ) {
+    //   this.props.history.push("/login_register")
+    // }
     if (nextProps.mproductDetail !== this.props.mproductDetail) {
       // console.log(nextProps.mproductDetail);
       // this.props.productActions.getBookDetail(this.props.mproductDetail);

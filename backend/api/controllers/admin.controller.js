@@ -49,7 +49,7 @@ export const addBook = async (req, res) => {
     // typeof req.body.describe === "undefined" ||
     typeof req.body.id_category === "undefined" ||
     typeof req.body.id_nsx === "undefined" ||
-    typeof req.body.id_supplier === "undefined" ||
+    //typeof req.body.id_supplier === "undefined" ||
     typeof req.body.id_author === "undefined"
   ) {
     return res
@@ -74,7 +74,7 @@ export const addBook = async (req, res) => {
   console.log(req.file);
   let urlImg;
   if (req.file == undefined) urlImg = "react1.jpeg";
-  // else urlImg = await uploadImg(req.file.path);
+  else urlImg = await uploadImg(req.file.path);
   // // let urlImg = (await uploadImg(req.file.path)) || "react1.jpeg";
   // if (urlImg === false) {
   //   return res.status(500).json({

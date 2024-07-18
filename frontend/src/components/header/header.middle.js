@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import { Link } from "react-router-dom"
 import storeConfig from "../../config/store.config"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import * as userActions from "../../actions/user.action"
 
 class HeaderMiddle extends Component {
   constructor(props) {
@@ -10,9 +13,9 @@ class HeaderMiddle extends Component {
     }
   }
   componentWillMount() {
-    if (storeConfig.getUser() !== null) {
+    if (this.props.currentUser !== null) {
       this.setState({
-        email: storeConfig.getUser().email
+        email: this.props.currentUser.user.email
       })
     }
   }
@@ -21,9 +24,9 @@ class HeaderMiddle extends Component {
       this.setState({
         email: "Account"
       })
-    } else {
+    } else if (nextProps.islogin && this.props.currentUser !== null) {
       this.setState({
-        email: storeConfig.getUser().email
+        email: this.props.currentUser.user.email
       })
     }
   }
@@ -64,6 +67,7 @@ class HeaderMiddle extends Component {
   }
   render() {
     // console.log(this.props.cart.length);
+    //console.log(this.props.currentUser.user)
     return (
       <div className="header-middle">
         <div className="container">
@@ -168,4 +172,14 @@ class HeaderMiddle extends Component {
   }
 }
 
-export default HeaderMiddle
+const mapStateToProps = state => ({
+  currentUser: state.userReducers.user.currentUser
+})
+
+const mapDispatchToProps = dispatch => {
+  return {
+    userActions: bindActionCreators(userActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderMiddle)

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../../actions/user.action"
 import HomePageTheme from "../../components/HomePageTheme/HomePageTheme"
@@ -18,10 +18,12 @@ import SliderListProductSoldTop10ByDay from "../../components/SliderListProductS
 import SliderListProductTop10ByCategory from "../../components/SliderListProductTop10ByCategory/SliderListProductTop10ByCategory"
 import SliderListProductSoldTop10ByWeek from "../../components/SliderListProductSoldTop10ByWeek/SliderListProductSoldTop10ByWeek"
 import SliderListFlashSalesProductTop10 from "../../components/SliderListFlashSalesProductTop10/SliderListFlashSalesProductTop10"
+import { AuthUser } from "App"
 
 const HomeScreen = ({ history }) => {
+  const Auth = useContext(AuthUser)
   const cart = useSelector(state => state.cart)
-  const islogin = useSelector(state => state.userReducers.user.islogin)
+  const islogin = Auth.auth.isLogin
   // const bookSearchData = useSelector(
   //   (state) => state.homeReducers.book.dataListProductSearch
   // );
@@ -55,15 +57,15 @@ const HomeScreen = ({ history }) => {
         />
       </header>
       {/* <ScrollButton /> */}
-      {/* <CarouselImageSlider /> */}
+      <CarouselImageSlider />
       {/* <SliderBrands /> */}
-      {/* <HomePageTheme /> */}
-      {/* <SliderCards />
+      <HomePageTheme />
+      <SliderCards />
       <SliderListFlashSalesProductTop10 />
       <SliderListProductSoldTop10ByDay />
       <SliderListProductTop10ByCategory />
       <SliderListProductSoldTop10ByWeek />
-      <SliderListProductRankTop5 /> */}
+      <SliderListProductRankTop5 />
       <footer id="footer">
         <FooterTop />
         <FooterMiddle />

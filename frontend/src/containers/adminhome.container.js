@@ -31,7 +31,6 @@ class AdminHomeContainer extends Component {
   // }
 
   render() {
-    console.log(this.props.currentUser)
     return (
       <section id="container" className="">
         <NavbarContainer />
