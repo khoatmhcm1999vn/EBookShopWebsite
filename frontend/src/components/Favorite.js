@@ -18,6 +18,7 @@ function Favorite({ id_book, id_user, bookTitle, image }) {
     bookTitle: name,
     image: imageUrl
   }
+  console.log(currentUser)
 
   const onClickFavorite = () => {
     if (!currentUser.user) {

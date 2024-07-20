@@ -173,7 +173,7 @@ export const addToCart = product => async (dispatch, getState) => {
     let res
     try {
       res = await axiosClient.post("/cart/addtocard", {
-        id_user: getState().userReducers.user.currentUser.user._id,
+        id_user: storeConfig.getUser().id,
         products: [product]
       })
       dispatch(getCart())

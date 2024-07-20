@@ -53,9 +53,9 @@ export const updateInfor =
       dispatch(setUpdateInforFail())
       return false
     }
-    // storeConfig.clear()
-    // storeConfig.setToken(res.data.token)
-    // storeConfig.setUser(res.data.user)
+    storeConfig.clear()
+    storeConfig.setToken(res.data.token)
+    storeConfig.setUser(res.data.user)
     dispatch(setUpdateInforSuccess())
     return true
   }

@@ -154,7 +154,7 @@ class AdminHome extends Component {
                       </a>
                     </div>
                   </div>
-                  {/* <DashboardScreen /> */}
+                  {/* <DashboardScreen /> se mo comment */}
                   <div className="panel-body">
                     <table className="table bootstrap-datatable countries">
                       <thead>

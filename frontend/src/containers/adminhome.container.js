@@ -13,6 +13,7 @@ class AdminHomeContainer extends Component {
     //this.props.homeActions.getCountProductBill()
     //this.props.homeActions.getCountProductStock()
     //this.props.homeActions.getCountBill()
+    //se mo comment o day
     //let res = await this.props.userActions.loadUser()
     // console.log(res);
     // console.log(this.props.currentUser.user.is_admin);

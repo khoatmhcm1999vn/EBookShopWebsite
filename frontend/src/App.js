@@ -107,6 +107,7 @@ export default function App() {
 
   useEffect(() => {
     setAuth(readCookie())
+    dispatch(getListProductCategoryIds())
   }, [])
 
   useEffect(() => {

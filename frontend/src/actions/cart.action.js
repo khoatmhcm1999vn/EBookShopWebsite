@@ -19,15 +19,8 @@ export const getCart = () => async (dispatch, getState) => {
     dispatch(setCart(cart))
     return
   }
-  //if (storeConfig.getUser() === null) return
-  let id_user = null
-  if (getState().userReducers.user.currentUser !== null) {
-    console.log(getState().userReducers.user)
-    id_user = getState().userReducers.user.currentUser.user._id
-  } else {
-    return
-  }
-
+  if (storeConfig.getUser() === null) return
+  let id_user = storeConfig.getUser().id
   try {
     cart = await axiosClient.get("/cart/" + id_user)
   } catch (err) {
@@ -35,7 +28,6 @@ export const getCart = () => async (dispatch, getState) => {
     return
   }
   if (cart.data !== null) {
-    console.log("cart")
     dispatch(setCart(cart.data.products))
   }
 }
@@ -45,7 +37,7 @@ export const updateProductInCart = product => async (dispatch, getState) => {
   } else {
     try {
       await axiosClient.post("/cart/update", {
-        id_user: getState().userReducers.user.currentUser.user._id,
+        id_user: storeConfig.getUser().id,
         product: product
       })
     } catch (err) {
@@ -60,7 +52,7 @@ export const deteleProductInCart = id_product => async (dispatch, getState) => {
   } else {
     try {
       await axiosClient.post("/cart/delete", {
-        id_user: getState().userReducers.user.currentUser.user._id,
+        id_user: storeConfig.getUser().id,
         id_product: id_product
       })
     } catch (err) {

@@ -182,13 +182,11 @@ class LoginRegisterContainer extends Component {
     saveJwtToken(res.data.access_token)
     saveRefreshToken(res.data.refresh_token)
 
-    setTimeout(() => {
-      if (parseJwt(res.data.access_token).role.includes("admin")) {
-        window.location.href = "/dashboard"
-      } else {
-        window.location.href = "/"
-      }
-    }, 1000)
+    if (parseJwt(res.data.access_token).role.includes("admin")) {
+      window.location.href = "/dashboard"
+    } else {
+      window.location.href = "/"
+    }
   }
 
   render() {
