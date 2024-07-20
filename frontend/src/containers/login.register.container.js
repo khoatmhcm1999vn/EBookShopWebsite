@@ -26,6 +26,10 @@ class LoginRegisterContainer extends Component {
       notificationLogin: ""
     }
   }
+  async componentDidMount() {
+    this.props.cartActions.getCart()
+    if (this.props.islogin) this.props.history.push("/")
+  }
 
   // async componentDidMount() {
   //   let res = await this.props.actions.loadUser()

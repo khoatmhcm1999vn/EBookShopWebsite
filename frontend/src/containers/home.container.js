@@ -31,7 +31,7 @@ class HomeContainer extends React.Component {
     this.props.homeActions.getPublisher()
     this.props.homeActions.getBook()
     this.props.homeActions.getAuthor()
-    //this.props.cartActions.getCart()
+    this.props.cartActions.getCart()
     document.title = "[TellMe] Trang bán hàng"
   }
 

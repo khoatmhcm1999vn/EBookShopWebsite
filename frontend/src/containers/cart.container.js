@@ -12,12 +12,13 @@ class CartContainer extends Component {
     super()
   }
   componentWillMount() {
-    this.props.actions.loadUser()
+    //this.props.actions.loadUser()
     this.props.cartActions.getCart()
     // console.log(this.props.city)
     this.props.cartActions.getCity()
   }
   render() {
+    console.log(this.props.cart)
     return (
       <Cart
         islogin={this.props.islogin}

@@ -26,10 +26,10 @@ class ContentProductDetail extends Component {
       tmp.push(i)
     }
     this.setState({ pagination: tmp })
-    if (storeConfig.getUser() !== null) {
+    if (this.props.user !== null) {
       this.setState({
-        name: storeConfig.getUser().firstName,
-        email: storeConfig.getUser().email
+        name: this.props.user.user.firstName,
+        email: this.props.user.user.email
       })
     } else {
       this.setState({
@@ -443,7 +443,7 @@ class ContentProductDetail extends Component {
                           image={this.props.mproductDetail.img}
                           bookTitle={this.props.mproductDetail.name}
                           id_book={this.props.mproductDetail._id}
-                          id_user={storeConfig.getUser().id}
+                          id_user={this.props.user.user._id}
                         />
                       ) : (
                         <div key={1} className="panel panel-default">
@@ -465,7 +465,7 @@ class ContentProductDetail extends Component {
                       {this.props.islogin && this.props.islogin ? (
                         <PointRating
                           id_book={this.props.mproductDetail._id}
-                          id_user={storeConfig.getUser().id}
+                          id_user={this.props.user.user._id}
                           view_counts={this.props.mproductDetail.view_counts}
                         />
                       ) : (

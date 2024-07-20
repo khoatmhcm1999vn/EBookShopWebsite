@@ -9,7 +9,10 @@ class HeaderMiddle extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: "Account"
+      email:
+        this.props.currentUser !== null
+          ? this.props.currentUser.user.email
+          : "Account"
     }
   }
   componentWillMount() {

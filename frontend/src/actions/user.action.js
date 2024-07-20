@@ -187,7 +187,7 @@ export const loginSuccess =
       // let res;
       try {
         await axiosClient.post("/cart/addtocard", {
-          id_user: user.id,
+          id_user: user._id,
           products: cart
         })
         dispatch(getCart())
@@ -219,10 +219,10 @@ export const setEmail = email => ({
 export const logout = () => (dispatch, getState) => {
   // console.log("logout ");
   // storeConfig.clear();
-  localStorage.removeItem("userInfo")
-  localStorage.removeItem("access_token")
-  localStorage.removeItem("refresh_token")
-  localStorage.removeItem("expiryDate")
+  // localStorage.removeItem("userInfo")
+  // localStorage.removeItem("access_token")
+  // localStorage.removeItem("refresh_token")
+  // localStorage.removeItem("expiryDate")
   localStorage.removeItem("cart")
   localStorage.removeItem("shippingAddress")
   removeJwtToken()
@@ -330,70 +330,70 @@ export const loadedUser = user => {
     payload: user
   }
 }
-export const loadUser = refHistory => async (dispatch, getState) => {
-  // user_loading
-  // dispatch({ type: "LOADING_USER" });
-  // const token = getState().auth.token
-  // axiosClient
-  //   .get(`/me`)
-  //   .then((data) => {
-  //     // console.log(data)
-  //     if (!data.success) {
-  //       removeLocalStorage("token");
-  //       refHistory.replace("/login_register");
-  //       dispatch(loadedUser(null));
-  //       return;
-  //     }
-  //     console.log(data.user);
-  //     dispatch(loadedUser(data.user));
-  //   })
-  //   .catch(() => {
-  //     // refHistory.replace('/login')
-  //   });
-  if (storeConfig.getUser() === null) {
-    dispatch(setLoginFail())
-    return false
-  }
-  let res
-  try {
-    res = await axiosClient.get("/me")
-    console.log(res)
-    if (!res.success) {
-      // storeConfig.removeLocalStorage("access_token");
-      storeConfig.clear()
-      // refHistory.replace("/login_register");
-      dispatch(setLoginFail())
-      return false
-    }
-  } catch (err) {
-    dispatch(setLoginFail())
-    return false
-  }
-  dispatch(setLoginSuccess(res.user))
-  return res.user
-}
-export const auth = () => async (dispatch, getState) => {
-  if (storeConfig.getUser() === null) {
-    dispatch(setLoginFail())
-    return false
-  }
-  let email = storeConfig.getUser().email
-  let token = storeConfig.getToken()
-  console.log(email)
-  let res
-  try {
-    res = await axios.post(`${process.env.REACT_APP_API_URL}/auth`, {
-      email: email,
-      token: token
-    })
-    // console.log(res)
-  } catch (err) {
-    dispatch(setLoginFail())
-    return false
-  }
-  dispatch(setLoginSuccess())
-  return true
-}
+// export const loadUser = refHistory => async (dispatch, getState) => {
+//   // user_loading
+//   // dispatch({ type: "LOADING_USER" });
+//   // const token = getState().auth.token
+//   // axiosClient
+//   //   .get(`/me`)
+//   //   .then((data) => {
+//   //     // console.log(data)
+//   //     if (!data.success) {
+//   //       removeLocalStorage("token");
+//   //       refHistory.replace("/login_register");
+//   //       dispatch(loadedUser(null));
+//   //       return;
+//   //     }
+//   //     console.log(data.user);
+//   //     dispatch(loadedUser(data.user));
+//   //   })
+//   //   .catch(() => {
+//   //     // refHistory.replace('/login')
+//   //   });
+//   if (storeConfig.getUser() === null) {
+//     dispatch(setLoginFail())
+//     return false
+//   }
+//   let res
+//   try {
+//     res = await axiosClient.get("/me")
+//     console.log(res)
+//     if (!res.success) {
+//       // storeConfig.removeLocalStorage("access_token");
+//       storeConfig.clear()
+//       // refHistory.replace("/login_register");
+//       dispatch(setLoginFail())
+//       return false
+//     }
+//   } catch (err) {
+//     dispatch(setLoginFail())
+//     return false
+//   }
+//   dispatch(setLoginSuccess(res.user))
+//   return res.user
+// }
+// export const auth = () => async (dispatch, getState) => {
+//   if (storeConfig.getUser() === null) {
+//     dispatch(setLoginFail())
+//     return false
+//   }
+//   let email = storeConfig.getUser().email
+//   let token = storeConfig.getToken()
+//   console.log(email)
+//   let res
+//   try {
+//     res = await axios.post(`${process.env.REACT_APP_API_URL}/auth`, {
+//       email: email,
+//       token: token
+//     })
+//     // console.log(res)
+//   } catch (err) {
+//     dispatch(setLoginFail())
+//     return false
+//   }
+//   dispatch(setLoginSuccess())
+//   return true
+// }
 
 export const getAddress = () => {
   return async dispatch => {

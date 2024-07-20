@@ -2,24 +2,24 @@ import axios from "axios"
 import storeConfig from "../config/store.config"
 import { profileTypes } from "../constants/action.types"
 
-export const auth = () => async (dispatch, getState) => {
-  if (storeConfig.getUser() === null) {
-    dispatch(setAuthFail())
-    return false
-  }
-  const user = storeConfig.getUser()
-  try {
-    await axios.post("http://localhost:8090/auth", {
-      email: user.email,
-      token: storeConfig.getToken()
-    })
-  } catch (err) {
-    dispatch(setAuthFail())
-    return false
-  }
-  dispatch(setAuthSuccess())
-  return true
-}
+// export const auth = () => async (dispatch, getState) => {
+//   if (storeConfig.getUser() === null) {
+//     dispatch(setAuthFail())
+//     return false
+//   }
+//   const user = storeConfig.getUser()
+//   try {
+//     await axios.post("http://localhost:8090/auth", {
+//       email: user.email,
+//       token: storeConfig.getToken()
+//     })
+//   } catch (err) {
+//     dispatch(setAuthFail())
+//     return false
+//   }
+//   dispatch(setAuthSuccess())
+//   return true
+// }
 export const setAuthSuccess = () => ({
   type: profileTypes.SET_AUTH_LOGIN_SUCCESS
 })
@@ -53,9 +53,9 @@ export const updateInfor =
       dispatch(setUpdateInforFail())
       return false
     }
-    storeConfig.clear()
-    storeConfig.setToken(res.data.token)
-    storeConfig.setUser(res.data.user)
+    // storeConfig.clear()
+    // storeConfig.setToken(res.data.token)
+    // storeConfig.setUser(res.data.user)
     dispatch(setUpdateInforSuccess())
     return true
   }

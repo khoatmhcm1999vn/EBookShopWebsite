@@ -97,12 +97,15 @@ export const submitComment =
   (name, email, comment, ratingValue, id_book) =>
   async (dispatch, getState) => {
     let id = null
-    if (
-      storeConfig.getUser() &&
-      storeConfig.getUser().id &&
-      storeConfig.getUser().id
-    )
-      id = storeConfig.getUser().id
+    if (getState().userReducers.user.currentUser !== null) {
+      id = getState().userReducers.user.currentUser.user._id
+    }
+    // if (
+    //   storeConfig.getUser() &&
+    //   storeConfig.getUser().id &&
+    //   storeConfig.getUser().id
+    // )
+    //   id = storeConfig.getUser().id
     let res
     try {
       res = await axiosClient.post("/comment", {
@@ -166,10 +169,11 @@ export const setComment = data => ({
 
 export const addToCart = product => async (dispatch, getState) => {
   if (getState().userReducers.user.islogin) {
+    console.log(getState().userReducers.user)
     let res
     try {
       res = await axiosClient.post("/cart/addtocard", {
-        id_user: storeConfig.getUser().id,
+        id_user: getState().userReducers.user.currentUser.user._id,
         products: [product]
       })
       dispatch(getCart())

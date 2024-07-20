@@ -26,8 +26,11 @@ class ProfileContainer extends Component {
     //if (res === false) this.props.history.push("/")
     // console.log(this.props.params.email)
     //console.log(storeConfig.getUser().email)
-    // if(this.props.match.params.email !==  storeConfig.getUser().email)
-    //     this.props.history.push('/')
+    if (
+      this.props.currentUser !== null &&
+      this.props.match.params.email !== this.props.currentUser.user.email
+    )
+      this.props.history.push("/")
     if (this.props.currentUser !== null) {
       this.setState({
         email: this.props.currentUser.user.email,

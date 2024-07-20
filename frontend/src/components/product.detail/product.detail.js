@@ -52,6 +52,7 @@ class ProductDetail extends Component {
           backPage={() => this.props.backPage()}
           nextPage={() => this.props.nextPage()}
           setPage={page => this.props.setPage(page)}
+          user={this.props.user}
         />
         <footer id="footer">
           <FooterTop />

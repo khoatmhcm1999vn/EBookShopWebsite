@@ -14,14 +14,14 @@ class ProductDetailContainer extends Component {
   }
   componentWillMount() {
     const { id } = this.props.match.params
-    this.props.actions.loadUser()
+    //this.props.actions.loadUser()
     this.props.homeActions.getCategory()
     this.props.homeActions.getPublisher()
     this.props.productActions.getBookDetail(id)
     this.props.productActions.getBookRelated(id)
     this.props.productActions.getBookRelatedByRating(id)
     this.props.productActions.getCommentByIDBook(id)
-    //this.props.cartActions.getCart()
+    this.props.cartActions.getCart()
   }
   componentWillReceiveProps(nextProps, prevState) {
     if (nextProps.mproductDetail !== null) {
@@ -92,6 +92,7 @@ class ProductDetailContainer extends Component {
             setPage={page => this.props.productActions.setPage(page)}
             history={this.props.history}
             cart={this.props.cart}
+            user={this.props.user}
           />
         </div>
       )
@@ -114,7 +115,8 @@ const mapStateToProps = state => ({
   comment: state.productReducers.product.comment,
   totalpage: state.productReducers.product.totalpage,
   page: state.productReducers.product.page,
-  cart: state.cart.data
+  cart: state.cart.data,
+  user: state.userReducers.user.currentUser
 })
 const mapDispatchToProps = dispatch => {
   return {
