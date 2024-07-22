@@ -13,7 +13,7 @@ class UserContainer extends Component {
     super()
   }
   async componentWillMount() {
-    //this.props.userActions.getUser()
+    this.props.userActions.getUser()
     // let res = await this.props.userActions.loadUser()
     // if (!res.is_admin || this.props.currentUser === null)
     //   this.props.history.push("/login_register")

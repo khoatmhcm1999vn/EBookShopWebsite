@@ -171,13 +171,13 @@ export const setCurrentUser = user => {
 
 export const loginSuccess =
   (token, refreshToken, user) => async (dispatch, getState) => {
-    storeConfig.setUser(user)
-    storeConfig.setToken(token)
-    storeConfig.setRefreshToken(refreshToken)
-    const remainingMilliseconds = 60 * 60 * 1000
-    const expiryDate = new Date(new Date().getTime() + remainingMilliseconds)
-    console.log(expiryDate)
-    localStorage.setItem("expiryDate", expiryDate.toISOString())
+    // storeConfig.setUser(user)
+    // storeConfig.setToken(token)
+    // storeConfig.setRefreshToken(refreshToken)
+    // const remainingMilliseconds = 60 * 60 * 1000
+    // const expiryDate = new Date(new Date().getTime() + remainingMilliseconds)
+    // console.log(expiryDate)
+    // localStorage.setItem("expiryDate", expiryDate.toISOString())
     //dispatch(setCurrentUser(user))
     dispatch(setLoginSuccess(user))
 
@@ -219,12 +219,12 @@ export const setEmail = email => ({
 export const logout = () => (dispatch, getState) => {
   // console.log("logout ");
   // storeConfig.clear();
-  localStorage.removeItem("userInfo")
-  localStorage.removeItem("access_token")
-  localStorage.removeItem("refresh_token")
-  localStorage.removeItem("expiryDate")
+  // localStorage.removeItem("userInfo")
+  // localStorage.removeItem("access_token")
+  // localStorage.removeItem("refresh_token")
+  // localStorage.removeItem("expiryDate")
   localStorage.removeItem("cart")
-  localStorage.removeItem("shippingAddress")
+  // localStorage.removeItem("shippingAddress")
   removeJwtToken()
   removeRefreshToken()
   dispatch({ type: USER_SIGNOUT })

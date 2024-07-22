@@ -18,14 +18,14 @@ export const getPurchaseHitory = () => async (dispatch, getState) => {
   const page = getState().purchaseReducers.purchaseHistory.page
   // console.log(page);
   let res = null
-  // let user = null
-  // if (getState().userReducers.user.currentUser !== null) {
-  //   user = getState().userReducers.user.currentUser.user
-  // }
-  let user = storeConfig.getUser()
+  let user = null
+  if (getState().userReducers.user.currentUser !== null) {
+    user = getState().userReducers.user.currentUser.user
+  }
+  //let user = storeConfig.getUser()
   if (user === null) return
   try {
-    res = await axiosClient.get(`/bill/list/${user.id}/${page}`)
+    res = await axiosClient.get(`/bill/list/${user._id}/${page}`)
     // console.log(res)
   } catch (err) {
     console.log(err)

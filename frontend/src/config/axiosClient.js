@@ -36,7 +36,7 @@ axiosClient.interceptors.request.use(config => {
 })
 
 axiosClient.interceptors.response.use(
-  response => response,
+  response => response.data,
   async error => {
     if (error.response.status === 401) {
       const refreshToken = getRefreshToken()

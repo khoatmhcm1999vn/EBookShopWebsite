@@ -127,8 +127,8 @@ export default function App() {
   //   //dispatch(getListProductCategoryIds())
   // }, [dispatch])
 
-  const { user } = useSelector(state => state.userReducers)
-  console.log(user)
+  //const { user } = useSelector(state => state.userReducers)
+  //console.log(user)
   // const categories = useSelector(
   //   state => state.homeReducers.book.dataProductCategoryIds
   // )

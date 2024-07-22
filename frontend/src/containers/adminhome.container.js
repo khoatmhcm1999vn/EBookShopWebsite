@@ -9,10 +9,10 @@ import * as userActions from "../actions/user.action"
 
 class AdminHomeContainer extends Component {
   async componentDidMount() {
-    //this.props.homeActions.getTopProduct()
-    //this.props.homeActions.getCountProductBill()
-    //this.props.homeActions.getCountProductStock()
-    //this.props.homeActions.getCountBill()
+    this.props.homeActions.getTopProduct()
+    this.props.homeActions.getCountProductBill()
+    this.props.homeActions.getCountProductStock()
+    this.props.homeActions.getCountBill()
     //se mo comment o day
     //let res = await this.props.userActions.loadUser()
     // console.log(res);

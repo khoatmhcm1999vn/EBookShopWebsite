@@ -15,7 +15,7 @@ class BillContainer extends Component {
     super()
   }
   async componentWillMount() {
-    //this.props.bookActions.getBill("true")
+    this.props.bookActions.getBill("true")
     // let res = await this.props.userActions.loadUser()
     // if (!res.is_admin || this.props.currentUser === null)
     //   this.props.history.push("/login_register")

@@ -3,7 +3,7 @@ import Scroll from "../scroll/Scroll"
 
 const FooterBottom = () => (
   <>
-    {/* <Scroll showBelow={400} /> */}
+    <Scroll showBelow={400} />
     <div className="footer-bottom">
       <div className="container">
         <div className="row">

@@ -25,7 +25,7 @@ favouriteRouter.post(
 );
 favouriteRouter.post("/favourite/getFavoredBook", (req, res) => {
   // Need to find all of the Users that I am subscribing to From Subscriber Collection
-  Favourite.find({ id_user: req.body.id }).exec((err, favorites) => {
+  Favourite.find({ id_user: req.body._id }).exec((err, favorites) => {
     if (err) return res.status(400).send(err);
     return res.status(200).json({ success: true, favorites });
   });

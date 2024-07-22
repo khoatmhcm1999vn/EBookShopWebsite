@@ -19,21 +19,24 @@ function FavoritePage({ history }) {
   let variable = JSON.parse(localStorage.getItem("userInfo"))
 
   // console.log(cart)
+  console.log(currentUser)
 
   useEffect(() => {
     fetchFavoredMovie()
   }, [])
   const fetchFavoredMovie = () => {
-    AxiosClient.post("/api/favourite/getFavoredBook", variable).then(
-      response => {
-        if (response.success) {
-          setFavorites(response.favorites)
-          setLoading(false)
-        } else {
-          alert("Failed to get subscription videos")
+    if (currentUser != null) {
+      AxiosClient.post("/api/favourite/getFavoredBook", currentUser.user).then(
+        response => {
+          if (response.success) {
+            setFavorites(response.favorites)
+            setLoading(false)
+          } else {
+            alert("Failed to get subscription videos")
+          }
         }
-      }
-    )
+      )
+    }
   }
   const onClickDelete = (bookId, userId) => {
     const variables = {
