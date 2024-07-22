@@ -224,7 +224,7 @@ export const logout = () => (dispatch, getState) => {
   // localStorage.removeItem("refresh_token")
   // localStorage.removeItem("expiryDate")
   localStorage.removeItem("cart")
-  // localStorage.removeItem("shippingAddress")
+  localStorage.removeItem("shippingAddress")
   removeJwtToken()
   removeRefreshToken()
   dispatch({ type: USER_SIGNOUT })
