@@ -3,9 +3,9 @@ import cloudinary from "cloudinary";
 var cloudinaryConfig = cloudinary.v2;
 // var uploads = {};
 cloudinaryConfig.config({
-  cloud_name: "dhjbnicrr",
-  api_key: "716683488489554",
-  api_secret: "lXvFAP3e8kp93s6D2hgc_C_hy3Y",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 import Book from "../models/book.model.js";
