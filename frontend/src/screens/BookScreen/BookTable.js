@@ -307,7 +307,7 @@ function BookTable() {
         // console.log(pageIndexx1);
         const startRow = pageSize * 0
         const endRow = datax1.length
-        console.log(endRow)
+        //console.log(endRow)
         setData(datax1.slice(startRow, endRow))
         // Your server could send back total page count.
         // For now we'll just fake it, too

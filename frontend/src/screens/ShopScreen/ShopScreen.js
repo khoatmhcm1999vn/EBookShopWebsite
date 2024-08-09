@@ -91,7 +91,7 @@ export default function ShopScreen(props) {
     ) {
       // filterPageSize = 10;
       filterPage = 1
-      console.log("test if")
+      //console.log("test if")
     }
     if (
       sortOrder == "lowsale" ||
@@ -121,7 +121,7 @@ export default function ShopScreen(props) {
     const filterMax = 0
     const filterSales = "all"
     const filterUpdatedAtByDay = "all"
-    console.log(sortOrder)
+    //console.log(sortOrder)
     // console.log(filterMin);
     // console.log(filterMax);
     return props.history.push(
@@ -151,7 +151,7 @@ export default function ShopScreen(props) {
   }
 
   // console.log(productCategoryList);
-  console.log("pagecate " + productsBe.pagesCate)
+  //console.log("pagecate " + productsBe.pagesCate)
   // console.log(order);
 
   return (

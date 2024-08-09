@@ -62,7 +62,7 @@ billRouter.get(
   "/api/bill",
   expressAsyncHandler(async (req, res) => {
     const { page, size, name } = req.query;
-    console.log(name);
+    //console.log(name);
     if (name) {
       try {
         const productCategories = await Bill.aggregate([
@@ -85,7 +85,7 @@ billRouter.get(
         res.json({ result: "error", message: err.msg });
       }
     } else {
-      console.log("fail");
+      //console.log("fail");
       try {
         const productCategories = await Bill.aggregate([
           {
@@ -153,7 +153,7 @@ billRouter.post(
       paymentMethod,
     });
 
-    console.log(new_bill);
+    //console.log(new_bill);
 
     try {
       await cartFind.remove();
@@ -162,7 +162,7 @@ billRouter.post(
         success: false,
         message: "👎 Có lỗi xảy ra khi lưu trong database!",
       });
-      console.log("Cart remove fail");
+      //console.log("Cart remove fail");
       return;
     }
 
@@ -175,7 +175,7 @@ billRouter.post(
         success: false,
         message: "👎 Có lỗi xảy ra khi lưu trong database!",
       });
-      console.log("Save bill fail");
+      //console.log("Save bill fail");
       return;
     }
 
@@ -269,10 +269,10 @@ billRouter.put(
         });
         return;
       }
-      console.log(
-        "-------------------------------------------------------------------------------------------------------------------------------------"
-      );
-      console.log(updatedOrder);
+      // console.log(
+      //   "-------------------------------------------------------------------------------------------------------------------------------------"
+      // );
+      // console.log(updatedOrder);
       transporter.sendMail(
         {
           from: process.env.EMAIL_FROM,
@@ -285,7 +285,7 @@ billRouter.put(
           if (error) {
             console.log(error);
           } else {
-            console.log(body);
+            //console.log(body);
           }
         }
       );
@@ -501,7 +501,7 @@ billRouter.post(
         };
       }
 
-      console.log(condition);
+      //console.log(condition);
 
       const pipeline = [
         { $match: { isDelivered: true } },
@@ -525,7 +525,7 @@ billRouter.post(
       ];
       const order = await Bill.aggregate(pipeline);
 
-      console.log(order);
+      //console.log(order);
 
       const totalPrice = order.reduce(
         (accumulator, currentValue) => accumulator + currentValue.totalPrice,
@@ -620,7 +620,7 @@ billRouter.post(
       ];
       const order = await Bill.aggregate(pipeline);
 
-      console.log(order);
+      //console.log(order);
       // console.log(today.getMonth())
 
       const count = order.reduce(
@@ -679,9 +679,9 @@ billRouter.post(
       ];
       const order = await Bill.aggregate(pipeline);
 
-      console.log(new Date(condition.browse_to));
-      console.log(new Date(condition.browse_from));
-      console.log(order);
+      //console.log(new Date(condition.browse_to));
+      //console.log(new Date(condition.browse_from));
+      //console.log(order);
 
       return res
         .status(200)

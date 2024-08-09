@@ -34,7 +34,7 @@ export const sendEmail = async (email, token) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return false;
   }
   return true;
@@ -58,7 +58,7 @@ export const sendEmailForgotPassword = async (email, token) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return false;
   }
   return true;
@@ -81,7 +81,7 @@ export const sendMailConfirmPayment = async (email, token) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return false;
   }
   return true;

@@ -145,7 +145,7 @@ export const addAddressx1 = expressAsyncHandler(async (req, res) => {
     try {
       await addressFind.save();
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         success: false,
         message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
@@ -167,14 +167,14 @@ export const addAddressx1 = expressAsyncHandler(async (req, res) => {
       address: address.address.address,
     });
 
-    console.log(new_address);
+    //console.log(new_address);
 
     let updatedAddress;
 
     try {
       updatedAddress = await new_address.save();
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         success: false,
         message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
@@ -182,9 +182,9 @@ export const addAddressx1 = expressAsyncHandler(async (req, res) => {
       return;
     }
 
-    console.log(
-      "-------------------------------------------------------------------------------------------------------------------------------------"
-    );
+    // console.log(
+    //   "-------------------------------------------------------------------------------------------------------------------------------------"
+    // );
     // console.log(updatedAddress);
 
     res.status(201).json({
@@ -204,7 +204,7 @@ export const getAddress = expressAsyncHandler(async (req, res) => {
       "select firstName lastName phone_number ward district address city"
     );
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.json({ success: false, message: "👎 Không tìm thấy!", error });
     return;
   }

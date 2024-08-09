@@ -44,7 +44,7 @@ flashSalesRouter.post(
         : 0;
 
     // console.log(Array.isArray(id_book));
-    console.log(req.body);
+    //console.log(req.body);
     // console.log(id_book);
     // console.log(isEnabled);
     // console.log(img);
@@ -81,7 +81,7 @@ flashSalesRouter.post(
     let bulkOps = bookFind.map((item) => {
       // console.log(item);
       item.sellPrice = item.price * newFlash.salesPercentage;
-      console.log(item);
+      //console.log(item);
       return {
         updateOne: {
           filter: { _id: item._id },
@@ -148,8 +148,8 @@ flashSalesRouter.post(
   "/flash-sales/get-flash-sale/by-id-book",
   expressAsyncHandler(async (req, res) => {
     let { day, month, year } = req.body;
-    console.log(new Date(year, month - 1, day));
-    console.log(new Date(year, month - 1, parseInt(day) + 1));
+    //console.log(new Date(year, month - 1, day));
+    //console.log(new Date(year, month - 1, parseInt(day) + 1));
 
     return res.json({ msg: "fail" });
     let flashFind;
@@ -212,7 +212,7 @@ flashSalesRouter.post(
         ? Number(req.body.salesPercentage)
         : 0;
 
-    console.log(req.body);
+    //console.log(req.body);
 
     // console.log(id_book);
     // console.log(isEnabled);
@@ -252,7 +252,7 @@ flashSalesRouter.post(
     let bulkOps = bookFind.map((item) => {
       // console.log(item);
       item.sellPrice = item.price * flashFind.salesPercentage;
-      console.log(item);
+      //console.log(item);
       return {
         updateOne: {
           filter: { _id: item._id },
@@ -273,7 +273,7 @@ flashSalesRouter.post(
     //   newFlash
     // });
 
-    console.log(isEnabled);
+    //console.log(isEnabled);
     if (isEnabled === true) {
       await Book.bulkWrite(bulkOps, {}, (error, product) => {
         if (error) {
@@ -326,7 +326,7 @@ flashSalesRouter.post(
       req.body.salesPercentage && Number(req.body.salesPercentage) !== 0
         ? Number(req.body.salesPercentage)
         : 0;
-    console.log(req.body);
+    //console.log(req.body);
     // console.log(id_book);
     // console.log(isEnabled);
     // console.log(salesPercentage);
@@ -363,7 +363,7 @@ flashSalesRouter.post(
     let bulkOps = bookFind.map((item) => {
       // console.log(item);
       item.sellPrice = item.price * flashFind.salesPercentage;
-      console.log(item);
+      //console.log(item);
       return {
         updateOne: {
           filter: { _id: item._id },
@@ -382,7 +382,7 @@ flashSalesRouter.post(
     //   data: bookFind,
     //   newFlash
     // });
-    console.log(isEnabled);
+    //console.log(isEnabled);
     if (isEnabled === true) {
       await Book.bulkWrite(bulkOps, {}, (error, product) => {
         if (error) {
@@ -413,7 +413,7 @@ flashSalesRouter.post(
       });
     }
     let { id } = req.body;
-    console.log(req.body);
+    //console.log(req.body);
 
     let flashFind;
     try {
@@ -436,7 +436,7 @@ flashSalesRouter.post(
     let bulkOpsActivate = bookFind.map((item) => {
       // console.log(item);
       item.sellPrice = item.price * flashFind.salesPercentage;
-      console.log(item);
+      //console.log(item);
       return {
         updateOne: {
           filter: { _id: item._id },
@@ -450,7 +450,7 @@ flashSalesRouter.post(
     let bulkOpsDeactivate = bookFind.map((item) => {
       // console.log(item);
       item.sellPrice = 0;
-      console.log(item);
+      //console.log(item);
       return {
         updateOne: {
           filter: { _id: item._id },
@@ -461,7 +461,7 @@ flashSalesRouter.post(
         },
       };
     });
-    console.log(flashFind.isEnabled);
+    //console.log(flashFind.isEnabled);
     if (flashFind.isEnabled === true) {
       await Book.bulkWrite(bulkOpsActivate, {}, (error, product) => {
         if (error) {

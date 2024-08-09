@@ -25,7 +25,7 @@ function initial() {
         is_verify: true,
       }).save((err) => {
         if (err) {
-          console.log("error", err);
+          //console.log("error", err);
         }
         console.log("Added 'admin' to users collection".red.bold);
       });
@@ -35,15 +35,12 @@ function initial() {
 
 const connectDB = async () => {
   const conn = await mongoose
-    .connect(
-      process.env.DB_CONN_STRING,
-      {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-        useUnifiedTopology: true,
-      }
-    )
+    .connect(process.env.DB_CONN_STRING, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    })
     .catch((err) => {
       console.log("Cannot connect to the database!".red.bold, err);
       process.exit();

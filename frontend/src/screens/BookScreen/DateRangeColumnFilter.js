@@ -12,7 +12,7 @@ export default function DateRangeColumnFilter({
     })
     return [min, max]
   }, [id, preFilteredRows])
-  console.log(min, max)
+  //console.log(min, max)
   return (
     <div
       style={{
@@ -25,7 +25,7 @@ export default function DateRangeColumnFilter({
         min={min.toISOString().slice(0, 10)}
         onChange={e => {
           const val = e.target.value
-          console.log(e.target.value)
+          //console.log(e.target.value)
           setFilter((old = []) => [val ? val : undefined, old[1]])
         }}
         style={{

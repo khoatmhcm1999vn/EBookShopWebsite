@@ -64,7 +64,7 @@ const test = () => {
     try {
       new_address.save();
     } catch (Err) {
-      console.log(Err);
+      //console.log(Err);
     }
   });
 };
@@ -184,13 +184,13 @@ const io = new Server(httpServer, { cors: { origin: "*" } });
 const users = [];
 
 io.on("connection", (socket) => {
-  console.log("connection", socket.id);
+  //console.log("connection", socket.id);
 
   socket.on("disconnect", () => {
     const user = users.find((x) => x.socketId === socket.id);
     if (user) {
       user.online = false;
-      console.log("Offline", user.name);
+      //console.log("Offline", user.name);
       const admin = users.find((x) => x.is_admin && x.online);
       if (admin) {
         io.to(admin.socketId).emit("updateUser", user);
@@ -212,7 +212,7 @@ io.on("connection", (socket) => {
     } else {
       users.push(updatedUser);
     }
-    console.log("Online", user.name);
+    //console.log("Online", user.name);
     const admin = users.find((x) => x.is_admin && x.online);
     if (admin) {
       io.to(admin.socketId).emit("updateUser", updatedUser);

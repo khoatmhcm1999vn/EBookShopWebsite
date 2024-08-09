@@ -182,8 +182,8 @@ const recommendProducts = (req, res, next) => {
     var process = spawn("python", ["./recommend.py"]);
     process.stdout.on("data", async (data) => {
       // Convert string to JSON
-      console.log(data);
-      console.log(data.toString());
+      //console.log(data);
+      //console.log(data.toString());
       // var _data = JSON.stringify(data.toString());
       var result = JSON.parse(data);
       // console.log(result);
@@ -192,7 +192,7 @@ const recommendProducts = (req, res, next) => {
       return res.status(200).json({ success: true, code: 200, data: result });
     });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };
@@ -243,13 +243,13 @@ const io = new Server(httpServer, { cors: { origin: "*" } });
 const users = [];
 
 io.on("connection", (socket) => {
-  console.log("connection", socket.id);
+  //console.log("connection", socket.id);
 
   socket.on("disconnect", () => {
     const user = users.find((x) => x.socketId === socket.id);
     if (user) {
       user.online = false;
-      console.log("Offline", user.name);
+      //console.log("Offline", user.name);
       const admin = users.find((x) => x.is_admin && x.online);
       if (admin) {
         io.to(admin.socketId).emit("updateUser", user);
@@ -271,7 +271,7 @@ io.on("connection", (socket) => {
     } else {
       users.push(updatedUser);
     }
-    console.log("Online", user.name);
+    //console.log("Online", user.name);
     const admin = users.find((x) => x.is_admin && x.online);
     if (admin) {
       io.to(admin.socketId).emit("updateUser", updatedUser);

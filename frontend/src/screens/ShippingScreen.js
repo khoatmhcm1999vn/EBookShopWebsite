@@ -141,7 +141,7 @@ const ShippingScreen = ({ history }) => {
   }
 
   const enableAddressEditForm = addr => {
-    console.log(addr)
+    //console.log(addr)
     const updatedAddress =
       address._id === addr._id
         ? { ...address, edit: true }
@@ -177,7 +177,7 @@ const ShippingScreen = ({ history }) => {
   }, [userAddr.address])
 
   // console.log(userAddr.address);
-  console.log(address)
+  //console.log(address)
   // console.log(newAddress);
   // console.log(confirmAddress);
 

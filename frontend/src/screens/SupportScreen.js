@@ -25,7 +25,7 @@ export default function SupportScreen() {
   // const { userInfo } = userSignin;
   const currentUser = useSelector(state => state.userReducers.user.currentUser)
   const { user } = currentUser
-  console.log(user)
+  //console.log(user)
 
   useEffect(() => {
     if (uiMessagesRef.current) {

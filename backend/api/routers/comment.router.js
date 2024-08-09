@@ -40,7 +40,7 @@ commentRouter.post(
       pointFind = await Point.findOne({ user: req.user._id, book: id_book });
     } catch (err) {
       // return res.json({ success: false, message: "👎 Point không tồn tại!" });
-      console.log(err);
+      //console.log(err);
     }
 
     if (pointFind === null || pointFind === "undefined") {

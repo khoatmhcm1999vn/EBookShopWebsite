@@ -32,7 +32,7 @@ const uploadImg = async (path) => {
   try {
     res = await cloudinaryConfig.uploader.upload(path);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return false;
   }
   return res.secure_url;
@@ -150,7 +150,7 @@ export const updateBook = async (req, res) => {
   try {
     bookFind = await Book.findById(id);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return res
       .status(500)
       .json({ success: false, message: "👎 Book không tồn tại!" });
@@ -189,7 +189,7 @@ export const updateBook = async (req, res) => {
     bookFind.img = urlImg;
     bookFind.save((err, docs) => {
       if (err) {
-        console.log(err);
+        //console.log(err);
       }
     });
     fs.unlink(req.file.path, (err) => {
@@ -215,7 +215,7 @@ export const updateBook = async (req, res) => {
     bookFind.img = urlImg;
     bookFind.save((err, docs) => {
       if (err) {
-        console.log(err);
+        //console.log(err);
       }
     });
     // fs.unlink(req.file.path, (err) => {
@@ -239,7 +239,7 @@ export const deletebook = async (req, res) => {
   try {
     bookFind = await Book.findById(req.params.id);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return res
       .status(401)
       .json({ result: "error", message: "👎 Không tìm thấy Book!" });
@@ -261,7 +261,7 @@ export const deactivateBook = async (req, res) => {
   try {
     bookFind = await Book.findById(req.params.id);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return res
       .status(500)
       .json({ success: false, message: "👎 Không tìm thấy Book!" });
@@ -302,7 +302,7 @@ export const addPublisher = async (req, res) => {
   try {
     await newPublisher.save();
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({
       success: false,
       message: " 👎 Có sự cố xảy ra khi lưu vào trong database!",
@@ -342,7 +342,7 @@ export const updatePublisher = async (req, res) => {
   try {
     await publisherFind.save();
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({
       success: false,
       message: " 👎 Có sự cố xảy ra khi lưu vào trong database!",
@@ -372,7 +372,7 @@ export const deletePublisher = async (req, res) => {
   try {
     publisherFind = await Publisher.findById(req.params.id);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({
       result: "error",
       message: " 👎 Không tìm thấy dữ liệu Publisher!",
@@ -395,7 +395,7 @@ export const deactivatePublisher = async (req, res) => {
   try {
     publisherFind = await Publisher.findById(req.params.id);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({
       success: false,
       message: " 👎 Không tìm thấy dữ liệu Publisher!",
@@ -435,7 +435,7 @@ export const addCategory = async (req, res) => {
   try {
     await newCategory.save();
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({
       success: false,
       message: " 👎 Có sự cố xảy ra khi lưu vào trong database!",
@@ -475,7 +475,7 @@ export const updateCategory = async (req, res) => {
   try {
     await categoryFind.save();
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({
       success: false,
       message: " 👎 Có vấn đề xảy ra khi lưu vào trong database!",
@@ -505,7 +505,7 @@ export const deleteCategory = async (req, res) => {
   try {
     categoryFind = await Category.findById(req.params.id);
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({
       result: "error",
       message: " 👎 Không tìm thấy dữ liệu Category!",
@@ -688,7 +688,7 @@ export const getAllUser = async (req, res) => {
   let count = null;
   try {
     count = await UserAddress.count({});
-    console.log(count);
+    //console.log(count);
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: err });
@@ -949,7 +949,7 @@ export const login = async (req, res) => {
   }
 
   if (userFind.isLocked) {
-    console.log("locked");
+    //console.log("locked");
     return userFind.incrementLoginAttempts(function (err) {
       if (err) {
         return res.status(400).json({
@@ -1004,7 +1004,7 @@ export const login = async (req, res) => {
   }
 
   if (!bcrypt.compareSync(password, userFind.password)) {
-    console.log("wrong password");
+    //console.log("wrong password");
     userFind.incrementLoginAttempts(function (err) {
       // console.log(err);
       if (err) {
@@ -1091,7 +1091,7 @@ export function getAccessToken(req, res) {
 
 export async function logOut(req, res) {
   const token = undefined;
-  console.log(token);
+  //console.log(token);
   const user_id = req.userData._id;
   await redis_client.del(user_id.toString());
   await redis_client.set("BL_" + user_id.toString(), JSON.stringify({ token }));
@@ -1156,7 +1156,7 @@ export const excelController = expressAsyncHandler(
       }
 
       let filePath = req.file.path;
-      console.log(filePath);
+      //console.log(filePath);
       // -> Read Excel File to Json Data
 
       const excelData = excelToJson({
@@ -1280,7 +1280,7 @@ export const excelDownloadController = expressAsyncHandler(async (req, res) => {
   res.setHeader("Content-Disposition", "attachment; filename=" + "author.xlsx");
 
   return workbook.xlsx.write(res).then(function () {
-    console.log("file saved!");
+    //console.log("file saved!");
     res.status(200).end();
   });
 

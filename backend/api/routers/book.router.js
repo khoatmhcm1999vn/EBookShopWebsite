@@ -82,7 +82,7 @@ bookRouter.post(
     let bookFind;
     if (name) {
       try {
-        console.log(name);
+        //console.log(name);
         bookFind = await Book.aggregate([
           {
             $addFields: {
@@ -256,7 +256,7 @@ bookRouter.get(
   "/api/product",
   expressAsyncHandler(async (req, res) => {
     const { page, size, name } = req.query;
-    console.log(name);
+    //console.log(name);
     if (name) {
       try {
         const productCategories = await Book.aggregate([
@@ -279,7 +279,7 @@ bookRouter.get(
         res.json({ result: "error", message: err.msg });
       }
     } else {
-      console.log("fail");
+      //console.log("fail");
       try {
         const productCategories = await Book.aggregate([
           {
@@ -302,7 +302,7 @@ bookRouter.get(
   "/api/findproduct",
   expressAsyncHandler(async (req, res) => {
     const { page, size, name } = req.query;
-    console.log(name);
+    //console.log(name);
     const condition = name
       ? {
           name: { $regex: new RegExp(name), $options: "i" },
@@ -1161,7 +1161,7 @@ bookRouter.post(
     const page = Number(req.body.pageNumber) || 1;
     const id_category = req.body.id_category || "";
     const published = req.body.published || true;
-    console.log(req.body);
+    //console.log(req.body);
 
     const categoryFilter = id_category ? { id_category: id_category } : {};
     const publishedFilter = published
@@ -1171,7 +1171,7 @@ bookRouter.post(
       ...categoryFilter,
       ...publishedFilter,
     };
-    console.log(objFilter);
+    //console.log(objFilter);
 
     let count = null;
     try {
@@ -1180,7 +1180,7 @@ bookRouter.post(
       console.log(err);
       return res.status(500).json({ msg: err });
     }
-    console.log(count);
+    //console.log(count);
 
     const pipeline = [
       {
@@ -1277,7 +1277,7 @@ bookRouter.post(
 
     // console.log(limit);
     // console.log(skip);
-    console.log(req.query);
+    //console.log(req.query);
 
     const nameFilter = name ? { name: { $regex: name, $options: "i" } } : {};
     const categoryFilter = id_category ? { id_category: id_category } : {};
@@ -1340,7 +1340,7 @@ bookRouter.post(
         ? { createdAt: 1 }
         : { createdAt: -1 };
 
-    console.log(sortOrder);
+    //console.log(sortOrder);
     const objFilter = {
       ...nameFilter,
       ...categoryFilter,
@@ -1350,7 +1350,7 @@ bookRouter.post(
       ...salesFilter,
       ...updatedAtByDayFilter,
     };
-    console.log(objFilter);
+    //console.log(objFilter);
 
     let count = null;
     try {
@@ -1364,7 +1364,7 @@ bookRouter.post(
       res.status(500).json({ msg: err });
       return;
     }
-    console.log(count);
+    //console.log(count);
     // return res.json({ msg: "fail" });
 
     const pipeline = [
@@ -1469,7 +1469,7 @@ bookRouter.post(
         $lte: endOfWeek(new Date()),
       };
     }
-    console.log(matchCriteria);
+    //console.log(matchCriteria);
 
     const pipeline = [
       {
@@ -1531,14 +1531,14 @@ bookRouter.post(
 bookRouter.post(
   "/api/get-best-seller-product-all-pagination/by-week",
   expressAsyncHandler(async (req, res) => {
-    console.log(startOfWeek(new Date()));
-    console.log(endOfWeek(new Date()));
+    //console.log(startOfWeek(new Date()));
+    //console.log(endOfWeek(new Date()));
 
     let matchCriteria = {};
     let name = req.body.name || "";
     const { week, month, id_category } = req.body;
 
-    console.log(name);
+    //console.log(name);
     // console.log(name != "");
     // if (typeof name === "string" || name instanceof String) console.log("succ");
 
@@ -1566,7 +1566,7 @@ bookRouter.post(
       name !== undefined &&
       parseInt(month) == 1
     ) {
-      console.log("name test");
+      //console.log("name test");
       matchCriteria["name"] = {
         $regex: name,
         $options: "i",
@@ -1585,7 +1585,7 @@ bookRouter.post(
       id_category !== undefined &&
       parseInt(week) == 1
     ) {
-      console.log("name test");
+      //console.log("name test");
       matchCriteria["id_category"] = id_category;
       matchCriteria["name"] = {
         $regex: name,
@@ -1639,7 +1639,7 @@ bookRouter.post(
         $lte: endOfWeek(new Date()),
       };
     }
-    console.log(matchCriteria);
+    //console.log(matchCriteria);
 
     let sortCriteria = {};
     const defaultSort = -1;
@@ -1655,7 +1655,7 @@ bookRouter.post(
     } else {
       sortCriteria["sales"] = defaultSort;
     }
-    console.log(sortCriteria);
+    //console.log(sortCriteria);
 
     let count = null;
     try {
@@ -1731,7 +1731,7 @@ bookRouter.post(
       res.status(500).json({ msg: err });
       return;
     }
-    console.log(count);
+    //console.log(count);
 
     let perPage = parseInt(req.body.size) || 10; //số lượng sản phẩm xuất hiện trên 1 page
     let totalPage = parseInt((count - 1) / perPage + 1);
@@ -1806,8 +1806,8 @@ bookRouter.post(
     // console.log(req.body);
     // console.log(new Date(startFrom));
     // console.log(new Date(endFrom));
-    console.log(startOfWeek(new Date()));
-    console.log(endOfWeek(new Date()));
+    //console.log(startOfWeek(new Date()));
+    //console.log(endOfWeek(new Date()));
 
     const pipeline = [
       {

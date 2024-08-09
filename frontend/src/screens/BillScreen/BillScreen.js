@@ -208,7 +208,7 @@ export default function BillScreen(props) {
         accessor: "createdAt",
         Cell: ({ cell: { value } }) => {
           let date = new Date(value).toDateString()
-          console.log(date)
+          //console.log(date)
           let day = date.split(" ")["2"]
           let month = date.split(" ")["1"]
           if (day.charAt(0) === "0") {

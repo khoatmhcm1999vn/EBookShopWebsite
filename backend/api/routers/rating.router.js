@@ -35,7 +35,7 @@ ratingRouter.post(
     try {
       await newRating.save();
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       res.json({
         success: false,
         message: "👎 Có sự cố xảy ra khi lưu vào trong database!",
